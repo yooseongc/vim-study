@@ -27,6 +27,7 @@ ${
 let snapshot = {'mode': mode(1), 'lines': getline(1,'$'), 'modified': &modified, 'command': getcmdline(), 'commandType': getcmdtype(), 'cursor': [line('.'), col('.')], 'register': getreg('"')}
 let snapshot.path = expand('%:p')
 let snapshot.registerA = getreg('a')
+let snapshot.registerZero = getreg('0')
 let snapshot.recording = reg_recording()
 let snapshot.markA = getpos("'a")[1:2]
 let snapshot.visualStart = [line('v'), col('v')]

@@ -16,10 +16,13 @@ import { workshop } from './lessons/workshop.js';
 import { Workshop } from './components/Workshop.jsx';
 import { rangeWorkshop } from './lessons/range-workshop.js';
 import { RangeWorkshop } from './components/RangeWorkshop.jsx';
+import { RegisterWorkshop } from './components/RegisterWorkshop.jsx';
+import { registerWorkshop } from './lessons/register-workshop.js';
 
 const activities = [
   workshop,
   rangeWorkshop,
+  registerWorkshop,
   ...guidedCourses,
   localCourse,
   workspace,
@@ -89,6 +92,8 @@ export default function App() {
   }
   if (mission.id === 'workshop') return <Workshop ref={session} onSelect={select} />;
   if (mission.id === 'range-workshop') return <RangeWorkshop ref={session} onSelect={select} />;
+  if (mission.id === 'register-workshop')
+    return <RegisterWorkshop ref={session} onSelect={select} />;
   return (
     <>
       <header className={s.header}>

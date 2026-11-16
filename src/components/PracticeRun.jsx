@@ -4,6 +4,7 @@ import { useVimEngine } from '../hooks/useVimEngine.js';
 import { readSettings } from '../lib/storage.js';
 import { SettingsDialog } from './SettingsDialog.jsx';
 import { VimTerminal } from './VimTerminal.jsx';
+import { RegisterShelf } from './RegisterShelf.jsx';
 import s from '../styles/Workshop.module.css';
 
 export function PracticeRun({ ref, lesson, kind, reset, finish, sectionLabel }) {
@@ -69,8 +70,7 @@ export function PracticeRun({ ref, lesson, kind, reset, finish, sectionLabel }) 
         observed.current = value;
         setSnapshot(value);
         if (kind === 'guided') {
-          const found = guidedStage(value);
-          if (found !== null) setStage(found);
+          setStage((previous) => guidedStage(value, previous) ?? previous);
         }
       }
       if (pendingCheck.current) {
@@ -111,7 +111,7 @@ export function PracticeRun({ ref, lesson, kind, reset, finish, sectionLabel }) 
   }
   return (
     <main
-      className={`${s.practice} ${extendedCoach ? s.extendedCoach : ''}`}
+      className={`${s.practice} ${extendedCoach ? s.extendedCoach : ''} ${lesson.showRegisters ? s.withRegisters : ''}`}
       onKeyDownCapture={shortcut}
     >
       <div className={s.lessonHeading}>
@@ -226,6 +226,7 @@ export function PracticeRun({ ref, lesson, kind, reset, finish, sectionLabel }) 
               {focused ? '여기에 입력 중' : '편집기로 돌아가기'}
             </button>
           </div>
+          {lesson.showRegisters && <RegisterShelf snapshot={snapshot} />}
           <VimTerminal
             {...editor}
             path={snapshot?.path || `/work/${course.file}`}
