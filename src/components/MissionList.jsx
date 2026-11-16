@@ -28,6 +28,17 @@ export function MissionList({ current, completed, onSelect, basicsCompleted, gra
             <small>한 단계씩 · 동작과 범위</small>
           </span>
         </button>
+        <button
+          className={`${s.mission} ${current.id === 'review' ? s.active : ''}`}
+          aria-current={current.id === 'review' ? 'step' : 'false'}
+          onClick={() => onSelect('review')}
+        >
+          <span className={s.number}>복습</span>
+          <span>
+            <strong>다시 꺼내 쓰는 연습</strong>
+            <small>상태 점검 · 변형 문제</small>
+          </span>
+        </button>
         {missions.map((mission, index) => (
           <button
             key={mission.id}

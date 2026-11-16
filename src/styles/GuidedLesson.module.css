@@ -63,6 +63,45 @@
   font-size: 14px;
   line-height: 1.8;
 }
+.diagnosis {
+  margin: 16px 0;
+  padding: 16px;
+  border: 1px solid #b9c6ae;
+  border-radius: 6px;
+  background: #f1f4ea;
+}
+.diagnosis p {
+  margin-bottom: 8px;
+}
+.diagnosis dl {
+  margin: 8px 0 0;
+}
+.diagnosis dt {
+  font-size: 14px;
+  font-weight: 600;
+}
+.diagnosis dd {
+  margin: 4px 0 12px;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+.diagnosis code,
+.target pre {
+  font-family: 'Consolas', 'Menlo', monospace;
+  font-size: 15px;
+}
+.target {
+  padding: 16px;
+  background: #edf1e3;
+  margin-bottom: 16px;
+  border-radius: 6px;
+}
+.target pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 15px;
+  line-height: 1.7;
+}
 .success {
   color: #294733;
   background: #e8eedc;

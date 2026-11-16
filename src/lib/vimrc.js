@@ -22,14 +22,9 @@ call jsevalfunc('${bridge}?.result(...arguments)', [${dict}, len(filter(getbufin
 endfunction
 ${
   observe
-    ? `let g:field_last = ''
-function! FieldObserve(timer)
+    ? `function! FieldObserve(timer)
 let snapshot = {'mode': mode(1), 'lines': getline(1,'$'), 'modified': &modified, 'command': getcmdline(), 'commandType': getcmdtype(), 'cursor': [line('.'), col('.')], 'register': getreg('"')}
-let encoded = json_encode(snapshot)
-if encoded !=# g:field_last
-let g:field_last = encoded
 call jsevalfunc('${bridge}?.observe(...arguments)', [snapshot], v:true)
-endif
 endfunction
 call timer_start(100, function('FieldObserve'), {'repeat': -1})`
     : ''

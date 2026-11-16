@@ -1,5 +1,7 @@
 import { useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { basics } from '../lessons/basics.js';
+import { diagnose } from '../lessons/feedback.js';
+import { LessonFeedback } from './LessonFeedback.jsx';
 import { stepSatisfied } from '../lessons/evaluate.js';
 import { saveLesson, readLesson } from '../lessons/progress.js';
 import { readSettings } from '../lib/storage.js';
@@ -8,9 +10,16 @@ import { VimTerminal } from './VimTerminal.jsx';
 import { SettingsDialog } from './SettingsDialog.jsx';
 import s from '../styles/GuidedLesson.module.css';
 
-export function GuidedLesson({ ref, course = basics, onPractice, onComplete }) {
+export function GuidedLesson({
+  ref,
+  course = basics,
+  onPractice,
+  onComplete,
+  initialChallenge = false,
+  completionNote,
+}) {
   const [run, setRun] = useState(0);
-  const [challenge, setChallenge] = useState(false);
+  const [challenge, setChallenge] = useState(initialChallenge);
   return (
     <LessonRun
       key={`${run}:${challenge}`}
@@ -18,17 +27,27 @@ export function GuidedLesson({ ref, course = basics, onPractice, onComplete }) {
       challenge={challenge}
       course={course}
       onRestart={() => {
-        setChallenge(false);
+        setChallenge(initialChallenge);
         setRun((value) => value + 1);
       }}
       onChallenge={() => setChallenge(true)}
       onPractice={onPractice}
       onComplete={onComplete}
+      completionNote={completionNote}
     />
   );
 }
 
-function LessonRun({ ref, course, challenge, onRestart, onChallenge, onPractice, onComplete }) {
+function LessonRun({
+  ref,
+  course,
+  challenge,
+  onRestart,
+  onChallenge,
+  onPractice,
+  onComplete,
+  completionNote,
+}) {
   const { steps, questions } = course;
   const [files] = useState(() => ({
     [course.file]: (challenge ? course.challengeInitial : course.initial) + '\n',
@@ -47,6 +66,12 @@ function LessonRun({ ref, course, challenge, onRestart, onChallenge, onPractice,
   const [done, setDone] = useState(false),
     [settingsOpen, setSettingsOpen] = useState(false),
     [hint, setHint] = useState(false);
+  const [feedback, setFeedback] = useState(null);
+  const [hintUsed, setHintUsed] = useState(false);
+  const [issues, setIssues] = useState([]);
+  const [checking, setChecking] = useState(false);
+  const pendingCheck = useRef(false);
+  const observed = useRef(null);
   const dirty = useRef(false),
     instructions = useRef(null);
   useImperativeHandle(
@@ -82,25 +107,45 @@ function LessonRun({ ref, course, challenge, onRestart, onChallenge, onPractice,
     },
     path: () => {},
     result: () => {},
-    observe: setSnapshot,
+    observe: (value) => {
+      // The timer also replies when unchanged, so explicit checks never use an old mode.
+      // Keep the same object for identical snapshots to avoid idle React renders.
+      if (JSON.stringify(observed.current) !== JSON.stringify(value)) {
+        observed.current = value;
+        setSnapshot(value);
+      }
+      if (pendingCheck.current) {
+        pendingCheck.current = false;
+        const current = observed.current;
+        const result = diagnose(challenge ? challengeStep : step, current, pressed, saved);
+        setFeedback({ result, snapshot: current, saved, pressed });
+        if (challenge && !['waiting', 'success'].includes(result.kind)) {
+          setIssues((previous) => [...new Set([...previous, result.kind])]);
+        }
+        setChecking(false);
+      }
+    },
     saved: (path, lines) => {
       if (path !== `/work/${course.file}`) return;
       const text = lines.join('\n');
       setSaved(text);
       setSaveMessage(
-        saveLesson({ savedText: text }, course.id)
-          ? '브라우저에도 저장했습니다.'
+        course.review || saveLesson({ savedText: text }, course.id)
+          ? course.review
+            ? '연습 파일에 저장했습니다. 복습을 완료하면 기록을 보관합니다.'
+            : '브라우저에도 저장했습니다.'
           : 'Vim에는 저장했지만 브라우저 저장 공간에 접근하지 못했습니다.',
       );
     },
   });
   const step = steps[stepIndex];
-  const passed = stepSatisfied(step, snapshot, pressed, saved);
-  const challengePassed =
-    snapshot?.lines.join('\n') === course.challengeTarget &&
-    snapshot?.mode === 'n' &&
-    !snapshot?.modified &&
-    saved === course.challengeTarget;
+  const passed = !challenge && stepSatisfied(step, snapshot, pressed, saved);
+  const challengeStep = { mode: 'n', text: course.challengeTarget, saved: true };
+  const challengePassed = stepSatisfied(challengeStep, snapshot, [], saved);
+  function checkState() {
+    pendingCheck.current = true;
+    setChecking(true);
+  }
   const mode = snapshot?.mode || '';
   const modeName = mode.startsWith('i')
     ? '입력 모드'
@@ -115,6 +160,9 @@ function LessonRun({ ref, course, challenge, onRestart, onChallenge, onPractice,
             : '상태 확인 중';
   function advance() {
     if (!passed) return;
+    pendingCheck.current = false;
+    setChecking(false);
+    setFeedback(null);
     if (stepIndex === steps.length - 1) setQuiz(true);
     else {
       setStepIndex((value) => value + 1);
@@ -123,9 +171,9 @@ function LessonRun({ ref, course, challenge, onRestart, onChallenge, onPractice,
   }
   function finish() {
     if (!challengePassed) return;
-    const stored = saveLesson({ completed: true }, course.id);
+    const stored = course.review || saveLesson({ completed: true }, course.id);
     if (!stored) setSaveMessage('완료했습니다. 다만 브라우저에 완료 기록을 저장하지 못했습니다.');
-    onComplete();
+    onComplete({ hintUsed, issues });
     setDone(true);
   }
   function restart() {
@@ -143,7 +191,9 @@ function LessonRun({ ref, course, challenge, onRestart, onChallenge, onPractice,
         aria-label="단계별 안내"
       >
         <p className={s.eyebrow}>{course.eyebrow}</p>
-        <h2 id="title">{challenge ? '설명 없이 한 번 더' : course.title}</h2>
+        <h2 id="title">
+          {challenge ? course.challengeTitle || '설명 없이 한 번 더' : course.title}
+        </h2>
         {!challenge && !quiz && (
           <>
             <p>먼저 읽고, 한 번 직접 실행하고, 확인한 뒤 다음으로 넘어가세요.</p>
@@ -162,6 +212,22 @@ function LessonRun({ ref, course, challenge, onRestart, onChallenge, onPractice,
                 ? '✓ 실제 Vim에서 확인했습니다. 다음 단계로 넘어가세요.'
                 : '편집기에서 실행해 보세요. 모드와 내용이 맞으면 다음 단계가 열립니다.'}
             </p>
+            <button
+              id="lesson-check"
+              disabled={editor.status !== 'ready' || checking}
+              onClick={checkState}
+            >
+              {checking ? 'Vim 상태 확인 중…' : '현재 상태 점검'}
+            </button>
+            <LessonFeedback
+              feedback={feedback?.result}
+              stale={
+                feedback &&
+                (feedback.snapshot !== snapshot ||
+                  feedback.saved !== saved ||
+                  feedback.pressed !== pressed)
+              }
+            />
             <button id="lesson-next" disabled={!passed} onClick={advance}>
               {stepIndex === steps.length - 1 ? '이해 확인으로' : '다음 단계'}
             </button>
@@ -212,7 +278,19 @@ function LessonRun({ ref, course, challenge, onRestart, onChallenge, onPractice,
         {challenge && (
           <>
             <p>{course.challengeDescription}</p>
-            <button onClick={() => setHint((value) => !value)}>
+            {course.review && (
+              <div className={s.target}>
+                <strong>목표 내용</strong>
+                <pre id="review-target">{course.challengeTarget}</pre>
+              </div>
+            )}
+            <button
+              disabled={done}
+              onClick={() => {
+                setHint((value) => !value);
+                setHintUsed(true);
+              }}
+            >
               {hint ? '도움말 접기' : '기억이 안 나면 도움말'}
             </button>
             {hint && (
@@ -228,15 +306,40 @@ function LessonRun({ ref, course, challenge, onRestart, onChallenge, onPractice,
                 : '목표 내용으로 수정하고 저장하면 완료할 수 있습니다.'}
             </p>
             {!done && (
+              <>
+                <button
+                  id="lesson-check"
+                  disabled={editor.status !== 'ready' || checking}
+                  onClick={checkState}
+                >
+                  {checking ? 'Vim 상태 확인 중…' : '현재 상태 점검'}
+                </button>
+                <LessonFeedback
+                  feedback={feedback?.result}
+                  stale={
+                    feedback &&
+                    (feedback.snapshot !== snapshot ||
+                      feedback.saved !== saved ||
+                      feedback.pressed !== pressed)
+                  }
+                />
+              </>
+            )}
+            {!done && (
               <button id="lesson-finish" disabled={!challengePassed} onClick={finish}>
-                단원 완료
+                {course.review ? '복습 완료' : '단원 완료'}
               </button>
             )}
             {done && (
               <div className={s.success}>
-                <h3>단원을 마쳤습니다.</h3>
+                <h3>{course.review ? '복습을 마쳤습니다.' : '단원을 마쳤습니다.'}</h3>
                 <p>{course.recap}</p>
                 <p>{course.note}</p>
+                {completionNote && (
+                  <p id="review-result" role="status">
+                    {completionNote}
+                  </p>
+                )}
                 <button onClick={onPractice}>{course.nextLabel}</button>
               </div>
             )}
@@ -280,7 +383,7 @@ function LessonRun({ ref, course, challenge, onRestart, onChallenge, onPractice,
           <button id="settings-open" onClick={() => setSettingsOpen(true)}>
             편집기 설정
           </button>
-          <button onClick={restart}>처음부터 다시</button>
+          {(!done || !course.review) && <button onClick={restart}>처음부터 다시</button>}
         </div>
         <p className={s.notice}>
           입력하기 버튼으로 포커스를 옮기세요. Ctrl+Shift+F로 안내 쪽으로 돌아올 수 있습니다. 키

@@ -5,8 +5,8 @@ const browser = await chromium.launch({
   channel: process.env.BROWSER_CHANNEL || 'msedge',
   headless: true,
 });
+const page = await browser.newPage();
 try {
-  const page = await browser.newPage();
   const errors = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto(
@@ -92,6 +92,11 @@ try {
   console.log(
     'PASS: StrictMode startup, SPA navigation, one Worker, expand preserves engine, unsaved cancel/accept, browser back, quit cleanup, restart/reset.',
   );
+} catch (error) {
+  await page.screenshot({ path: 'test-results/lifecycle-failure.png', fullPage: true });
+  console.error('Modified:', await page.evaluate(() => document.body.dataset.modified));
+  console.error((await page.locator('body').innerText()).slice(-1600));
+  throw error;
 } finally {
   await browser.close();
 }

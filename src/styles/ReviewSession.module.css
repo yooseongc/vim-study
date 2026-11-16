@@ -1,0 +1,72 @@
+.hub {
+  padding: 28px;
+  min-width: 0;
+}
+.hub p {
+  font-size: 16px;
+  line-height: 1.85;
+}
+.eyebrow {
+  color: #526244;
+  font-weight: 600;
+}
+.summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  background: #e8eedc;
+  border-radius: 8px;
+  margin: 24px 0;
+}
+.summary button {
+  background: #38563e;
+  color: white;
+}
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  gap: 16px;
+}
+.card {
+  min-width: 0;
+  border: 1px solid #cbd5c3;
+  border-radius: 8px;
+  padding: 20px;
+  background: #fafbf7;
+}
+.card h3 {
+  font-size: 19px;
+}
+.card button {
+  width: 100%;
+}
+.hub details {
+  margin-top: 28px;
+}
+.hub summary {
+  cursor: pointer;
+}
+.active {
+  min-width: 0;
+}
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 24px 0;
+}
+.toolbar span {
+  font-size: 14px;
+  color: #526244;
+}
+@media (max-width: 760px) {
+  .hub {
+    padding: 20px 14px;
+  }
+  .toolbar {
+    padding: 16px 12px 0;
+  }
+}
