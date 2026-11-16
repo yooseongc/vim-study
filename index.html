@@ -4,12 +4,26 @@
 <body>
 <header><a class="brand" href="./"><span class="logo">v_</span> VIM <b>FIELD GUIDE</b></a><span class="edition">실전에서 손에 익히는 Vim <span> / VOL. 01</span></span><button id="guide-toggle">학습 지도 ↗</button></header>
 <main>
+<dialog id="settings" aria-labelledby="settings-title">
+  <div class="settings-heading"><h2 id="settings-title">편집기 설정</h2><button id="settings-close" aria-label="설정 닫기">닫기</button></div>
+  <p>내 눈에 편한 글꼴과 크기로 Vim을 사용하세요.</p>
+  <label for="font-family">Vim 글꼴</label>
+  <select id="font-family"><option value="monospace">시스템 고정폭</option><option value="Consolas">Consolas</option><option value="Menlo">Menlo</option><option value="Courier New">Courier New</option></select>
+  <p class="settings-help">기기에 설치되지 않은 글꼴은 시스템 고정폭 글꼴로 표시됩니다.</p>
+  <label for="font-size">글자 크기 <output id="font-size-value" for="font-size">16 px</output></label>
+  <input id="font-size" type="range" min="12" max="28" step="1" value="16">
+  <pre id="font-preview" aria-label="글꼴 미리보기">const hello = "Vim";
+0123456789  {} [] ()
+읽기 편한 크기로 연습하세요.</pre>
+  <p id="settings-status" role="status" aria-live="polite"></p>
+  <button id="settings-reset">글꼴 설정 초기화</button>
+</dialog>
 <section class="intro"><div><p class="eyebrow">LESS TYPING. MORE THINKING.</p><h1>키를 외우지 말고,<br><em>문제를 해결하세요.</em></h1><p class="lede">서버 설정부터 반복되는 코드 수정까지.<br>실제 Vim으로 해결하며 나만의 편집 감각을 만드세요.</p></div><div class="journey"><span class="tiny">YOUR FIELD NOTES</span><strong><span id="completed">00</span><small> / 06</small></strong><span>완료한 실전 미션</span><div class="progress"><i id="progress"></i></div><p>빠른 타이핑보다, 정확한 한 번의 편집.</p></div></section>
 <section id="guide" hidden><h2>콘솔에서 자유로워지는 학습 경로</h2><p>① 생존: 모드·저장·되돌리기 → ② 의도 단위 편집: 검색·motion·text object → ③ 반복 제거: 점·치환·매크로 → ④ 작업 공간: 버퍼·분할·레지스터 → ⑤ 현장 전이: quickfix·argdo·필터·셸 왕복</p><p>아래 여섯 미션은 ①–④의 첫 훈련입니다. 미션마다 도움 없이 해결 → 힌트 확인 → 다른 방식으로 재도전 → 내 로컬 Vim에서 재현하는 순서를 권합니다. ⑤의 실전 과정과 간격 반복·변형 미션은 후속 구현 범위입니다.</p><p>실제 Vim 8.2 / 플러그인 없음 / 브라우저 가상 파일. <code>:!grep</code> 같은 외부 프로세스와 실제 서버 접속은 지원하지 않습니다. 키보드가 있는 데스크톱 사용을 권장합니다.</p></section>
 <div class="workspace"><aside class="missions"><div class="section-label">THE PRACTICE PATH <span>01—06</span></div><nav id="mission-list" aria-label="실전 미션"></nav><div class="aside-note"><span>↳</span><p>정답은 하나가 아닙니다.<br>결과가 같다면, 당신의 방법도 정답.</p></div></aside>
 <section class="lab"><div class="brief"><div class="mission-meta"><span id="level"></span><span id="tags"></span></div><h2 id="title"></h2><p id="story"></p><div class="objective"><span>MISSION</span><p id="objective"></p></div></div>
 <div class="terminal"><div class="terminal-bar"><div><span class="dot"></span><span id="file-name"></span></div><span id="engine-status">VIM · 준비 중</span></div><div id="editor-host"><canvas id="vim-canvas" aria-label="Vim 편집 화면"></canvas><input id="vim-input" aria-label="Vim 키보드 입력" autocomplete="off" autocapitalize="off" spellcheck="false"><div id="loading">실제 Vim을 불러오는 중…</div></div><div class="terminal-footer"><span><kbd>Esc</kbd> 기본 모드 <span>·</span> <kbd>:w</kbd> 파일 저장</span><span id="keys">0 keys</span></div></div>
-<div class="actions"><button id="check" class="primary" disabled>결과 확인 <span>↗</span></button><button id="hint">힌트 펼치기</button><button id="reset" class="muted">미션 초기화</button><span id="save-status">:w로 저장하면 다음 방문에도 이어집니다</span></div><div id="feedback" role="status" aria-live="polite"></div><div id="hint-panel" hidden></div><div id="review" hidden></div>
+<div class="actions"><button id="check" class="primary" disabled>결과 확인 <span>↗</span></button><button id="hint">힌트 펼치기</button><button id="settings-open" aria-haspopup="dialog">편집기 설정</button><button id="reset" class="muted">미션 초기화</button><span id="save-status">:w로 저장하면 다음 방문에도 이어집니다</span></div><div id="feedback" role="status" aria-live="polite"></div><div id="hint-panel" hidden></div><div id="review" hidden></div>
 </section></div>
 <footer><span>VIM FIELD GUIDE <span> / 작은 편집, 큰 차이.</span></span><span>Powered by <a href="https://github.com/rhysd/vim.wasm" target="_blank" rel="noreferrer">vim.wasm ↗</a> · 로컬에 저장되는 나만의 훈련장</span></footer>
 </main><script type="module" src="/src/main.js"></script></body></html>

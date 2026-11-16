@@ -1,6 +1,7 @@
 import { VimWasm, checkBrowserCompatibility } from 'vim-wasm';
 import { missions, filesFor, validate } from './missions.js';
 import './style.css';
+import { readSettings, setupSettings, vimFont } from './settings.js';
 
 const $ = id => document.getElementById(id);
 const storageKey = 'vim-field-guide:v1';
@@ -13,6 +14,10 @@ try {
 const current = missions.find(m => m.id === location.hash.slice(1)) || missions[0];
 const index = missions.indexOf(current);
 let vim, dirty = false, keys = 0, hints = 0;
+setupSettings(async settings => {
+  if (!vim?.isRunning()) throw new Error('Vim is not ready');
+  await vim.cmdline(`let &guifont = '${vimFont(settings)}' | redraw!`);
+});
 function persist() {
   try { localStorage.setItem(storageKey, JSON.stringify(state)); return true; }
   catch { $('save-status').textContent = '저장 공간에 접근할 수 없습니다. 페이지를 닫기 전 파일을 내려받으세요 (:export).'; return false; }
@@ -108,7 +113,7 @@ const vimrc = `set nocompatible
 set number hidden noswapfile nobackup nowritebackup
 set incsearch hlsearch ignorecase smartcase
 set backspace=indent,eol,start
-set guifont=monospace:h15
+let &guifont = '${vimFont(readSettings())}'
 set laststatus=2
 let &statusline = '%f %m%r%=%l:%c'
 syntax on
