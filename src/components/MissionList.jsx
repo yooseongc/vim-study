@@ -14,6 +14,13 @@ export function MissionList({ current, completed, onSelect, basicsCompleted, gra
             <small>이어 입력하는 새 연습</small>
           </span>
         </button>
+        <button className={s.mission} onClick={() => onSelect('range-workshop')}>
+          <span className={s.number}>새로</span>
+          <span>
+            <strong>범위를 고르고, 확인하며 바꾸기</strong>
+            <small>줄 범위와 치환을 이어 연습</small>
+          </span>
+        </button>
         <button
           className={`${s.mission} ${current.id === 'basics' ? s.active : ''}`}
           aria-current={current.id === 'basics' ? 'step' : 'false'}

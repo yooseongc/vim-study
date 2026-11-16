@@ -14,8 +14,18 @@ import { guidedCourses, nextCourse } from './lessons/catalog.js';
 import { LocalPractice, localCourse } from './components/LocalPractice.jsx';
 import { workshop } from './lessons/workshop.js';
 import { Workshop } from './components/Workshop.jsx';
+import { rangeWorkshop } from './lessons/range-workshop.js';
+import { RangeWorkshop } from './components/RangeWorkshop.jsx';
 
-const activities = [workshop, ...guidedCourses, localCourse, workspace, review, ...missions];
+const activities = [
+  workshop,
+  rangeWorkshop,
+  ...guidedCourses,
+  localCourse,
+  workspace,
+  review,
+  ...missions,
+];
 
 const missionFromHash = () =>
   activities.find((mission) => mission.id === location.hash.slice(1)) || workshop;
@@ -78,6 +88,7 @@ export default function App() {
     setAttempt((value) => value + 1);
   }
   if (mission.id === 'workshop') return <Workshop ref={session} onSelect={select} />;
+  if (mission.id === 'range-workshop') return <RangeWorkshop ref={session} onSelect={select} />;
   return (
     <>
       <header className={s.header}>

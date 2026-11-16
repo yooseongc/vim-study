@@ -1,0 +1,40 @@
+.options {
+  border: 0;
+  padding: 0;
+  margin: 18px 0 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+}
+.options legend {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.options label,
+.all {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  cursor: pointer;
+}
+.options input,
+.all input {
+  accent-color: #294e40;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+.command {
+  margin: 16px 0 0;
+  padding: 10px 12px;
+  background: #e9eee0;
+  border-left: 3px solid #728765;
+  overflow-wrap: anywhere;
+}
+.explanation {
+  font-size: 14px;
+  min-height: 54px;
+  word-break: keep-all;
+}

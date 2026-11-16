@@ -700,6 +700,15 @@
     grid-template-rows: 240px minmax(0, 1fr);
     gap: 10px;
   }
+  .extendedCoach .workbench {
+    grid-template-rows: 300px minmax(0, 1fr);
+  }
+  .extendedCoach .lessonHeading {
+    padding-block: 7px;
+  }
+  .extendedCoach .coach p {
+    line-height: 1.65;
+  }
   .coach {
     flex-direction: column;
   }

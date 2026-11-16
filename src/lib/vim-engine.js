@@ -18,6 +18,7 @@ export function createVimEngine({ canvas, input, files, settings, callbacks }) {
   sessions.set(sessionId, callbacks);
   let vim,
     observer,
+    windowResize,
     disposed = false,
     ready = false,
     serial = Promise.resolve();
@@ -27,6 +28,7 @@ export function createVimEngine({ canvas, input, files, settings, callbacks }) {
     ready = false;
     sessions.delete(sessionId);
     observer?.disconnect();
+    if (windowResize) window.removeEventListener('resize', windowResize);
     input.removeEventListener('keydown', onKey, true);
     disposeVim(vim);
   };
@@ -57,14 +59,25 @@ export function createVimEngine({ canvas, input, files, settings, callbacks }) {
       const size = `${width}:${height}:${dpr}`;
       if (!ready || disposed || width <= 0 || height <= 0 || lastSize === size) return;
       lastSize = size;
-      canvas.width = Math.floor(width * dpr);
-      canvas.height = Math.floor(height * dpr);
+      // Assigning even the same canvas size erases all pixels. Vim may skip
+      // repainting an unchanged grid, so only clear a dimension when it changes.
+      const pixelWidth = Math.floor(width * dpr);
+      const pixelHeight = Math.floor(height * dpr);
+      if (canvas.width !== pixelWidth) canvas.width = pixelWidth;
+      if (canvas.height !== pixelHeight) canvas.height = pixelHeight;
       vim.resize(Math.floor(width), Math.floor(height));
     };
     observer = new ResizeObserver(resize);
     vim.onVimInit = () => {
       if (disposed) return;
       ready = true;
+      // vim-wasm 0.0.13 also installs a delayed window resize handler. It
+      // clears the canvas again 500 ms later, after our observer has repainted.
+      // This adapter owns both element and window resizing instead.
+      vim.screen.resizer.onVimExit();
+      clearTimeout(vim.screen.resizer.bounceTimerToken);
+      windowResize = resize;
+      window.addEventListener('resize', windowResize, { passive: true });
       observer.observe(canvas);
       resize();
       callbacks.ready();

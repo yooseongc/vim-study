@@ -145,8 +145,9 @@ try {
   assert.deepEqual(await page.evaluate(() => Object.keys(localStorage)), []);
   await page.screenshot({ path: 'test-results/workshop-finished.png', fullPage: true });
   await page.getByRole('button', { name: '다음에는 범위를 정해 치환하기 →' }).click();
-  await expect(page.locator('#title')).toHaveText('범위를 정하고 확인하며 치환하기');
-  await expect.poll(() => page.workers().length).toBe(1);
+  await expect(page.locator('#range-start')).toBeVisible();
+  await expect.poll(() => page.workers().length).toBe(0);
+  await page.getByRole('button', { name: /학습 목차/ }).click();
   await page.getByRole('button', { name: /한 번 바꾸고, 다시 쓰기/ }).click();
   await page.locator('#workshop-start').click();
   await ready();

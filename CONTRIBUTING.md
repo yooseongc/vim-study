@@ -39,6 +39,7 @@
    `node scripts/local.mjs`: 로컬 과정, ZIP 다운로드, 파일 비교·오답·크기 제한, 반응형과 작업 공간 연결.
    `node scripts/local-native.mjs`: 실제 로컬 Vim/Bash로 여러 파일 편집, 매크로, 외부 필터, 검사기와 읽기 전용 복구. 설치된 Vim/Bash가 필요하며 SSH 접속·대화형 job control은 자동 검증 범위 밖입니다.
    `node scripts/workshop.mjs`: 새 대표 단원의 연속 입력, 키보드 진행·힌트, 현재 문제 초기화, 실수 복구, 저장 판정, 여러 화면에서의 조작 가능성과 Worker 정리.
+   `node scripts/range-workshop.mjs`: 치환 미리보기와 실제 Vim의 여섯 조합 비교, 네 문제, 확인 중 y/n/q·undo 복구, 범위 밖 변경 차단, 긴 명령 노출, resize 뒤 픽셀과 확인 모드 유지.
 6. 공개 전에 변경 내용을 검토하고, 배포 성공 뒤 운영 주소에서도 동작을 확인합니다.
 
 브라우저 검증은 별도의 숨겨진 임시 프로필에서 수행합니다. 사용자가 보고 있는 창의 크기를 테스트 목적으로 바꾸지 않습니다.

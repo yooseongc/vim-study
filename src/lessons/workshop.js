@@ -1,3 +1,4 @@
+import { checkExercise } from './exercise.js';
 export const workshop = { id: 'workshop', title: '한 번 바꾸고, 다시 쓰기' };
 export const practice = {
   guided: {
@@ -15,6 +16,7 @@ export const practice = {
     target:
       'order: morning\nmilk: oat\nnote: whole is the original recipe\nmilk: oat\nsize: tall\nmilk: oat',
     title: '이번에는 바꿀 위치도 골라보세요.',
+    expected: 'milk: oat 세 줄 · note와 다른 항목은 그대로 · 저장 완료',
     description:
       '세 milk 항목의 whole을 oat로 바꾸고 저장하세요. note의 whole과 다른 항목은 남겨야 합니다.',
   },
@@ -132,47 +134,18 @@ export function guidedStage(snapshot) {
 }
 
 export function checkPractice(kind, snapshot, saved) {
-  if (!snapshot) return { kind: 'waiting', message: 'Vim을 준비하고 있습니다.' };
-  const course = practice[kind];
-  if (snapshot.path !== `/work/${course.file}`)
-    return {
-      kind: 'path',
-      message: `${course.file}에서 연습하고 있습니다. 콜론을 열고 e /work/${course.file}를 입력한 뒤 Enter로 돌아오세요.`,
-    };
-  const target = course.target.split('\n');
-  const row = Array.from(
-    { length: Math.max(target.length, snapshot.lines.length) },
-    (_, i) => i,
-  ).find((i) => target[i] !== snapshot.lines[i]);
-  if (row !== undefined)
-    return {
-      kind: 'text',
-      row: row + 1,
-      actual: snapshot.lines[row] ?? '(줄 없음)',
-      expected: target[row] ?? '(이 줄은 없어야 합니다)',
-      message: target[row]?.startsWith('note:')
-        ? `${row + 1}번째 설명 줄은 바꾸지 않는 부분입니다. Esc로 나온 뒤 u로 마지막 변경을 되돌려보세요.`
-        : `${row + 1}번째 줄을 목표와 비교해보세요. 지금까지 맞게 바꾼 줄은 그대로 두면 됩니다.`,
-    };
-  if (snapshot.mode !== 'n')
-    return {
-      kind: 'mode',
-      message:
-        '내용은 맞습니다. Esc로 일반 모드로 돌아오세요. 명령줄의 저장을 실행 중이라면 Enter로 마치세요.',
-    };
-  if (snapshot.modified || snapshot.dirtyCount || saved !== course.target)
-    return {
-      kind: 'save',
-      message: '내용은 맞습니다. 콜론 → w → Enter로 저장하면 이 문제가 끝납니다.',
-    };
-  return { kind: 'success', message: '바꿀 내용과 남길 내용, 저장까지 확인했습니다.' };
+  return checkExercise(practice[kind], snapshot, saved);
 }
-
-export function modeText(mode = '') {
-  if (mode === 'n') return '일반 모드';
-  if (mode.startsWith('no')) return '범위를 기다리는 중';
-  if (mode.startsWith('i')) return '입력 모드';
-  if (mode.startsWith('c')) return '명령줄 입력 중';
-  if (mode === 'r?') return '치환 확인 중';
-  return mode ? '다른 모드 · Esc로 돌아오기' : 'Vim 준비 중';
-}
+export { modeText } from './exercise.js';
+export const dotWorkshop = {
+  title: workshop.title,
+  practice,
+  guidedGoals,
+  guidedStage,
+  challengeHints,
+  reference: [
+    'ciw는 c(바꾸기) + i(안쪽) + w(단어)입니다. 새 단어를 쓰고 Esc로 나옵니다.',
+    'n은 다음 검색 위치, .은 현재 위치에서 마지막 변경 반복입니다.',
+    '잘못 바꿨다면 Esc로 나온 뒤 u로 되돌리고 위치를 확인하세요. Ctrl+r는 되돌린 변경을 복원합니다.',
+  ],
+};
