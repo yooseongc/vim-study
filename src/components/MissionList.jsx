@@ -29,6 +29,17 @@ export function MissionList({ current, completed, onSelect, basicsCompleted, gra
           </span>
         </button>
         <button
+          className={`${s.mission} ${current.id === 'workspace' ? s.active : ''}`}
+          aria-current={current.id === 'workspace' ? 'step' : 'false'}
+          onClick={() => onSelect('workspace')}
+        >
+          <span className={s.number}>파일</span>
+          <span>
+            <strong>나의 Vim 작업 공간</strong>
+            <small>파일 저장 · 버퍼와 창</small>
+          </span>
+        </button>
+        <button
           className={`${s.mission} ${current.id === 'review' ? s.active : ''}`}
           aria-current={current.id === 'review' ? 'step' : 'false'}
           onClick={() => onSelect('review')}

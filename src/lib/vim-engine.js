@@ -1,6 +1,7 @@
 import { VimWasm, checkBrowserCompatibility } from 'vim-wasm';
 import { loadEditorFont, vimFont } from './fonts.js';
 import { createVimrc } from './vimrc.js';
+import { validFileName } from './workspace-files.js';
 
 // vim-wasm 0.0.13 has no public dispose API. Keep its pinned-version
 // internals here only; UI components never access workers or screen handlers.
@@ -95,7 +96,13 @@ export function createVimEngine({ canvas, input, files, settings, callbacks }) {
       clipboard: false,
       dirs: ['/work'],
       files: {
-        '/field.vim': createVimrc(names, settings, sessionId, Boolean(callbacks.observe)),
+        '/field.vim': createVimrc(
+          names,
+          settings,
+          sessionId,
+          Boolean(callbacks.observe),
+          Boolean(callbacks.workspaceState),
+        ),
         ...Object.fromEntries(Object.entries(files).map(([name, text]) => [`/work/${name}`, text])),
       },
       cmdArgs: ['-u', '/field.vim', ...names.map((name) => `/work/${name}`)],
@@ -124,6 +131,21 @@ export function createVimEngine({ canvas, input, files, settings, callbacks }) {
       command(() => {
         vim.sendKeydown('Escape', 27);
         return vim.cmdline('call FieldCheck()');
+      }),
+    openFile: (name) =>
+      command(() => {
+        if (!validFileName(name))
+          throw new Error(
+            '파일 이름은 영문·숫자로 시작하고 영문·숫자·점·밑줄·하이픈만 사용할 수 있습니다 (최대 64자).',
+          );
+        vim.sendKeydown('Escape', 27);
+        return vim.cmdline(`execute 'edit ' . fnameescape('/work/${name}')`);
+      }),
+    deleteFile: (name) =>
+      command(() => {
+        if (!validFileName(name)) throw new Error('지원하지 않는 파일 이름입니다.');
+        vim.sendKeydown('Escape', 27);
+        return vim.cmdline(`call WorkspaceDelete('/work/${name}')`);
       }),
     setFont: (next) =>
       command(async () => {

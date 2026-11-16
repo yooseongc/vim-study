@@ -19,6 +19,12 @@ export function useVimEngine(files, settings, callbacks) {
       settings,
       callbacks: {
         ...(callbacks.observe ? { observe: (...args) => latest.current.observe(...args) } : {}),
+        ...(callbacks.workspaceState
+          ? {
+              workspaceState: (...args) => latest.current.workspaceState(...args),
+              workspaceEvent: (...args) => latest.current.workspaceEvent(...args),
+            }
+          : {}),
         ...Object.fromEntries(
           ['key', 'escapeFocus', 'changed', 'saved', 'path', 'result'].map((name) => [
             name,

@@ -1,6 +1,7 @@
 import { vimFont } from './fonts.js';
+import { workspaceVimrc } from './workspace-vimrc.js';
 
-export function createVimrc(names, settings, sessionId, observe = false) {
+export function createVimrc(names, settings, sessionId, observe = false, workspace = false) {
   const bridge = `window.__vimFieldSessions.get("${sessionId}")`;
   const dict =
     '{' + names.map((name) => `'${name}': join(readfile('/work/${name}'), "\\n")`).join(',') + '}';
@@ -35,5 +36,6 @@ autocmd BufWritePost /work/* call jsevalfunc('${bridge}?.saved(...arguments)', [
 autocmd BufEnter * call jsevalfunc('${bridge}?.path(...arguments)', [expand('%:p')], v:true)
 autocmd TextChanged,TextChangedI,BufWritePost,BufEnter * call jsevalfunc('${bridge}?.changed(...arguments)', [len(filter(getbufinfo(), 'v:val.changed'))], v:true)
 augroup END
+${workspace ? workspaceVimrc(bridge) : ''}
 `;
 }

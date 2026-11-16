@@ -10,8 +10,10 @@ import { readBasics, readLesson } from './lessons/progress.js';
 import { GuidedLesson } from './components/GuidedLesson.jsx';
 import { ReviewSession } from './components/ReviewSession.jsx';
 import { review } from './lessons/review.js';
+import { workspace } from './lib/workspace-files.js';
+import { WorkspaceSession } from './components/WorkspaceSession.jsx';
 
-const activities = [basics, grammar, review, ...missions];
+const activities = [basics, grammar, workspace, review, ...missions];
 
 const missionFromHash = () =>
   activities.find((mission) => mission.id === location.hash.slice(1)) || basics;
@@ -25,8 +27,9 @@ function Guide() {
       </p>
       <p>
         아래 여섯 미션은 ①–④의 첫 훈련입니다. 미션마다 도움 없이 해결 → 힌트 확인 → 다른 방식으로
-        재도전 → 내 로컬 Vim에서 재현하는 순서를 권합니다. 입문·편집 문법 다음에는 ‘다시 꺼내 쓰는
-        연습’에서 변형 예제와 간격 복습을 할 수 있습니다. ⑤의 과정은 후속 구현 범위입니다.
+        재도전 → 내 로컬 Vim에서 재현하는 순서를 권합니다. 입문·편집 문법 다음에는 ‘나의 Vim 작업
+        공간’에서 직접 파일을 만들고 버퍼와 창을 다뤄 보세요. 변형 예제는 ‘다시 꺼내 쓰는 연습’에서
+        선택할 수 있습니다. ⑤의 과정은 후속 구현 범위입니다.
       </p>
       <p>
         실제 Vim 8.2 / 플러그인 없음 / 브라우저 가상 파일. <code>:!grep</code> 같은 외부 프로세스와
@@ -134,11 +137,13 @@ export default function App() {
               key={mission.id}
               course={mission}
               ref={session}
-              onPractice={() => select(mission.id === 'basics' ? 'grammar' : 'review')}
+              onPractice={() => select(mission.id === 'basics' ? 'grammar' : 'workspace')}
               onComplete={() =>
                 mission.id === 'basics' ? setBasicsCompleted(true) : setGrammarCompleted(true)
               }
             />
+          ) : mission.id === 'workspace' ? (
+            <WorkspaceSession ref={session} />
           ) : mission.id === 'review' ? (
             <ReviewSession ref={session} />
           ) : (
