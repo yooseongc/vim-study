@@ -1,0 +1,65 @@
+.dialog {
+  width: min(480px, calc(100vw - 32px));
+  max-height: calc(100dvh - 32px);
+  overflow: auto;
+  border: 1px solid #b6c7a1;
+  border-radius: 14px;
+  padding: 24px;
+  background: #fafbf6;
+  color: #243d35;
+  box-shadow: 0 20px 70px #15252144;
+}
+.dialog::backdrop {
+  background: #15252188;
+}
+.heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.heading h2 {
+  margin: 0;
+}
+.dialog p {
+  font-size: 15px;
+  line-height: 1.8;
+}
+.dialog label {
+  display: block;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 24px 0 10px;
+}
+.dialog select {
+  width: 100%;
+  padding: 12px;
+  color: inherit;
+  background: white;
+  border: 1px solid #899a7e;
+  border-radius: 6px;
+}
+.dialog input[type='range'] {
+  width: 100%;
+  accent-color: #38563e;
+}
+.dialog output {
+  float: right;
+  font-variant-numeric: tabular-nums;
+}
+.dialog .help {
+  font-size: 14px;
+  color: #52624c;
+}
+.preview {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  background: #152521;
+  color: #d5e2dd;
+  padding: 16px;
+  border-radius: 6px;
+  line-height: 1.7;
+}
+.status {
+  min-height: 52px;
+}

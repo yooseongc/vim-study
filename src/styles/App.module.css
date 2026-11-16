@@ -1,0 +1,229 @@
+.header {
+  min-height: 68px;
+  padding: 10px clamp(16px, 3vw, 48px);
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #d3dacb;
+  gap: 20px;
+}
+.brand {
+  text-decoration: none;
+  font-size: 15px;
+  letter-spacing: 0.6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+.brand b {
+  font-weight: 400;
+  color: #53634d;
+}
+.logo {
+  font: bold 24px monospace;
+  background: #294a3d;
+  color: #ecf0e1;
+  padding: 8px 10px;
+  border-radius: 6px;
+}
+.edition {
+  flex: 1;
+  text-align: center;
+  font-size: 14px;
+  color: #52624c;
+}
+.edition span {
+  font-size: 12px;
+}
+.header button {
+  margin-left: auto;
+  font-size: 14px;
+}
+.main {
+  width: 100%;
+  max-width: 1920px;
+  margin: auto;
+  padding: 0 clamp(16px, 3vw, 48px);
+}
+.intro {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+  gap: 28px;
+}
+.eyebrow {
+  font-size: 12px;
+  letter-spacing: 0.6px;
+  font-weight: 600;
+}
+.tiny {
+  font-size: 12px;
+  letter-spacing: 0.6px;
+  font-weight: 600;
+}
+.eyebrow {
+  color: #526344;
+  margin: 0 0 8px;
+}
+.lede {
+  font-size: 15px;
+  line-height: 1.8;
+  color: #52624c;
+  margin: 8px 0 0;
+}
+.lede br {
+  display: none;
+}
+.journey {
+  flex: 0 0 230px;
+  padding: 16px 20px;
+  background: #ecefe4;
+  border: 1px solid #d3dcc8;
+  border-radius: 8px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4px 8px;
+  color: #526244;
+}
+.journey strong {
+  grid-column: 2;
+  grid-row: 1/3;
+  font: 34px monospace;
+  color: #354c39;
+  white-space: nowrap;
+  align-self: center;
+}
+.journey small {
+  font-size: 18px;
+  color: #596a4d;
+}
+.journey > span:not(.tiny) {
+  font-size: 13px;
+}
+.progress {
+  height: 5px;
+  background: #d3dcc8;
+  margin-top: 10px;
+  grid-column: 1/-1;
+}
+.progress i {
+  display: block;
+  height: 100%;
+  background: #59723e;
+  transition: width 0.3s;
+}
+.journey p {
+  display: none;
+}
+.workspace {
+  display: grid;
+  grid-template-columns: 232px minmax(0, 1fr);
+  border: 1px solid #cbd5c3;
+  border-radius: 10px;
+  background: #fafbf6;
+}
+.guide {
+  padding: 22px;
+  margin-bottom: 22px;
+  background: #e9eddf;
+  border-radius: 8px;
+  font-size: 16px;
+  line-height: 1.9;
+}
+.guide h2 {
+  margin-top: 0;
+}
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px 24px;
+  padding: 22px 0;
+  font-size: 13px;
+  color: #52624c;
+}
+@media (max-width: 1000px) {
+  .edition {
+    display: none;
+  }
+  .workspace {
+    grid-template-columns: 200px minmax(0, 1fr);
+  }
+  .intro {
+    gap: 16px;
+  }
+  .journey {
+    flex-basis: 200px;
+    padding: 14px;
+  }
+  .tiny {
+    font-size: 11px;
+  }
+}
+@media (max-width: 760px) {
+  .header {
+    gap: 10px;
+    padding: 10px 16px;
+  }
+  .brand {
+    font-size: 12px;
+    gap: 5px;
+    letter-spacing: 0;
+  }
+  .brand b {
+    display: none;
+  }
+  .logo {
+    font-size: 21px;
+  }
+  .main {
+    padding: 0 12px;
+  }
+  .intro {
+    display: block;
+    padding: 18px 4px;
+  }
+  .intro h1 {
+    font-size: 26px;
+  }
+  .lede {
+    font-size: 15px;
+  }
+  .journey {
+    margin-top: 14px;
+    padding: 12px 16px;
+  }
+  .journey strong {
+    font-size: 28px;
+  }
+  .workspace {
+    display: block;
+  }
+  .footer {
+    padding: 18px 4px;
+  }
+}
+@media (max-height: 650px) and (min-width: 761px) {
+  .intro {
+    padding: 14px 0;
+  }
+  .eyebrow {
+    display: none;
+  }
+  .lede {
+    display: none;
+  }
+  .journey {
+    padding: 8px 14px;
+  }
+}
+.workspace.expanded {
+  display: block;
+  margin-top: 16px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .progress i {
+    transition: none;
+  }
+}

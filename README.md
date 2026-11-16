@@ -37,7 +37,18 @@ npm run build
 5. 후속 구현: marks/jumplist, 레지스터 보존, visual block, quickfix, arglist/argdo, global 명령, 변형 미션과 간격 반복.
 6. 로컬 전이 과정: SSH, 권한, 외부 필터, 셸 왕복, 실제 프로젝트 편집. 브라우저의 가상 파일 성공을 실제 서버 작업 능력으로 동일시하지 않습니다.
 
-각 미션의 데이터·힌트·완료 조건은 `src/missions.js`에 모여 있습니다. 실제 엔진과 학습 UI 연결은 `src/main.js`입니다. 긴 Ex 명령은 엔진 통신 버퍼 제한을 피하도록 vimrc 함수로 정의하고 짧은 함수 호출만 전송합니다.
+## React 구조
+
+- `src/App.jsx`: 미션 선택, 진행률, 화면 전환. 미션 이동은 전체 새로고침 없이 처리합니다.
+- `src/components/`: 미션 목록·학습 세션·Vim 화면·설정 다이얼로그.
+- `src/hooks/`: 저장 상태와 엔진 생명주기를 React에 연결합니다.
+- `src/lib/`: 저장 데이터 검증, 폰트 로딩, Vim 어댑터, vimrc 생성.
+- `src/styles/`: 기본 타이포그래피와 컴포넌트별 CSS Modules. 자체 CSS에 `!important`를 사용하지 않습니다.
+- `src/missions.js`: 미션 데이터·힌트·완료 조건. UI 프레임워크와 독립적입니다.
+
+React StrictMode를 활성화합니다. 미션 변경과 초기화 시 기존 Worker·이벤트·Observer·콜백을 정리하고, 확대/축소나 힌트 변경 시에는 Vim 인스턴스를 유지합니다. 기존 localStorage 키와 형식은 유지합니다. 긴 Ex 명령은 엔진 통신 버퍼 제한을 피하도록 vimrc 함수로 정의하고 짧은 호출만 전송합니다.
+
+개발 원칙과 검증 절차는 [CONTRIBUTING.md](./CONTRIBUTING.md)에 정리합니다.
 
 ## 한계
 
@@ -57,6 +68,8 @@ node scripts/smoke.mjs
 다른 Chromium 채널은 `BROWSER_CHANNEL=chrome` 등으로 선택합니다. 여섯 미션을 실제 키 입력으로 풀고, 저장·새로고침 복원·오답 검출·다중 버퍼·모바일 가로 넘침을 확인합니다. 캡처는 무시되는 `test-results/`에 저장됩니다.
 
 `node scripts/layout.mjs`는 `TEST_URL` 또는 기본 로컬 5184 포트에서 320px 휴대폰부터 1920px 데스크톱까지 7가지 화면 크기로 안내문 크기, 가로 넘침, Vim 캔버스 크기, 확대·복원 및 설정 창의 크기를 검증합니다.
+
+`node scripts/lifecycle.mjs`는 StrictMode 시작, 새로고침 없는 미션 전환, Worker 수, 미저장 이동 경고, 뒤로 가기, 종료와 재시작을 검증합니다. `npm run format:check`로 JSX/CSS 형식을 확인합니다.
 
 ## 배포
 

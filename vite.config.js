@@ -1,2 +1,3 @@
 import { defineConfig } from 'vite';
-export default defineConfig({ base: '/vim-study/' });
+import react from '@vitejs/plugin-react';
+export default defineConfig({ base: '/vim-study/', plugins: [react()] });

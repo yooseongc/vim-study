@@ -1,0 +1,96 @@
+.label {
+  font-size: 12px;
+  letter-spacing: 0.6px;
+  font-weight: 600;
+}
+.missions {
+  background: #eff1e8;
+  border-right: 1px solid #cbd5c3;
+  border-radius: 10px 0 0 10px;
+  padding: 22px 12px;
+  min-width: 0;
+}
+.label {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  color: #526244;
+  margin: 0 8px 16px;
+}
+.mission {
+  display: flex;
+  align-items: center;
+  text-align: left;
+  width: 100%;
+  border: 1px solid transparent;
+  padding: 13px 8px;
+  gap: 10px;
+  margin: 4px 0;
+}
+.mission.active {
+  background: #e0e8d3;
+  border-color: #b6c7a1;
+}
+.number {
+  font: 16px monospace;
+  color: #546c40;
+  min-width: 24px;
+}
+.mission strong {
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.6;
+  display: block;
+  word-break: keep-all;
+}
+.mission small {
+  display: block;
+  color: #52624c;
+  margin-top: 5px;
+  font-size: 13px;
+}
+.note {
+  border-top: 1px solid #cbd5c3;
+  margin: 24px 8px 0;
+  padding-top: 18px;
+  display: flex;
+  gap: 8px;
+  color: #52624c;
+}
+.note p {
+  font-size: 14px;
+  line-height: 1.85;
+  margin: 0;
+  word-break: keep-all;
+}
+@media (min-width: 1100px) {
+  .missions {
+    max-height: max(420px, calc(100dvh - 250px));
+    overflow-y: auto;
+  }
+}
+@media (max-width: 760px) {
+  .missions {
+    padding: 14px 10px;
+    border-right: 0;
+    border-bottom: 1px solid #cbd5c3;
+    border-radius: 10px 10px 0 0;
+  }
+  .label {
+    margin-bottom: 8px;
+  }
+  .list {
+    display: flex;
+    overflow-x: auto;
+    gap: 6px;
+    padding-bottom: 6px;
+  }
+  .mission {
+    flex: 0 0 230px;
+    margin: 0;
+    padding: 10px;
+  }
+  .note {
+    display: none;
+  }
+}
