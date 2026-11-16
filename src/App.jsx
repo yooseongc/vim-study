@@ -5,10 +5,11 @@ import { MissionList } from './components/MissionList.jsx';
 import { MissionSession } from './components/MissionSession.jsx';
 import s from './styles/App.module.css';
 import { basics } from './lessons/basics.js';
-import { readBasics } from './lessons/progress.js';
-import { BasicsLesson } from './components/BasicsLesson.jsx';
+import { grammar } from './lessons/grammar.js';
+import { readBasics, readLesson } from './lessons/progress.js';
+import { GuidedLesson } from './components/GuidedLesson.jsx';
 
-const activities = [basics, ...missions];
+const activities = [basics, grammar, ...missions];
 
 const missionFromHash = () =>
   activities.find((mission) => mission.id === location.hash.slice(1)) || basics;
@@ -36,6 +37,7 @@ function Guide() {
 export default function App() {
   const store = useStudyStore();
   const [basicsCompleted, setBasicsCompleted] = useState(() => readBasics().completed);
+  const [grammarCompleted, setGrammarCompleted] = useState(() => readLesson('grammar').completed);
   const [mission, setMission] = useState(missionFromHash);
   const [attempt, setAttempt] = useState(0),
     [guide, setGuide] = useState(false),
@@ -122,13 +124,18 @@ export default function App() {
               completed={store.state.completed}
               onSelect={select}
               basicsCompleted={basicsCompleted}
+              grammarCompleted={grammarCompleted}
             />
           )}
-          {mission.id === 'basics' ? (
-            <BasicsLesson
+          {['basics', 'grammar'].includes(mission.id) ? (
+            <GuidedLesson
+              key={mission.id}
+              course={mission}
               ref={session}
-              onPractice={() => select(missions[0].id)}
-              onComplete={() => setBasicsCompleted(true)}
+              onPractice={() => select(mission.id === 'basics' ? 'grammar' : missions[0].id)}
+              onComplete={() =>
+                mission.id === 'basics' ? setBasicsCompleted(true) : setGrammarCompleted(true)
+              }
             />
           ) : (
             <MissionSession

@@ -32,6 +32,8 @@
   border-color: #b6c7a1;
 }
 .number {
+  flex-shrink: 0;
+  white-space: nowrap;
   font: 16px monospace;
   color: #546c40;
   min-width: 24px;

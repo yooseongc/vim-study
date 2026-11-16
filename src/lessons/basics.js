@@ -115,16 +115,6 @@ export const steps = [
     saved: true,
   },
 ];
-export function stepSatisfied(step, snapshot, pressed, saved) {
-  return Boolean(
-    snapshot &&
-    snapshot.mode === step.mode &&
-    snapshot.lines.join('\n') === step.text &&
-    (!step.pressed || pressed.includes(step.pressed)) &&
-    (step.command === undefined || snapshot.command === step.command) &&
-    (!step.saved || (saved === editedText && !snapshot.modified)),
-  );
-}
 export const questions = [
   {
     question: '일반 모드에서 w를 누르면?',
@@ -145,3 +135,28 @@ export const questions = [
     why: 'Ctrl+r가 redo입니다. 키를 함께 누른다는 점이 중요합니다.',
   },
 ];
+
+Object.assign(basics, {
+  steps,
+  questions,
+  file: 'first-edit.txt',
+  initial: initialText,
+  eyebrow: '첫 단원 · 모드 → 편집 → 되돌리기 → 저장',
+  challengeInitial: 'ready',
+  challengeTarget: 'Vim ready',
+  challengeDescription:
+    '새 파일에는 ready가 있습니다. 앞에 Vim과 공백 하나를 붙여 Vim ready로 만들고 저장하세요. 이번에는 직접 모드를 선택해 보세요.',
+  hints: [
+    'Esc로 일반 모드로 돌아갑니다.',
+    '줄의 맨 앞에서 i를 눌러 입력 모드로 들어갑니다.',
+    'Vim을 입력하고 Space를 한 번 누릅니다.',
+    'Esc로 일반 모드로 돌아갑니다.',
+    '콜론을 입력해 명령줄을 엽니다.',
+    'w를 입력합니다.',
+    'Enter로 저장을 실행합니다.',
+  ],
+  recap:
+    'i는 입력, Esc는 일반 모드 복귀, u는 undo, Ctrl+r는 redo입니다. 저장은 콜론 → w → Enter입니다.',
+  note: '종료는 명령줄에서 q를 입력한 뒤 Enter입니다. :q!는 저장하지 않은 변경을 버립니다. !가 모든 곳에서 무조건 강제를 뜻하지는 않습니다.',
+  nextLabel: '편집 문법 배우기',
+});

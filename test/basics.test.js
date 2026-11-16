@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { steps, stepSatisfied } from '../src/lessons/basics.js';
+import { steps } from '../src/lessons/basics.js';
+import { stepSatisfied } from '../src/lessons/evaluate.js';
 
 test('step completion requires actual text and exact mode, not only a key', () => {
   const snapshot = { mode: 'i', lines: ['hello'], modified: 0, command: '' };

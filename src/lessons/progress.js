@@ -1,7 +1,7 @@
-const key = 'vim-field-guide:basics:v1';
-export function readBasics() {
+const key = (id) => `vim-field-guide:${id}:v1`;
+export function readLesson(id = 'basics') {
   try {
-    const value = JSON.parse(localStorage.getItem(key));
+    const value = JSON.parse(localStorage.getItem(key(id)));
     return {
       completed: value?.completed === true,
       savedText: typeof value?.savedText === 'string' ? value.savedText : '',
@@ -10,11 +10,14 @@ export function readBasics() {
     return { completed: false, savedText: '' };
   }
 }
-export function saveBasics(update) {
+export function saveLesson(update, id = 'basics') {
   try {
-    localStorage.setItem(key, JSON.stringify({ ...readBasics(), ...update }));
+    localStorage.setItem(key(id), JSON.stringify({ ...readLesson(id), ...update }));
     return true;
   } catch {
     return false;
   }
 }
+
+export const readBasics = () => readLesson();
+export const saveBasics = (update) => saveLesson(update);

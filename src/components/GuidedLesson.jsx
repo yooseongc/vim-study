@@ -1,13 +1,14 @@
 import { useEffect, useImperativeHandle, useRef, useState } from 'react';
-import { steps, stepSatisfied, questions } from '../lessons/basics.js';
-import { saveBasics, readBasics } from '../lessons/progress.js';
+import { basics } from '../lessons/basics.js';
+import { stepSatisfied } from '../lessons/evaluate.js';
+import { saveLesson, readLesson } from '../lessons/progress.js';
 import { readSettings } from '../lib/storage.js';
 import { useVimEngine } from '../hooks/useVimEngine.js';
 import { VimTerminal } from './VimTerminal.jsx';
 import { SettingsDialog } from './SettingsDialog.jsx';
-import s from '../styles/BasicsLesson.module.css';
+import s from '../styles/GuidedLesson.module.css';
 
-export function BasicsLesson({ ref, onPractice, onComplete }) {
+export function GuidedLesson({ ref, course = basics, onPractice, onComplete }) {
   const [run, setRun] = useState(0);
   const [challenge, setChallenge] = useState(false);
   return (
@@ -15,6 +16,7 @@ export function BasicsLesson({ ref, onPractice, onComplete }) {
       key={`${run}:${challenge}`}
       ref={ref}
       challenge={challenge}
+      course={course}
       onRestart={() => {
         setChallenge(false);
         setRun((value) => value + 1);
@@ -26,10 +28,13 @@ export function BasicsLesson({ ref, onPractice, onComplete }) {
   );
 }
 
-function LessonRun({ ref, challenge, onRestart, onChallenge, onPractice, onComplete }) {
-  const [files] = useState(() => ({ 'first-edit.txt': challenge ? 'ready\n' : 'hello\n' }));
+function LessonRun({ ref, course, challenge, onRestart, onChallenge, onPractice, onComplete }) {
+  const { steps, questions } = course;
+  const [files] = useState(() => ({
+    [course.file]: (challenge ? course.challengeInitial : course.initial) + '\n',
+  }));
   const [settings] = useState(readSettings);
-  const [previouslyCompleted] = useState(() => readBasics().completed);
+  const [previouslyCompleted] = useState(() => readLesson(course.id).completed);
   const [stepIndex, setStepIndex] = useState(0),
     [snapshot, setSnapshot] = useState(null);
   const [pressed, setPressed] = useState([]),
@@ -79,11 +84,11 @@ function LessonRun({ ref, challenge, onRestart, onChallenge, onPractice, onCompl
     result: () => {},
     observe: setSnapshot,
     saved: (path, lines) => {
-      if (path !== '/work/first-edit.txt') return;
+      if (path !== `/work/${course.file}`) return;
       const text = lines.join('\n');
       setSaved(text);
       setSaveMessage(
-        saveBasics({ savedText: text })
+        saveLesson({ savedText: text }, course.id)
           ? '브라우저에도 저장했습니다.'
           : 'Vim에는 저장했지만 브라우저 저장 공간에 접근하지 못했습니다.',
       );
@@ -92,20 +97,22 @@ function LessonRun({ ref, challenge, onRestart, onChallenge, onPractice, onCompl
   const step = steps[stepIndex];
   const passed = stepSatisfied(step, snapshot, pressed, saved);
   const challengePassed =
-    snapshot?.lines.join('\n') === 'Vim ready' &&
+    snapshot?.lines.join('\n') === course.challengeTarget &&
     snapshot?.mode === 'n' &&
     !snapshot?.modified &&
-    saved === 'Vim ready';
+    saved === course.challengeTarget;
   const mode = snapshot?.mode || '';
   const modeName = mode.startsWith('i')
     ? '입력 모드'
     : mode.startsWith('c')
       ? '명령줄 모드'
-      : mode === 'n'
-        ? '일반 모드'
-        : mode
-          ? `다른 모드 (${mode})`
-          : '상태 확인 중';
+      : mode.startsWith('no')
+        ? '편집 범위 대기'
+        : mode === 'n'
+          ? '일반 모드'
+          : mode
+            ? `다른 모드 (${mode})`
+            : '상태 확인 중';
   function advance() {
     if (!passed) return;
     if (stepIndex === steps.length - 1) setQuiz(true);
@@ -116,7 +123,7 @@ function LessonRun({ ref, challenge, onRestart, onChallenge, onPractice, onCompl
   }
   function finish() {
     if (!challengePassed) return;
-    const stored = saveBasics({ completed: true });
+    const stored = saveLesson({ completed: true }, course.id);
     if (!stored) setSaveMessage('완료했습니다. 다만 브라우저에 완료 기록을 저장하지 못했습니다.');
     onComplete();
     setDone(true);
@@ -135,8 +142,8 @@ function LessonRun({ ref, challenge, onRestart, onChallenge, onPractice, onCompl
         className={s.instructions}
         aria-label="단계별 안내"
       >
-        <p className={s.eyebrow}>첫 단원 · 모드 → 편집 → 되돌리기 → 저장</p>
-        <h2 id="title">{challenge ? '설명 없이 한 번 더' : '기억을 정리하는 첫 편집'}</h2>
+        <p className={s.eyebrow}>{course.eyebrow}</p>
+        <h2 id="title">{challenge ? '설명 없이 한 번 더' : course.title}</h2>
         {!challenge && !quiz && (
           <>
             <p>먼저 읽고, 한 번 직접 실행하고, 확인한 뒤 다음으로 넘어가세요.</p>
@@ -204,46 +211,33 @@ function LessonRun({ ref, challenge, onRestart, onChallenge, onPractice, onCompl
         )}
         {challenge && (
           <>
-            <p>
-              새 파일에는 <code>ready</code>가 있습니다. 앞에 <code>Vim</code>과 공백 하나를 붙여{' '}
-              <code>Vim ready</code>로 만들고 저장하세요. 이번에는 직접 모드를 선택해 보세요.
-            </p>
+            <p>{course.challengeDescription}</p>
             <button onClick={() => setHint((value) => !value)}>
               {hint ? '도움말 접기' : '기억이 안 나면 도움말'}
             </button>
             {hint && (
               <ol>
-                <li>Esc로 일반 모드로 돌아갑니다.</li>
-                <li>줄의 맨 앞에서 i를 눌러 입력 모드로 들어갑니다.</li>
-                <li>Vim을 입력하고 Space를 한 번 누릅니다.</li>
-                <li>Esc로 일반 모드로 돌아갑니다.</li>
-                <li>콜론을 입력해 명령줄을 엽니다.</li>
-                <li>w를 입력합니다.</li>
-                <li>Enter로 저장을 실행합니다.</li>
+                {course.hints.map((text) => (
+                  <li key={text}>{text}</li>
+                ))}
               </ol>
             )}
             <p id="lesson-feedback" role="status">
               {challengePassed
                 ? '✓ 수정한 내용과 저장 상태를 확인했습니다.'
-                : 'Vim ready를 만들고 저장하면 완료할 수 있습니다.'}
+                : '목표 내용으로 수정하고 저장하면 완료할 수 있습니다.'}
             </p>
             {!done && (
               <button id="lesson-finish" disabled={!challengePassed} onClick={finish}>
-                첫 단원 완료
+                단원 완료
               </button>
             )}
             {done && (
               <div className={s.success}>
-                <h3>첫 단원을 마쳤습니다.</h3>
-                <p>
-                  i는 입력, Esc는 일반 모드 복귀, u는 undo, Ctrl+r는 redo입니다. 저장은 콜론 → w →
-                  Enter입니다.
-                </p>
-                <p>
-                  종료는 명령줄에서 q를 입력한 뒤 Enter입니다. :q!는 저장하지 않은 변경을 버립니다.
-                  !가 모든 곳에서 무조건 강제를 뜻하지는 않습니다.
-                </p>
-                <button onClick={onPractice}>자유 연습으로 이동</button>
+                <h3>단원을 마쳤습니다.</h3>
+                <p>{course.recap}</p>
+                <p>{course.note}</p>
+                <button onClick={onPractice}>{course.nextLabel}</button>
               </div>
             )}
           </>
@@ -268,7 +262,13 @@ function LessonRun({ ref, challenge, onRestart, onChallenge, onPractice, onCompl
                 : '파일과 일치'}
           </span>
         </div>
-        <VimTerminal {...editor} path="/work/first-edit.txt" keys={keys} expanded={false} guided />
+        <VimTerminal
+          {...editor}
+          path={`/work/${course.file}`}
+          keys={keys}
+          expanded={false}
+          guided
+        />
         <div className={s.tools}>
           <button
             id="lesson-focus"

@@ -1,7 +1,7 @@
 import { missions } from '../missions.js';
 import s from '../styles/MissionList.module.css';
 
-export function MissionList({ current, completed, onSelect, basicsCompleted }) {
+export function MissionList({ current, completed, onSelect, basicsCompleted, grammarCompleted }) {
   return (
     <aside className={s.missions}>
       <div className={s.label}>학습과 자유 연습</div>
@@ -15,6 +15,17 @@ export function MissionList({ current, completed, onSelect, basicsCompleted }) {
           <span>
             <strong>기억을 정리하는 첫 편집</strong>
             <small>한 단계씩 · 모드와 저장</small>
+          </span>
+        </button>
+        <button
+          className={s.mission + (current.id === 'grammar' ? ' ' + s.active : '')}
+          aria-current={current.id === 'grammar' ? 'step' : 'false'}
+          onClick={() => onSelect('grammar')}
+        >
+          <span className={s.number}>{grammarCompleted ? '✓' : '조합'}</span>
+          <span>
+            <strong>편집 명령을 문장처럼 조합하기</strong>
+            <small>한 단계씩 · 동작과 범위</small>
           </span>
         </button>
         {missions.map((mission, index) => (

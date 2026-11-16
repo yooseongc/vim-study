@@ -24,7 +24,7 @@ ${
   observe
     ? `let g:field_last = ''
 function! FieldObserve(timer)
-let snapshot = {'mode': mode(1), 'lines': getline(1,'$'), 'modified': &modified, 'command': getcmdline()}
+let snapshot = {'mode': mode(1), 'lines': getline(1,'$'), 'modified': &modified, 'command': getcmdline(), 'commandType': getcmdtype(), 'cursor': [line('.'), col('.')], 'register': getreg('"')}
 let encoded = json_encode(snapshot)
 if encoded !=# g:field_last
 let g:field_last = encoded
