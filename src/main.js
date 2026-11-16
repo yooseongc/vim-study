@@ -1,7 +1,7 @@
 import { VimWasm, checkBrowserCompatibility } from 'vim-wasm';
 import { missions, filesFor, validate } from './missions.js';
 import './style.css';
-import { readSettings, setupSettings, vimFont } from './settings.js';
+import { readSettings, setupSettings, vimFont, loadEditorFont } from './settings.js';
 
 const $ = id => document.getElementById(id);
 const storageKey = 'vim-field-guide:v1';
@@ -132,9 +132,10 @@ autocmd BufEnter * call jsevalfunc('window.fieldPath(arguments[0])', [expand('%:
 autocmd TextChanged,TextChangedI,BufWritePost,BufEnter * call jsevalfunc('window.fieldChanged(arguments[0])', [len(filter(getbufinfo(), 'v:val.changed'))], v:true)
 augroup END
 `;
-function boot() {
+async function boot() {
   const incompatibility = checkBrowserCompatibility();
   if (incompatibility) { showError('보안 격리 초기화가 필요합니다. HTTPS 또는 localhost로 접속하고 서비스 워커를 허용하세요.'); return; }
+  await loadEditorFont(readSettings());
   vim = new VimWasm({ canvas: $('vim-canvas'), input: $('vim-input'), workerScriptPath: `${import.meta.env.BASE_URL}vendor/vim.js` });
   vim.onVimInit = () => { $('loading').hidden = true; $('engine-status').textContent = '● VIM 8.2 · WASM'; $('check').disabled = false; vim.focus(); };
   vim.onError = showError;
@@ -147,4 +148,4 @@ function boot() {
   vim.start({ clipboard: false, dirs: ['/work'], files: { '/field.vim': vimrc, ...Object.fromEntries(Object.entries(initial).map(([name, content]) => [`/work/${name}`, content])) }, cmdArgs: ['-u', '/field.vim', ...names.map(name => `/work/${name}`)] });
 }
 if (storageWarning) $('save-status').textContent = storageWarning;
-try { boot(); } catch (error) { showError(error); }
+boot().catch(showError);

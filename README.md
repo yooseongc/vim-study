@@ -20,7 +20,7 @@ npm run build
 - vim-wasm 0.0.13에 포함된 실제 Vim 8.2.0055. 모방한 키 바인딩이 아닌 Vim의 검색, text object, 레지스터, 매크로, 버퍼, 분할을 사용합니다.
 - 설정 포트 수정, 문자열 편집, 점 반복, 범위 치환, 매크로 변환, 두 버퍼 동기화의 여섯 미션.
 - 단계별 힌트와 완료 후 복습. 정해진 키 순서를 강제하지 않으며 저장된 파일 내용을 검증합니다. 부수적인 변경도 검출합니다.
-- 편집기 아래 **편집기 설정**에서 고정폭 글꼴과 12–28px 크기를 선택합니다. 미리보기와 실제 Vim에 바로 적용하고 다음 방문에도 보관합니다. 기본값은 시스템 고정폭 16px이며, 설정만 초기화할 수 있습니다. 글꼴은 기기에 설치된 것을 사용하고 없으면 시스템 고정폭으로 대체합니다.
+- 편집기 아래 **편집기 설정**에서 Mono 폰트와 12–28px 크기를 선택합니다. 미리보기와 실제 Vim에 적용하고 다음 방문에도 보관합니다. 기본값은 시스템 Mono 16px입니다. JetBrains Mono, Fira Code, Source Code Pro, IBM Plex Mono, Inconsolata는 사이트에 포함되어 설치 없이 사용합니다. Cascadia Code/Mono, Consolas, Menlo, Monaco, Courier New는 기기에 설치된 것을 사용하며 없으면 시스템 Mono로 대체합니다. 한글은 기기의 대체 글꼴을 사용합니다. 영문 일반·굵은 글꼴을 로드한 뒤 Vim의 글자 폭을 계산합니다.
 - 미션별 지정 파일은 `:w` 시 localStorage에 보관합니다. 미저장 변경은 이동·종료 시 경고합니다. `:wa`로 여러 버퍼를 저장할 수 있습니다.
 - 완료 기록은 로컬 브라우저에만 보관합니다. 계정 동기화는 없습니다. 임의의 새 파일을 영구 저장하는 범용 파일시스템은 아직 아닙니다.
 - `/vim-study/` 범위의 coi-serviceworker로 GitHub Pages에서 cross-origin isolation을 구성합니다. 최초 접속 시 한 번 새로고침될 수 있습니다.
@@ -64,3 +64,4 @@ GitHub 저장소 `yooseongc/vim-study`의 Settings → Pages → Source를 GitHu
 - [vim.wasm](https://github.com/rhysd/vim.wasm): Vim license. 배포물의 `vendor/VIM-LICENSE.txt`와 upstream 소스를 참고하세요.
 - [coi-serviceworker](https://github.com/gzuidhof/coi-serviceworker): MIT. 배포물의 `vendor/COI-LICENSE.txt`에 저작권·라이선스를 포함합니다.
 - Vite, Playwright는 개발·검증 도구입니다. 각 패키지의 라이선스를 따릅니다.
+- 포함된 Mono 폰트는 Fontsource 패키지로 공급하며 SIL Open Font License를 따릅니다. 각 원문의 저작권 및 라이선스를 `vendor/<font-name>-LICENSE.txt`로 함께 배포합니다.

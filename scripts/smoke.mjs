@@ -9,18 +9,24 @@ try {
   await page.waitForFunction(() => document.querySelector('#engine-status').textContent.includes('WASM'), { timeout: 30000 });
   assert.equal(await page.evaluate(() => crossOriginIsolated), true);
   await page.locator('#settings-open').click();
-  await page.locator('#font-family').selectOption('Consolas');
+  await page.locator('#font-family').selectOption('JetBrains Mono');
   await page.locator('#font-size').fill('22');
   await page.waitForFunction(() => JSON.parse(localStorage.getItem('vim-field-guide:editor-settings:v1'))?.size === 22);
   await page.locator('#settings-close').click();
   await page.locator('#vim-input').focus();
   await page.keyboard.type(":call jsevalfunc('document.body.dataset.font=arguments[0]', [&guifont], v:true)");
   await page.keyboard.press('Enter');
-  await page.waitForFunction(() => document.body.dataset.font === 'Consolas:h22');
+  await page.waitForFunction(() => document.body.dataset.font === 'JetBrains Mono:h22');
   await page.reload();
   await page.waitForFunction(() => document.querySelector('#engine-status').textContent.includes('WASM'));
   await page.locator('#settings-open').click();
   assert.equal(await page.locator('#font-size').inputValue(), '22');
+  assert.equal(await page.locator('#font-family').inputValue(), 'JetBrains Mono');
+  for (const family of ['Fira Code', 'Source Code Pro', 'IBM Plex Mono', 'Inconsolata']) {
+    await page.locator('#font-family').selectOption(family);
+    await page.waitForFunction(font => JSON.parse(localStorage.getItem('vim-field-guide:editor-settings:v1'))?.family === font, family);
+    assert.equal(await page.evaluate(font => [...document.fonts].some(face => face.family.replaceAll('"', '') === font && face.status === 'loaded'), family), true);
+  }
   await page.locator('#settings-reset').click();
   await page.waitForFunction(() => JSON.parse(localStorage.getItem('vim-field-guide:editor-settings:v1'))?.size === 16);
   await page.keyboard.press('Escape');
