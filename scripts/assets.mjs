@@ -1,4 +1,6 @@
 import { mkdir, copyFile } from 'node:fs/promises';
+import { buildLabArchive } from './lab-assets.mjs';
+await buildLabArchive();
 await mkdir('public/vendor', { recursive: true });
 for (const file of ['vim.js', 'vim.wasm', 'vim.data'])
   await copyFile(`node_modules/vim-wasm/${file}`, `public/vendor/${file}`);

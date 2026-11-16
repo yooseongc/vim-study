@@ -10,6 +10,24 @@ import { VimTerminal } from './VimTerminal.jsx';
 import { SettingsDialog } from './SettingsDialog.jsx';
 import s from '../styles/GuidedLesson.module.css';
 
+const modeLabels = {
+  n: '일반 모드',
+  v: '문자 선택 모드',
+  V: '줄 선택 모드',
+  '\u0016': '블록 선택 모드',
+  r: '메시지 확인 대기',
+  rm: '메시지 확인 대기',
+  'r?': '치환 확인 중',
+};
+function modeLabel(mode) {
+  if (!mode) return '상태 확인 중';
+  if (modeLabels[mode]) return modeLabels[mode];
+  if (mode.startsWith('i')) return '입력 모드';
+  if (mode.startsWith('c')) return '명령줄 모드';
+  if (mode.startsWith('no')) return '편집 범위 대기';
+  return `다른 모드 (${mode})`;
+}
+
 export function GuidedLesson({
   ref,
   course = basics,
@@ -52,6 +70,11 @@ function LessonRun({
   const keepProgress = !course.review && course.persist !== false;
   const [files] = useState(() => ({
     [course.file]: (challenge ? course.challengeInitial : course.initial) + '\n',
+    ...Object.fromEntries(
+      Object.entries((challenge ? course.challengeFiles : course.files) || {}).map(
+        ([name, text]) => [name, text + '\n'],
+      ),
+    ),
   }));
   const [settings] = useState(readSettings);
   const [previouslyCompleted] = useState(() => keepProgress && readLesson(course.id).completed);
@@ -141,27 +164,21 @@ function LessonRun({
   });
   const step = steps[stepIndex];
   const passed = !challenge && stepSatisfied(step, snapshot, pressed, saved);
-  const challengeStep = { mode: 'n', text: course.challengeTarget, saved: true };
+  const challengeStep = {
+    mode: 'n',
+    text: course.challengeTarget,
+    saved: !course.challengeState,
+    state: course.challengeState,
+    stateHint:
+      '모든 대상 파일을 저장하고 마지막 파일로 이동했는지 확인하세요. 보존할 파일의 내용도 검사합니다.',
+  };
   const challengePassed = stepSatisfied(challengeStep, snapshot, [], saved);
   function checkState() {
     pendingCheck.current = true;
     setChecking(true);
   }
   const mode = snapshot?.mode || '';
-  const modeName =
-    mode === 'r?'
-      ? '치환 확인 중'
-      : mode.startsWith('i')
-        ? '입력 모드'
-        : mode.startsWith('c')
-          ? '명령줄 모드'
-          : mode.startsWith('no')
-            ? '편집 범위 대기'
-            : mode === 'n'
-              ? '일반 모드'
-              : mode
-                ? `다른 모드 (${mode})`
-                : '상태 확인 중';
+  const modeName = modeLabel(mode);
   function advance() {
     if (!passed) return;
     pendingCheck.current = false;
@@ -283,10 +300,19 @@ function LessonRun({
         {challenge && (
           <>
             <p>{course.challengeDescription}</p>
-            {course.review && (
+            {(course.review || course.showTarget) && (
               <div className={s.target}>
                 <strong>목표 내용</strong>
-                <pre id="review-target">{course.challengeTarget}</pre>
+                {!course.challengeState?.files && (
+                  <pre id="review-target">{course.challengeTarget}</pre>
+                )}
+                {course.challengeState?.files &&
+                  Object.entries(course.challengeState.files).map(([name, text]) => (
+                    <div key={name}>
+                      <strong>{name}</strong>
+                      <pre>{text}</pre>
+                    </div>
+                  ))}
               </div>
             )}
             <button
@@ -370,10 +396,16 @@ function LessonRun({
                 ? '저장하지 않은 변경 있음'
                 : '파일과 일치'}
           </span>
+          {snapshot?.recording && (
+            <span role="status">레지스터 {snapshot.recording}에 녹화 중</span>
+          )}
+          {course.showRegister && (
+            <span id="register-state">a 레지스터: {snapshot?.registerA || '(비어 있음)'}</span>
+          )}
         </div>
         <VimTerminal
           {...editor}
-          path={`/work/${course.file}`}
+          path={snapshot?.path || `/work/${course.file}`}
           keys={keys}
           expanded={false}
           guided

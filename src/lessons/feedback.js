@@ -1,4 +1,4 @@
-import { stepSatisfied } from './evaluate.js';
+import { modeMatches, stateMatches, stepSatisfied } from './evaluate.js';
 
 export const issueLabels = {
   mode: '모드 구분',
@@ -8,6 +8,7 @@ export const issueLabels = {
   register: '복사 범위',
   save: '저장',
   key: '키 입력',
+  state: 'Vim 상태와 여러 파일 저장',
 };
 
 export function diagnose(step, snapshot, pressed = [], saved = '') {
@@ -16,7 +17,12 @@ export function diagnose(step, snapshot, pressed = [], saved = '') {
   if (stepSatisfied(step, snapshot, pressed, saved)) {
     return { kind: 'success', message: '내용과 모드가 목표에 맞습니다. 다음으로 넘어가도 됩니다.' };
   }
-  if (snapshot.mode !== step.mode) {
+  if (!modeMatches(step, snapshot.mode)) {
+    if (snapshot.mode === 'r' || snapshot.mode === 'rm')
+      return {
+        kind: 'mode',
+        message: 'Vim이 출력 메시지 확인을 기다립니다. Enter를 눌러 편집 화면으로 돌아오세요.',
+      };
     if (snapshot.mode === 'r?')
       return {
         kind: 'mode',
@@ -74,7 +80,7 @@ export function diagnose(step, snapshot, pressed = [], saved = '') {
   ) {
     return {
       kind: 'cursor',
-      message: `검색을 확정한 위치가 다릅니다. 목표는 ${step.cursor[0]}번째 줄 ${step.cursor[1]}번째 칸입니다. 검색어를 확인하고 Enter로 확정하세요.`,
+      message: `커서 위치가 다릅니다. 목표는 ${step.cursor[0]}번째 줄 ${step.cursor[1]}번째 칸입니다. 안내한 이동을 확인하세요.`,
     };
   }
   if (step.register !== undefined && step.register !== snapshot.register) {
@@ -84,6 +90,14 @@ export function diagnose(step, snapshot, pressed = [], saved = '') {
         '파일은 맞지만 복사한 내용이 다릅니다. 대상 안에 커서를 두고 복사할 범위를 다시 골라 보세요.',
       actual: snapshot.register || '',
       expected: step.register,
+    };
+  }
+  if (!stateMatches(step.state, snapshot)) {
+    return {
+      kind: 'state',
+      message:
+        step.stateHint ||
+        '내용 외의 Vim 상태가 아직 목표와 다릅니다. 파일 위치, 레지스터, 녹화 여부와 저장 상태를 안내와 비교하세요.',
     };
   }
   if (step.saved && (snapshot.modified || saved !== step.text)) {

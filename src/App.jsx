@@ -4,21 +4,19 @@ import { useStudyStore } from './hooks/useStudyStore.js';
 import { MissionList } from './components/MissionList.jsx';
 import { MissionSession } from './components/MissionSession.jsx';
 import s from './styles/App.module.css';
-import { basics } from './lessons/basics.js';
-import { substitution } from './lessons/substitution.js';
-import { dot } from './lessons/dot.js';
-import { grammar } from './lessons/grammar.js';
 import { readBasics, readLesson } from './lessons/progress.js';
 import { GuidedLesson } from './components/GuidedLesson.jsx';
 import { ReviewSession } from './components/ReviewSession.jsx';
 import { review } from './lessons/review.js';
 import { workspace } from './lib/workspace-files.js';
 import { WorkspaceSession } from './components/WorkspaceSession.jsx';
+import { guidedCourses, nextCourse } from './lessons/catalog.js';
+import { LocalPractice, localCourse } from './components/LocalPractice.jsx';
 
-const activities = [basics, grammar, dot, substitution, workspace, review, ...missions];
+const activities = [...guidedCourses, localCourse, workspace, review, ...missions];
 
 const missionFromHash = () =>
-  activities.find((mission) => mission.id === location.hash.slice(1)) || basics;
+  activities.find((mission) => mission.id === location.hash.slice(1)) || guidedCourses[0];
 function Guide() {
   return (
     <section id="guide" className={s.guide}>
@@ -28,10 +26,9 @@ function Guide() {
         점·치환·매크로 → ④ 작업 공간: 버퍼·분할·레지스터 → ⑤ 현장 전이: quickfix·argdo·필터·셸 왕복
       </p>
       <p>
-        아래 여섯 미션은 ①–④의 첫 훈련입니다. 미션마다 도움 없이 해결 → 힌트 확인 → 다른 방식으로
-        재도전 → 내 로컬 Vim에서 재현하는 순서를 권합니다. 입문·편집 문법 다음에는 ‘나의 Vim 작업
-        공간’에서 직접 파일을 만들고 버퍼와 창을 다뤄 보세요. 변형 예제는 ‘다시 꺼내 쓰는 연습’에서
-        선택할 수 있습니다. ⑤의 과정은 후속 구현 범위입니다.
+        안내 단원은 입문부터 레지스터·매크로·블록 편집·여러 파일 작업까지 이어집니다. 마지막 ‘내
+        터미널에서 마무리하기’에서 실습 파일을 내려받아 셸·필터·권한·SSH를 연습하세요. 자유 작업
+        공간에서는 파일과 창을 직접 다루고, 여섯 자유 미션에서는 배운 방법을 조합할 수 있습니다.
       </p>
       <p>
         실제 Vim 8.2 / 플러그인 없음 / 브라우저 가상 파일. <code>:!grep</code> 같은 외부 프로세스와
@@ -134,21 +131,12 @@ export default function App() {
               grammarCompleted={grammarCompleted}
             />
           )}
-          {['basics', 'grammar', 'dot', 'substitution'].includes(mission.id) ? (
+          {guidedCourses.some((course) => course.id === mission.id) ? (
             <GuidedLesson
               key={mission.id}
               course={mission}
               ref={session}
-              onPractice={() =>
-                select(
-                  {
-                    basics: 'grammar',
-                    grammar: 'dot',
-                    dot: 'substitution',
-                    substitution: 'workspace',
-                  }[mission.id],
-                )
-              }
+              onPractice={() => select(nextCourse(mission.id))}
               onComplete={() =>
                 mission.id === 'basics'
                   ? setBasicsCompleted(true)
@@ -157,6 +145,8 @@ export default function App() {
                     : undefined
               }
             />
+          ) : mission.id === 'local' ? (
+            <LocalPractice ref={session} onPractice={() => select('workspace')} />
           ) : mission.id === 'workspace' ? (
             <WorkspaceSession ref={session} />
           ) : mission.id === 'review' ? (

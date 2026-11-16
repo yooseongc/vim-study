@@ -25,6 +25,17 @@ ${
   observe
     ? `function! FieldObserve(timer)
 let snapshot = {'mode': mode(1), 'lines': getline(1,'$'), 'modified': &modified, 'command': getcmdline(), 'commandType': getcmdtype(), 'cursor': [line('.'), col('.')], 'register': getreg('"')}
+let snapshot.path = expand('%:p')
+let snapshot.registerA = getreg('a')
+let snapshot.recording = reg_recording()
+let snapshot.markA = getpos("'a")[1:2]
+let snapshot.visualStart = [line('v'), col('v')]
+let snapshot.quickfixCount = len(getqflist())
+let snapshot.quickfixIndex = get(getqflist({'idx': 0}), 'idx', 0)
+let snapshot.argumentCount = argc()
+let snapshot.argumentIndex = argidx()
+let snapshot.dirtyCount = len(filter(getbufinfo(), 'v:val.changed'))
+let snapshot.files = ${dict}
 call jsevalfunc('${bridge}?.observe(...arguments)', [snapshot], v:true)
 endfunction
 call timer_start(100, function('FieldObserve'), {'repeat': -1})`

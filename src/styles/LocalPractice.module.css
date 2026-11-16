@@ -1,0 +1,109 @@
+.local {
+  min-width: 0;
+  padding: 28px;
+  max-width: 1000px;
+}
+.local p,
+.steps li,
+.verify li {
+  font-size: 16px;
+  line-height: 1.9;
+}
+.local h3 {
+  font-size: 22px;
+  line-height: 1.6;
+}
+.local h4 {
+  font-size: 18px;
+  margin: 0 0 12px;
+}
+.eyebrow,
+.where {
+  color: #526244;
+  font-weight: 600;
+}
+.download {
+  display: inline-block;
+  padding: 12px 20px;
+  background: #38563e;
+  color: white;
+  border-radius: 6px;
+  margin: 8px 0 20px;
+}
+.tabs,
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.tabs {
+  padding: 16px 0;
+  border-block: 1px solid #cbd5c3;
+}
+.tabs button {
+  text-align: left;
+}
+.tabs button[aria-current='step'] {
+  background: #38563e;
+  color: white;
+}
+.section {
+  padding: 20px 0;
+}
+.steps {
+  padding-left: 24px;
+}
+.steps li {
+  padding: 16px 0;
+}
+.steps pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  background: #edf1e3;
+  padding: 14px;
+  border-radius: 6px;
+}
+.steps code {
+  font-family: Consolas, Menlo, monospace;
+  font-size: 16px;
+}
+.where {
+  font-size: 14px;
+}
+.verify {
+  background: #eff1e8;
+  padding: 20px;
+  border: 1px solid #cbd5c3;
+  border-radius: 8px;
+  margin: 20px 0;
+}
+.fileLabel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  font-weight: 600;
+}
+.fileLabel input {
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+}
+.verify ul {
+  padding-left: 22px;
+  overflow-wrap: anywhere;
+}
+.success {
+  color: #294733;
+  font-weight: 600;
+}
+.sources {
+  color: #526244;
+}
+@media (max-width: 760px) {
+  .local {
+    padding: 18px 12px;
+  }
+  .verify {
+    padding: 14px;
+  }
+}

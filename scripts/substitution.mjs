@@ -128,7 +128,9 @@ try {
   );
   assert.equal(await page.evaluate(() => localStorage.getItem('vim-field-guide:review:v1')), null);
   await page.screenshot({ path: 'test-results/substitution-complete.png', fullPage: true });
-  await page.getByRole('button', { name: '내 파일에서 연습하기', exact: true }).click();
+  await page.getByRole('button', { name: '복사한 내용을 보관하기', exact: true }).click();
+  await expect(page.locator('#title')).toHaveText('복사한 내용을 잃지 않는 레지스터');
+  await page.getByRole('button', { name: /나의 Vim 작업 공간/ }).click();
   await expect(page.locator('#title')).toHaveText('나의 Vim 작업 공간');
   await expect.poll(() => page.workers().length).toBe(1);
   await page.getByRole('button', { name: /범위를 정하고 확인하며 치환하기/ }).click();

@@ -1,5 +1,6 @@
 import { missions } from '../missions.js';
 import s from '../styles/MissionList.module.css';
+import { advancedCourses } from '../lessons/catalog.js';
 
 export function MissionList({ current, completed, onSelect, basicsCompleted, grammarCompleted }) {
   return (
@@ -48,6 +49,31 @@ export function MissionList({ current, completed, onSelect, basicsCompleted, gra
           <span>
             <strong>범위를 정하고 확인하며 치환하기</strong>
             <small>현재 줄 · 범위 · 확인</small>
+          </span>
+        </button>
+        {advancedCourses.map((course) => (
+          <button
+            key={course.id}
+            className={`${s.mission} ${current.id === course.id ? s.active : ''}`}
+            aria-current={current.id === course.id ? 'step' : 'false'}
+            onClick={() => onSelect(course.id)}
+          >
+            <span className={s.number}>{course.badge}</span>
+            <span>
+              <strong>{course.title}</strong>
+              <small>{course.skill}</small>
+            </span>
+          </button>
+        ))}
+        <button
+          className={`${s.mission} ${current.id === 'local' ? s.active : ''}`}
+          aria-current={current.id === 'local' ? 'step' : 'false'}
+          onClick={() => onSelect('local')}
+        >
+          <span className={s.number}>로컬</span>
+          <span>
+            <strong>내 터미널에서 마무리하기</strong>
+            <small>실습 파일 · 셸 · SSH</small>
           </span>
         </button>
         <button

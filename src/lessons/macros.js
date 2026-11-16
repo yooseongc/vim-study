@@ -1,0 +1,136 @@
+import { action as a, save, question } from './builders.js';
+const initial = 'api\nweb\njob\nnote: keep';
+const first = 'enabled: api\nweb\njob\nnote: keep';
+const second = 'enabled: api\nenabled: web\njob\nnote: keep';
+const target = 'enabled: api\nenabled: web\nenabled: job\nnote: keep';
+export const macros = {
+  id: 'macros',
+  title: '여러 동작을 매크로로 묶기',
+  badge: '녹화',
+  skill: '녹화 · 한 번 실행 · 복구',
+  persist: false,
+  showTarget: true,
+  file: 'macros.txt',
+  initial,
+  eyebrow: '매크로 · 편집뿐 아니라 이동까지 반복하기',
+  steps: [
+    a(
+      'Esc',
+      '반복할 작업을 정합니다',
+      '세 서비스 줄 앞에 enabled: 를 붙입니다. note는 남깁니다. 한 줄을 고치고 다음 줄로 이동하는 작업을 녹화합니다.',
+      initial,
+    ),
+    a(
+      'q',
+      '녹화를 준비합니다',
+      '일반 모드의 q는 녹화 시작 키입니다. 저장할 레지스터 이름을 기다립니다.',
+      initial,
+    ),
+    a(
+      'a',
+      'a에 녹화합니다',
+      '이후 Vim에서 누른 키를 a에 담습니다. 전에 a에 복사한 내용이 있다면 이 녹화가 대체합니다.',
+      initial,
+      { state: { recording: 'a' } },
+    ),
+    a(
+      'I',
+      '줄의 첫 글자 앞에서 입력합니다',
+      '대문자 I는 줄의 첫 공백 아닌 문자 앞에서 입력합니다. 매번 커서의 가로 위치가 달라도 같은 자리에 추가합니다.',
+      initial,
+      { mode: 'i' },
+    ),
+    a(
+      'enabled: ',
+      '접두 문구를 씁니다',
+      '끝의 공백도 입력합니다. 지금은 첫 번째 줄만 바뀝니다.',
+      first,
+      { mode: 'i', pressed: undefined },
+    ),
+    a('Esc', '입력을 마칩니다', '매크로에 일반 모드로 돌아오는 Esc도 포함됩니다.', first),
+    a(
+      'j',
+      '다음 줄로 이동합니다',
+      '이 이동도 녹화합니다. 한 번 실행한 뒤 다음 대상에 서도록 끝내야 이어서 반복하기 쉽습니다.',
+      first,
+      { cursor: [2, 3] },
+    ),
+    a(
+      'q',
+      '녹화를 끝냅니다',
+      '일반 모드에서 q를 눌러 멈춥니다. 끝내는 q 자체는 매크로에 들어가지 않습니다.',
+      first,
+      { state: { recording: '' } },
+    ),
+    a(
+      '@',
+      '실행할 매크로를 고릅니다',
+      '골뱅이는 레지스터의 내용을 명령으로 실행하는 키입니다.',
+      first,
+    ),
+    a(
+      'a',
+      'a를 한 번 실행합니다',
+      '먼저 한 번만 실행해 web만 바뀌고 커서가 job으로 갔는지 확인하세요.',
+      second,
+      { cursor: [3, 3] },
+    ),
+    a(
+      '@',
+      '다시 실행할 준비를 합니다',
+      '이번에는 레지스터 이름 대신 마지막 매크로를 지정합니다.',
+      second,
+    ),
+    a(
+      '@',
+      '마지막 매크로를 반복합니다',
+      '@@는 마지막 실행 매크로입니다. job을 고치고 note로 이동합니다. note에서는 더 실행하지 않습니다.',
+      target,
+      { cursor: [4, 9] },
+    ),
+    a(
+      'u',
+      '잘못 실행했을 때 되돌립니다',
+      '이번 매크로 실행의 변경을 되돌려 job이 원래대로 돌아오는지 봅니다. 여러 변경을 담은 다른 매크로는 결과를 보며 u를 더 눌러야 할 수 있습니다.',
+      second,
+    ),
+    a('Ctrl+r', '되돌린 결과를 복원합니다', 'redo로 job의 접두 문구를 복원합니다.', target),
+    ...save(target),
+  ],
+  questions: [
+    question(
+      '점과 매크로의 차이는?',
+      '매크로에는 이동과 여러 명령도 담을 수 있다',
+      ['점은 모든 입력을 녹화한다', '매크로는 텍스트 붙여 넣기 전용이다'],
+      '점은 마지막 변경, 매크로는 레지스터에 녹화한 명령들을 재실행합니다.',
+    ),
+    question(
+      '새 매크로를 여러 줄에 적용하기 전에 할 일은?',
+      '한 번 실행해 결과와 끝 위치를 확인한다',
+      ['바로 100번 실행한다', '저장부터 강제로 한다'],
+      '다음 실행이 시작될 위치까지 확인해야 반복 범위를 통제할 수 있습니다.',
+    ),
+    question(
+      '녹화를 마치는 방법은?',
+      '일반 모드에서 q',
+      ['입력 모드에서 q라는 글자 쓰기', '콜론 뒤에 q 입력'],
+      ':q는 종료입니다. 입력 모드의 q는 글자를 넣으므로 먼저 Esc로 나오세요.',
+    ),
+  ],
+  challengeInitial: 'dev\nprod\nnote: keep',
+  challengeTarget: 'active: dev\nactive: prod\nnote: keep',
+  challengeDescription:
+    'dev와 prod 앞에 active: 와 공백을 붙여 저장하세요. 첫 줄에서 매크로를 녹화하고 두 번째 줄에서 한 번 실행해 보세요. note는 보존합니다.',
+  hints: [
+    'q 다음 a로 녹화를 시작합니다.',
+    '대문자 I로 줄 앞에서 입력합니다.',
+    'active: 와 공백을 쓰고 Esc를 누릅니다.',
+    'j로 다음 줄에 갑니다.',
+    'q로 녹화를 마칩니다.',
+    '@ 다음 a로 한 번 실행합니다.',
+    'note에서 반복을 멈추고 콜론, w, Enter로 저장합니다.',
+  ],
+  recap: '시작 위치를 정하고 녹화한 뒤, 한 번 실행해 결과와 다음 위치를 확인합니다.',
+  note: '횟수를 붙인 2@a는 a를 두 번 실행합니다. 대상 수를 확인한 뒤 사용하세요. 이 단원에서는 한 번씩 실행해 경계를 확인했습니다.',
+  nextLabel: '표시한 위치로 돌아가기',
+};
