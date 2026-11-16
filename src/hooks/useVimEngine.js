@@ -18,6 +18,7 @@ export function useVimEngine(files, settings, callbacks) {
       files,
       settings,
       callbacks: {
+        ...(callbacks.observe ? { observe: (...args) => latest.current.observe(...args) } : {}),
         ...Object.fromEntries(
           ['key', 'escapeFocus', 'changed', 'saved', 'path', 'result'].map((name) => [
             name,

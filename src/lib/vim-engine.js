@@ -30,7 +30,8 @@ export function createVimEngine({ canvas, input, files, settings, callbacks }) {
     disposeVim(vim);
   };
   const onKey = (event) => {
-    if (!['Shift', 'Control', 'Alt', 'Meta'].includes(event.key)) callbacks.key();
+    if (!['Shift', 'Control', 'Alt', 'Meta'].includes(event.key))
+      callbacks.key({ key: event.key, ctrl: event.ctrlKey });
     if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === 'f') {
       event.preventDefault();
       event.stopImmediatePropagation();
@@ -94,7 +95,7 @@ export function createVimEngine({ canvas, input, files, settings, callbacks }) {
       clipboard: false,
       dirs: ['/work'],
       files: {
-        '/field.vim': createVimrc(names, settings, sessionId),
+        '/field.vim': createVimrc(names, settings, sessionId, Boolean(callbacks.observe)),
         ...Object.fromEntries(Object.entries(files).map(([name, text]) => [`/work/${name}`, text])),
       },
       cmdArgs: ['-u', '/field.vim', ...names.map((name) => `/work/${name}`)],
@@ -116,6 +117,9 @@ export function createVimEngine({ canvas, input, files, settings, callbacks }) {
   }
   return {
     dispose: stop,
+    focus: () => {
+      if (ready && !disposed) vim.focus();
+    },
     check: () =>
       command(() => {
         vim.sendKeydown('Escape', 27);

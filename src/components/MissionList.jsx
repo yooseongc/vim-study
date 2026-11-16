@@ -1,13 +1,22 @@
 import { missions } from '../missions.js';
 import s from '../styles/MissionList.module.css';
 
-export function MissionList({ current, completed, onSelect }) {
+export function MissionList({ current, completed, onSelect, basicsCompleted }) {
   return (
     <aside className={s.missions}>
-      <div className={s.label}>
-        THE PRACTICE PATH <span>01—06</span>
-      </div>
-      <nav id="mission-list" className={s.list} aria-label="실전 미션">
+      <div className={s.label}>학습과 자유 연습</div>
+      <nav id="mission-list" className={s.list} aria-label="학습 단원과 자유 연습">
+        <button
+          className={`${s.mission} ${current.id === 'basics' ? s.active : ''}`}
+          aria-current={current.id === 'basics' ? 'step' : 'false'}
+          onClick={() => onSelect('basics')}
+        >
+          <span className={s.number}>{basicsCompleted ? '✓' : '입문'}</span>
+          <span>
+            <strong>기억을 정리하는 첫 편집</strong>
+            <small>한 단계씩 · 모드와 저장</small>
+          </span>
+        </button>
         {missions.map((mission, index) => (
           <button
             key={mission.id}

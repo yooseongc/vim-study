@@ -4,7 +4,9 @@ import { mkdir } from 'node:fs/promises';
 const browser = await chromium.launch({ channel: 'msedge', headless: true });
 try {
   const page = await browser.newPage();
-  await page.goto(process.env.TEST_URL || 'http://127.0.0.1:5184/vim-study/');
+  await page.goto(
+    (process.env.TEST_URL || 'http://127.0.0.1:5184/vim-study/').split('#')[0] + '#port',
+  );
   await page.waitForFunction(() =>
     document.querySelector('#engine-status').textContent.includes('WASM'),
   );

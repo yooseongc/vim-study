@@ -4,9 +4,14 @@ import { useStudyStore } from './hooks/useStudyStore.js';
 import { MissionList } from './components/MissionList.jsx';
 import { MissionSession } from './components/MissionSession.jsx';
 import s from './styles/App.module.css';
+import { basics } from './lessons/basics.js';
+import { readBasics } from './lessons/progress.js';
+import { BasicsLesson } from './components/BasicsLesson.jsx';
+
+const activities = [basics, ...missions];
 
 const missionFromHash = () =>
-  missions.find((mission) => mission.id === location.hash.slice(1)) || missions[0];
+  activities.find((mission) => mission.id === location.hash.slice(1)) || basics;
 function Guide() {
   return (
     <section id="guide" className={s.guide}>
@@ -30,6 +35,7 @@ function Guide() {
 
 export default function App() {
   const store = useStudyStore();
+  const [basicsCompleted, setBasicsCompleted] = useState(() => readBasics().completed);
   const [mission, setMission] = useState(missionFromHash);
   const [attempt, setAttempt] = useState(0),
     [guide, setGuide] = useState(false),
@@ -42,7 +48,8 @@ export default function App() {
   function select(id) {
     if (id === mission.id || !session.current?.canLeave()) return;
     history.pushState(null, '', `#${id}`);
-    setMission(missions.find((item) => item.id === id));
+    setMission(activities.find((item) => item.id === id));
+    setExpanded(false);
   }
   useEffect(() => {
     const onHashChange = () => {
@@ -53,6 +60,7 @@ export default function App() {
         return;
       }
       setMission(next);
+      setExpanded(false);
     };
     window.addEventListener('hashchange', onHashChange);
     return () => window.removeEventListener('hashchange', onHashChange);
@@ -89,8 +97,8 @@ export default function App() {
                 키를 외우지 말고, <em>문제를 해결하세요.</em>
               </h1>
               <p className={s.lede}>
-                서버 설정부터 반복되는 코드 수정까지. 실제 Vim으로 해결하며 나만의 편집 감각을
-                만드세요.
+                모드와 저장부터 한 단계씩 이해하고 연습하세요. 익숙해지면 자유 연습에서 직접 조합해
+                보세요.
               </p>
             </div>
             <div className={s.journey}>
@@ -109,22 +117,35 @@ export default function App() {
         {guide && !expanded && <Guide />}
         <div className={`${s.workspace} ${expanded ? s.expanded : ''}`}>
           {!expanded && (
-            <MissionList current={mission} completed={store.state.completed} onSelect={select} />
+            <MissionList
+              current={mission}
+              completed={store.state.completed}
+              onSelect={select}
+              basicsCompleted={basicsCompleted}
+            />
           )}
-          <MissionSession
-            key={`${mission.id}:${attempt}`}
-            ref={session}
-            mission={mission}
-            index={index}
-            saved={store.state.files[mission.id]}
-            warning={store.warning}
-            saveFile={store.saveFile}
-            complete={store.complete}
-            onReset={reset}
-            onNext={missions[index + 1] ? () => select(missions[index + 1].id) : null}
-            expanded={expanded}
-            onExpand={() => setExpanded((value) => !value)}
-          />
+          {mission.id === 'basics' ? (
+            <BasicsLesson
+              ref={session}
+              onPractice={() => select(missions[0].id)}
+              onComplete={() => setBasicsCompleted(true)}
+            />
+          ) : (
+            <MissionSession
+              key={`${mission.id}:${attempt}`}
+              ref={session}
+              mission={mission}
+              index={index}
+              saved={store.state.files[mission.id]}
+              warning={store.warning}
+              saveFile={store.saveFile}
+              complete={store.complete}
+              onReset={reset}
+              onNext={missions[index + 1] ? () => select(missions[index + 1].id) : null}
+              expanded={expanded}
+              onExpand={() => setExpanded((value) => !value)}
+            />
+          )}
         </div>
         {!expanded && (
           <footer className={s.footer}>

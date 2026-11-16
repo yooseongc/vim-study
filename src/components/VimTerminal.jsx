@@ -1,6 +1,15 @@
 import s from '../styles/VimTerminal.module.css';
 
-export function VimTerminal({ canvas, input, status, message, path, keys, expanded }) {
+export function VimTerminal({
+  canvas,
+  input,
+  status,
+  message,
+  path,
+  keys,
+  expanded,
+  guided = false,
+}) {
   const label = {
     ready: '● VIM 8.2 · WASM',
     loading: 'VIM · 준비 중',
@@ -8,7 +17,7 @@ export function VimTerminal({ canvas, input, status, message, path, keys, expand
     exited: 'VIM · 종료',
   }[status];
   return (
-    <div className={`${s.terminal} ${expanded ? s.expanded : ''}`}>
+    <div className={`${s.terminal} ${expanded ? s.expanded : ''} ${guided ? s.guided : ''}`}>
       <div className={s.bar}>
         <div>
           <span className={s.dot} />
@@ -39,7 +48,7 @@ export function VimTerminal({ canvas, input, status, message, path, keys, expand
       </div>
       <div className={s.footer}>
         <span>
-          <kbd>Esc</kbd> 기본 모드 <span>·</span> <kbd>:w</kbd> 파일 저장
+          <kbd>Esc</kbd> 일반 모드 <span>·</span> <kbd>:w</kbd> 파일 저장
         </span>
         <span id="keys">{keys} keys</span>
       </div>

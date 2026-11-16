@@ -9,7 +9,9 @@ try {
   const page = await browser.newPage();
   const errors = [];
   page.on('pageerror', (error) => errors.push(error.message));
-  await page.goto(process.env.TEST_URL || 'http://127.0.0.1:5184/vim-study/');
+  await page.goto(
+    (process.env.TEST_URL || 'http://127.0.0.1:5184/vim-study/').split('#')[0] + '#port',
+  );
   const ready = async () => {
     await page.waitForFunction(() =>
       document.querySelector('#engine-status')?.textContent.includes('WASM'),

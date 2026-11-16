@@ -10,7 +10,9 @@ try {
     viewport: { width: 1440, height: 1100 },
   });
   page.on('pageerror', (error) => console.error('PAGE ERROR:', error.message));
-  await page.goto(process.env.TEST_URL || 'http://127.0.0.1:5174/vim-study/');
+  await page.goto(
+    (process.env.TEST_URL || 'http://127.0.0.1:5174/vim-study/').split('#')[0] + '#port',
+  );
   await page.waitForFunction(
     () => document.querySelector('#engine-status').textContent.includes('WASM'),
     { timeout: 30000 },

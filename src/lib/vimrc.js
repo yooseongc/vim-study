@@ -1,6 +1,6 @@
 import { vimFont } from './fonts.js';
 
-export function createVimrc(names, settings, sessionId) {
+export function createVimrc(names, settings, sessionId, observe = false) {
   const bridge = `window.__vimFieldSessions.get("${sessionId}")`;
   const dict =
     '{' + names.map((name) => `'${name}': join(readfile('/work/${name}'), "\\n")`).join(',') + '}';
@@ -20,6 +20,20 @@ highlight Search guifg=#152521 guibg=#e6c27a
 function! FieldCheck()
 call jsevalfunc('${bridge}?.result(...arguments)', [${dict}, len(filter(getbufinfo(), 'v:val.changed'))], v:true)
 endfunction
+${
+  observe
+    ? `let g:field_last = ''
+function! FieldObserve(timer)
+let snapshot = {'mode': mode(1), 'lines': getline(1,'$'), 'modified': &modified, 'command': getcmdline()}
+let encoded = json_encode(snapshot)
+if encoded !=# g:field_last
+let g:field_last = encoded
+call jsevalfunc('${bridge}?.observe(...arguments)', [snapshot], v:true)
+endif
+endfunction
+call timer_start(100, function('FieldObserve'), {'repeat': -1})`
+    : ''
+}
 augroup FieldGuide
 autocmd!
 autocmd BufWritePost /work/* call jsevalfunc('${bridge}?.saved(...arguments)', [expand('%:p'), getline(1,'$')], v:true)

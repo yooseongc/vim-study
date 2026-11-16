@@ -1,0 +1,122 @@
+.lesson {
+  display: grid;
+  grid-template-columns: minmax(260px, 380px) minmax(0, 1fr);
+  gap: 28px;
+  padding: 24px;
+  min-width: 0;
+}
+.instructions,
+.editor {
+  min-width: 0;
+}
+.instructions p {
+  font-size: 16px;
+  line-height: 1.85;
+}
+.eyebrow,
+.stepCount {
+  color: #526244;
+  font-weight: 600;
+}
+.action {
+  padding: 16px;
+  border-left: 3px solid #708e50;
+  background: #edf1e3;
+}
+.action > span {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+.action kbd {
+  display: inline-block;
+  color: #243d35;
+  background: white;
+  border: 1px solid #b4c1a6;
+  border-bottom-width: 3px;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font: 600 22px monospace;
+}
+.action p {
+  margin-bottom: 0;
+}
+.instructions details {
+  margin: 18px 0;
+}
+.instructions summary {
+  cursor: pointer;
+  color: #40562f;
+}
+.instructions button {
+  background: #38563e;
+  color: #fff;
+}
+.instructions button:hover {
+  background: #284530;
+}
+.instructions button:disabled {
+  cursor: default;
+}
+.notice {
+  color: #52624c;
+  font-size: 14px;
+  line-height: 1.8;
+}
+.success {
+  color: #294733;
+  background: #e8eedc;
+  padding: 16px;
+  border-radius: 6px;
+}
+.editor {
+  position: sticky;
+  top: 16px;
+  align-self: start;
+}
+.mode {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  padding: 12px 0;
+  font-size: 14px;
+  color: #42543d;
+}
+.mode strong {
+  color: #243d35;
+  font-size: 17px;
+}
+.tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+.tools button {
+  font-size: 14px;
+}
+.quiz {
+  display: grid;
+  gap: 12px;
+}
+.quiz button {
+  text-align: left;
+}
+.quiz button[aria-pressed='true'] {
+  outline: 3px solid #7a935d;
+  outline-offset: 2px;
+}
+@media (max-width: 1100px) {
+  .lesson {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 18px;
+  }
+  .editor {
+    position: static;
+  }
+}
+@media (max-width: 760px) {
+  .lesson {
+    padding: 16px 12px;
+  }
+}

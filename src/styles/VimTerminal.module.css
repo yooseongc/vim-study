@@ -109,3 +109,6 @@
 .expanded .host {
   height: max(240px, calc(100dvh - 310px));
 }
+.guided .host {
+  height: clamp(240px, calc(55dvh - 120px), 440px);
+}
