@@ -1,0 +1,6 @@
+node_modules/
+dist/
+public/vendor/
+public/coi-serviceworker.js
+test-results/
+.playwright-mcp/

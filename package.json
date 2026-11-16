@@ -1,0 +1,19 @@
+{
+  "name": "vim-field-guide",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node scripts/assets.mjs && vite --host 127.0.0.1",
+    "build": "node scripts/assets.mjs && vite build",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "coi-serviceworker": "0.1.7",
+    "vim-wasm": "0.0.13"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.65.1",
+    "vite": "7.3.8"
+  }
+}
