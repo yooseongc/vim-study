@@ -5,6 +5,7 @@ import { MissionList } from './components/MissionList.jsx';
 import { MissionSession } from './components/MissionSession.jsx';
 import s from './styles/App.module.css';
 import { basics } from './lessons/basics.js';
+import { dot } from './lessons/dot.js';
 import { grammar } from './lessons/grammar.js';
 import { readBasics, readLesson } from './lessons/progress.js';
 import { GuidedLesson } from './components/GuidedLesson.jsx';
@@ -13,7 +14,7 @@ import { review } from './lessons/review.js';
 import { workspace } from './lib/workspace-files.js';
 import { WorkspaceSession } from './components/WorkspaceSession.jsx';
 
-const activities = [basics, grammar, workspace, review, ...missions];
+const activities = [basics, grammar, dot, workspace, review, ...missions];
 
 const missionFromHash = () =>
   activities.find((mission) => mission.id === location.hash.slice(1)) || basics;
@@ -132,14 +133,26 @@ export default function App() {
               grammarCompleted={grammarCompleted}
             />
           )}
-          {['basics', 'grammar'].includes(mission.id) ? (
+          {['basics', 'grammar', 'dot'].includes(mission.id) ? (
             <GuidedLesson
               key={mission.id}
               course={mission}
               ref={session}
-              onPractice={() => select(mission.id === 'basics' ? 'grammar' : 'workspace')}
+              onPractice={() =>
+                select(
+                  mission.id === 'basics'
+                    ? 'grammar'
+                    : mission.id === 'grammar'
+                      ? 'dot'
+                      : 'workspace',
+                )
+              }
               onComplete={() =>
-                mission.id === 'basics' ? setBasicsCompleted(true) : setGrammarCompleted(true)
+                mission.id === 'basics'
+                  ? setBasicsCompleted(true)
+                  : mission.id === 'grammar'
+                    ? setGrammarCompleted(true)
+                    : undefined
               }
             />
           ) : mission.id === 'workspace' ? (

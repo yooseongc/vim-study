@@ -29,6 +29,17 @@ export function MissionList({ current, completed, onSelect, basicsCompleted, gra
           </span>
         </button>
         <button
+          className={`${s.mission} ${current.id === 'dot' ? s.active : ''}`}
+          aria-current={current.id === 'dot' ? 'step' : 'false'}
+          onClick={() => onSelect('dot')}
+        >
+          <span className={s.number}>반복</span>
+          <span>
+            <strong>한 번 바꾸고, 점으로 반복하기</strong>
+            <small>한 단계씩 · n과 점 명령</small>
+          </span>
+        </button>
+        <button
           className={`${s.mission} ${current.id === 'workspace' ? s.active : ''}`}
           aria-current={current.id === 'workspace' ? 'step' : 'false'}
           onClick={() => onSelect('workspace')}

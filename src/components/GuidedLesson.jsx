@@ -49,11 +49,12 @@ function LessonRun({
   completionNote,
 }) {
   const { steps, questions } = course;
+  const keepProgress = !course.review && course.persist !== false;
   const [files] = useState(() => ({
     [course.file]: (challenge ? course.challengeInitial : course.initial) + '\n',
   }));
   const [settings] = useState(readSettings);
-  const [previouslyCompleted] = useState(() => readLesson(course.id).completed);
+  const [previouslyCompleted] = useState(() => keepProgress && readLesson(course.id).completed);
   const [stepIndex, setStepIndex] = useState(0),
     [snapshot, setSnapshot] = useState(null);
   const [pressed, setPressed] = useState([]),
@@ -130,9 +131,9 @@ function LessonRun({
       const text = lines.join('\n');
       setSaved(text);
       setSaveMessage(
-        course.review || saveLesson({ savedText: text }, course.id)
-          ? course.review
-            ? '연습 파일에 저장했습니다. 복습을 완료하면 기록을 보관합니다.'
+        !keepProgress || saveLesson({ savedText: text }, course.id)
+          ? !keepProgress
+            ? '연습 파일에 저장했습니다.'
             : '브라우저에도 저장했습니다.'
           : 'Vim에는 저장했지만 브라우저 저장 공간에 접근하지 못했습니다.',
       );
@@ -171,7 +172,7 @@ function LessonRun({
   }
   function finish() {
     if (!challengePassed) return;
-    const stored = course.review || saveLesson({ completed: true }, course.id);
+    const stored = !keepProgress || saveLesson({ completed: true }, course.id);
     if (!stored) setSaveMessage('완료했습니다. 다만 브라우저에 완료 기록을 저장하지 못했습니다.');
     onComplete({ hintUsed, issues });
     setDone(true);
@@ -214,6 +215,7 @@ function LessonRun({
             </p>
             <button
               id="lesson-check"
+              className={s.checkButton}
               disabled={editor.status !== 'ready' || checking}
               onClick={checkState}
             >
@@ -309,6 +311,7 @@ function LessonRun({
               <>
                 <button
                   id="lesson-check"
+                  className={s.checkButton}
                   disabled={editor.status !== 'ready' || checking}
                   onClick={checkState}
                 >
@@ -391,7 +394,8 @@ function LessonRun({
         </p>
         {saved && <p id="lesson-save">{saveMessage}</p>}
         <p className={s.notice}>
-          연습 파일은 다시 방문하면 처음 상태에서 시작합니다. 완료 기록은 유지됩니다.
+          연습 파일은 다시 방문하면 처음 상태에서 시작합니다.{' '}
+          {keepProgress ? '완료 기록은 유지됩니다.' : ''}
           {previouslyCompleted ? ' 이전에 완료한 단원입니다.' : ''}
         </p>
       </div>
