@@ -7,6 +7,13 @@ export function MissionList({ current, completed, onSelect, basicsCompleted, gra
     <aside className={s.missions}>
       <div className={s.label}>학습과 자유 연습</div>
       <nav id="mission-list" className={s.list} aria-label="학습 단원과 자유 연습">
+        <button className={s.mission} onClick={() => onSelect('workshop')}>
+          <span className={s.number}>새로</span>
+          <span>
+            <strong>한 번 바꾸고, 다시 쓰기</strong>
+            <small>이어 입력하는 새 연습</small>
+          </span>
+        </button>
         <button
           className={`${s.mission} ${current.id === 'basics' ? s.active : ''}`}
           aria-current={current.id === 'basics' ? 'step' : 'false'}

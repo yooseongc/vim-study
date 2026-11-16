@@ -73,8 +73,7 @@ try {
     await page.goto(
       (process.env.TEST_URL || 'http://127.0.0.1:5184/vim-study/').split('#')[0] + hash,
     );
-    await expect(page.locator('#title')).toHaveText('기억을 정리하는 첫 편집');
-    await expect(page.locator('#engine-status')).toContainText('WASM', { timeout: 30000 });
+    await expect(page.locator('#workshop-start')).toBeVisible();
   }
   assert.deepEqual(errors, []);
   console.log(

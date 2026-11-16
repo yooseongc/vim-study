@@ -12,11 +12,13 @@ import { workspace } from './lib/workspace-files.js';
 import { WorkspaceSession } from './components/WorkspaceSession.jsx';
 import { guidedCourses, nextCourse } from './lessons/catalog.js';
 import { LocalPractice, localCourse } from './components/LocalPractice.jsx';
+import { workshop } from './lessons/workshop.js';
+import { Workshop } from './components/Workshop.jsx';
 
-const activities = [...guidedCourses, localCourse, workspace, review, ...missions];
+const activities = [workshop, ...guidedCourses, localCourse, workspace, review, ...missions];
 
 const missionFromHash = () =>
-  activities.find((mission) => mission.id === location.hash.slice(1)) || guidedCourses[0];
+  activities.find((mission) => mission.id === location.hash.slice(1)) || workshop;
 function Guide() {
   return (
     <section id="guide" className={s.guide}>
@@ -75,6 +77,7 @@ export default function App() {
     store.reset(mission.id);
     setAttempt((value) => value + 1);
   }
+  if (mission.id === 'workshop') return <Workshop ref={session} onSelect={select} />;
   return (
     <>
       <header className={s.header}>

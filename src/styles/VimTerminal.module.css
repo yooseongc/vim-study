@@ -112,3 +112,22 @@
 .guided .host {
   height: clamp(240px, calc(55dvh - 120px), 440px);
 }
+.studio {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+.studio .host {
+  flex: 1;
+  height: auto;
+  min-height: 150px;
+}
+.studio .bar {
+  min-height: 36px;
+  padding-block: 7px;
+}
+.studio .footer {
+  padding-block: 6px;
+  font-size: 12px;
+}

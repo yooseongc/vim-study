@@ -9,6 +9,7 @@ export function VimTerminal({
   keys,
   expanded,
   guided = false,
+  studio = false,
 }) {
   const label = {
     ready: '● VIM 8.2 · WASM',
@@ -17,7 +18,9 @@ export function VimTerminal({
     exited: 'VIM · 종료',
   }[status];
   return (
-    <div className={`${s.terminal} ${expanded ? s.expanded : ''} ${guided ? s.guided : ''}`}>
+    <div
+      className={`${s.terminal} ${expanded ? s.expanded : ''} ${guided ? s.guided : ''} ${studio ? s.studio : ''}`}
+    >
       <div className={s.bar}>
         <div>
           <span className={s.dot} />
@@ -50,7 +53,7 @@ export function VimTerminal({
         <span>
           <kbd>Esc</kbd> 일반 모드 <span>·</span> <kbd>:w</kbd> 파일 저장
         </span>
-        <span id="keys">{keys} keys</span>
+        {!studio && <span id="keys">{keys} keys</span>}
       </div>
     </div>
   );
