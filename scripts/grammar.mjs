@@ -45,7 +45,7 @@ try {
     await expect(page.locator('#lesson-step')).toHaveText(`${i + 1} / ${actions.length}`);
     await page.locator('#lesson-focus').click();
     if (['Escape', 'Enter'].includes(actions[i])) await page.keyboard.press(actions[i]);
-    else await page.keyboard.type(actions[i]);
+    else await page.keyboard.type(actions[i], { delay: 25 });
     await expect(page.locator('#lesson-next')).toBeEnabled();
     if (i === 3)
       await page.screenshot({ path: 'test-results/grammar-pending.png', fullPage: true });
@@ -59,17 +59,17 @@ try {
   }
   await ready();
   await page.locator('#lesson-focus').click();
-  await page.keyboard.type('/guest');
+  await page.keyboard.type('/guest', { delay: 25 });
   await page.keyboard.press('Enter');
-  await page.keyboard.type('ciwrelease ready');
+  await page.keyboard.type('ciwrelease ready', { delay: 25 });
   await page.keyboard.press('Escape');
-  await page.keyboard.type(':w');
+  await page.keyboard.type(':w', { delay: 25 });
   await page.keyboard.press('Enter');
   await expect(page.locator('#lesson-save')).toContainText('브라우저에도 저장');
   await expect(page.locator('#lesson-finish')).toBeDisabled();
-  await page.keyboard.type('ci"release ready');
+  await page.keyboard.type('ci"release ready', { delay: 25 });
   await page.keyboard.press('Escape');
-  await page.keyboard.type(':w');
+  await page.keyboard.type(':w', { delay: 25 });
   await page.keyboard.press('Enter');
   await expect(page.locator('#lesson-finish')).toBeEnabled();
   await page.locator('#lesson-finish').click();

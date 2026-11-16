@@ -148,17 +148,20 @@ function LessonRun({
     setChecking(true);
   }
   const mode = snapshot?.mode || '';
-  const modeName = mode.startsWith('i')
-    ? '입력 모드'
-    : mode.startsWith('c')
-      ? '명령줄 모드'
-      : mode.startsWith('no')
-        ? '편집 범위 대기'
-        : mode === 'n'
-          ? '일반 모드'
-          : mode
-            ? `다른 모드 (${mode})`
-            : '상태 확인 중';
+  const modeName =
+    mode === 'r?'
+      ? '치환 확인 중'
+      : mode.startsWith('i')
+        ? '입력 모드'
+        : mode.startsWith('c')
+          ? '명령줄 모드'
+          : mode.startsWith('no')
+            ? '편집 범위 대기'
+            : mode === 'n'
+              ? '일반 모드'
+              : mode
+                ? `다른 모드 (${mode})`
+                : '상태 확인 중';
   function advance() {
     if (!passed) return;
     pendingCheck.current = false;

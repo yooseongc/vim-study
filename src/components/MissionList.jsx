@@ -40,6 +40,17 @@ export function MissionList({ current, completed, onSelect, basicsCompleted, gra
           </span>
         </button>
         <button
+          className={`${s.mission} ${current.id === 'substitution' ? s.active : ''}`}
+          aria-current={current.id === 'substitution' ? 'step' : 'false'}
+          onClick={() => onSelect('substitution')}
+        >
+          <span className={s.number}>치환</span>
+          <span>
+            <strong>범위를 정하고 확인하며 치환하기</strong>
+            <small>현재 줄 · 범위 · 확인</small>
+          </span>
+        </button>
+        <button
           className={`${s.mission} ${current.id === 'workspace' ? s.active : ''}`}
           aria-current={current.id === 'workspace' ? 'step' : 'false'}
           onClick={() => onSelect('workspace')}

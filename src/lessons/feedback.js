@@ -17,6 +17,18 @@ export function diagnose(step, snapshot, pressed = [], saved = '') {
     return { kind: 'success', message: '내용과 모드가 목표에 맞습니다. 다음으로 넘어가도 됩니다.' };
   }
   if (snapshot.mode !== step.mode) {
+    if (snapshot.mode === 'r?')
+      return {
+        kind: 'mode',
+        message:
+          '치환 확인에 답하는 중입니다. 현재 항목을 바꾸려면 y, 건너뛰려면 n, 남은 확인을 중단하려면 q를 누르세요. 이미 바꾼 내용은 유지됩니다.',
+      };
+    if (step.mode === 'r?')
+      return {
+        kind: 'mode',
+        message:
+          '아직 치환 확인 상태가 아닙니다. c 옵션이 붙은 명령을 입력하고 Enter로 실행했는지 확인하세요. 이미 확인을 끝냈다면 처음부터 다시 연습할 수 있습니다.',
+      };
     const message = snapshot.mode.startsWith('i')
       ? '지금은 입력 모드입니다. 편집을 마쳤다면 Esc를 한 번 눌러 일반 모드로 돌아오세요.'
       : snapshot.mode.startsWith('c')
