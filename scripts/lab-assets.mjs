@@ -1,4 +1,4 @@
-import { writeFile } from 'node:fs/promises';
+import { mkdir, writeFile } from 'node:fs/promises';
 import { labArchiveFiles } from '../src/lessons/local-lab.js';
 
 // Uncompressed ZIP: small text fixtures, deterministic metadata, no runtime dependency.
@@ -11,6 +11,7 @@ function crc32(bytes) {
   return (crc ^ 0xffffffff) >>> 0;
 }
 export async function buildLabArchive() {
+  await mkdir('public', { recursive: true });
   const entries = [],
     directory = [];
   let offset = 0;
