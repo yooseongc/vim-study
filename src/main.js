@@ -1,6 +1,8 @@
 import { VimWasm, checkBrowserCompatibility } from 'vim-wasm';
 import { missions, filesFor, validate } from './missions.js';
 import './style.css';
+import '@fontsource/noto-sans-kr/400.css';
+import '@fontsource/noto-sans-kr/600.css';
 import { readSettings, setupSettings, vimFont, loadEditorFont } from './settings.js';
 
 const $ = id => document.getElementById(id);
@@ -49,7 +51,15 @@ $('title').textContent = current.title;
 $('story').textContent = current.story;
 $('objective').textContent = current.objective;
 $('file-name').textContent = `/work/${current.file}`;
-$('guide-toggle').onclick = () => { $('guide').hidden = !$('guide').hidden; };
+$('guide-toggle').onclick = () => {
+  if (document.body.classList.contains('editor-expanded')) $('editor-expand').click();
+  $('guide').hidden = !$('guide').hidden;
+};
+$('editor-expand').onclick = () => {
+  const expanded = document.body.classList.toggle('editor-expanded');
+  $('editor-expand').textContent = expanded ? '학습 화면으로' : '편집기 확대';
+  $('editor-expand').setAttribute('aria-pressed', String(expanded));
+};
 $('hint').onclick = () => {
   $('hint-panel').hidden = false;
   if (hints < current.hints.length) hints++;
@@ -138,7 +148,20 @@ async function boot() {
   await loadEditorFont(readSettings());
   vim = new VimWasm({ canvas: $('vim-canvas'), input: $('vim-input'), workerScriptPath: `${import.meta.env.BASE_URL}vendor/vim.js` });
   vim.onVimInit = () => { $('loading').hidden = true; $('engine-status').textContent = '● VIM 8.2 · WASM'; $('check').disabled = false; vim.focus(); };
-  vim.onError = showError;
+  const canvas = $('vim-canvas');
+  let lastSize = '';
+  const observer = new ResizeObserver(() => {
+    const { width, height } = canvas.getBoundingClientRect();
+    const size = `${Math.floor(width)}:${Math.floor(height)}`;
+    if (vim.isRunning() && width > 0 && height > 0 && size !== lastSize) {
+      lastSize = size;
+      canvas.width = Math.floor(width * (window.devicePixelRatio || 1));
+      canvas.height = Math.floor(height * (window.devicePixelRatio || 1));
+      vim.resize(Math.floor(width), Math.floor(height));
+    }
+  });
+  observer.observe(canvas);
+  vim.onError = error => { observer.disconnect(); showError(error); };
   vim.onVimExit = () => { dirty = false; $('loading').hidden = false; $('loading').textContent = 'Vim을 종료했습니다. 새로고침하면 저장한 파일로 다시 시작합니다.'; $('check').disabled = true; $('engine-status').textContent = 'VIM · 종료'; };
   vim.onFileExport = (path, contents) => {
     const url = URL.createObjectURL(new Blob([contents])); const a = document.createElement('a'); a.href = url; a.download = path.split('/').pop(); a.click(); setTimeout(() => URL.revokeObjectURL(url), 1000);
