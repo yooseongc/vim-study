@@ -78,7 +78,7 @@ export function BatchWorkshop({ ref, onSelect }) {
       segments={batchLessons}
       Intro={BatchIntro}
       continueId="batch-continue"
-      nextCourse={{ id: 'global', label: '이어서 조건에 맞는 줄만 처리하기' }}
+      nextCourse={{ id: 'global-workshop', label: '이어서 조건에 맞는 줄만 처리하기' }}
     />
   );
 }

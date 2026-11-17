@@ -32,7 +32,11 @@ import { quickfixWorkshop } from './lessons/quickfix-workshop.js';
 import { BatchWorkshop } from './components/BatchWorkshop.jsx';
 import { batchWorkshop } from './lessons/batch-workshop.js';
 
+import { GlobalWorkshop } from './components/GlobalWorkshop.jsx';
+import { globalWorkshop } from './lessons/global-workshop.js';
+
 const activities = [
+  globalWorkshop,
   batchWorkshop,
   quickfixWorkshop,
   blockWorkshop,
@@ -108,6 +112,7 @@ export default function App() {
     store.reset(mission.id);
     setAttempt((value) => value + 1);
   }
+  if (mission.id === 'global-workshop') return <GlobalWorkshop ref={session} onSelect={select} />;
   if (mission.id === 'batch-workshop') return <BatchWorkshop ref={session} onSelect={select} />;
   if (mission.id === 'quickfix-workshop')
     return <QuickfixWorkshop ref={session} onSelect={select} />;

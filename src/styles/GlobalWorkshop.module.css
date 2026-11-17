@@ -1,0 +1,17 @@
+.choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0;
+}
+.choices button[aria-pressed='true'] {
+  background: #e9eee0;
+  border-color: #728765;
+}
+.explanation {
+  min-height: 80px;
+}
+.selection {
+  background: #e6c27a;
+  color: #203b35;
+}

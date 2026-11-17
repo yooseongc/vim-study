@@ -46,6 +46,10 @@
    `node scripts/block-workshop.mjs`: 선택 방식 비교, 실제 블록 범위, 취소와 undo/redo, Esc 이후 입력 적용, 열 삭제, 보호할 줄과 저장, 다섯 화면 크기.
    `node scripts/quickfix-workshop.mjs`: 검색 명령 구성, 목록 창과 다음·이전 결과, 파일별 편집·저장, 숨은 미저장 버퍼, 설명 파일 복구, 세 문제와 다섯 화면 크기.
    `node scripts/batch-workshop.mjs`: 치환 범위, 실제 arglist 이름, argdo와 update 범위, 파일별 undo/redo, 보호 파일 복구, 세 문제와 다섯 화면 크기.
+   `node scripts/global-workshop.mjs`: 출력과 삭제, 줄 시작 패턴, 반대 조건, 잘못 삭제한 줄 복구, TEMP/TEMPORARY 구분과 다섯 화면 크기.
+   `node scripts/transport-repro.mjs`: 공유 메모리의 payload 완성 전 상태 공개 방지. 원본 비교는 `UNPATCHED_TRANSPORT=1`로 실행하며 실패가 예상됩니다.
+   `node scripts/input-stress.mjs`: 지연 없는 입력·명령·resize 반복. 실패를 감추기 위해 입력 지연이나 자동 재시도를 추가하지 않습니다.
+   `node scripts/isolation-startup.mjs`: 서비스 워커 제어가 등록 응답보다 먼저 시작하는 첫 접속, 일반 첫 접속, 새로고침 횟수와 등록 거부 안내.
 6. 공개 전에 변경 내용을 검토하고, 배포 성공 뒤 운영 주소에서도 동작을 확인합니다.
 
 브라우저 검증은 별도의 숨겨진 임시 프로필에서 수행합니다. 사용자가 보고 있는 창의 크기를 테스트 목적으로 바꾸지 않습니다.

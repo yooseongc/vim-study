@@ -63,6 +63,13 @@ export function MissionList({ current, completed, onSelect, basicsCompleted, gra
             <small>파일 범위 · 반복 치환 · 목록 저장</small>
           </span>
         </button>
+        <button className={s.mission} onClick={() => onSelect('global-workshop')}>
+          <span className={s.number}>새로</span>
+          <span>
+            <strong>조건으로 줄을 골라 처리하기</strong>
+            <small>출력 확인 · 줄 삭제 · 반대 조건</small>
+          </span>
+        </button>
         <button
           className={`${s.mission} ${current.id === 'basics' ? s.active : ''}`}
           aria-current={current.id === 'basics' ? 'step' : 'false'}

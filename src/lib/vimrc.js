@@ -29,6 +29,7 @@ let snapshot.path = expand('%:p')
 let snapshot.registerA = getreg('a')
 let snapshot.registerZero = getreg('0')
 let snapshot.recording = reg_recording()
+let snapshot.lastCommand = getreg(':')
 let snapshot.markA = getpos("'a")[1:2]
 let snapshot.jumpCount = len(getjumplist()[0])
 let snapshot.visualStart = [line('v'), col('v')]
