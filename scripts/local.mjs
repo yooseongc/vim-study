@@ -139,7 +139,7 @@ try {
     await page.goto(
       (process.env.TEST_URL || 'http://127.0.0.1:5184/vim-study/').split('#')[0] + hash,
     );
-    await expect(page.locator('#workshop-start')).toBeVisible();
+    await expect(page.locator('#home-start')).toBeVisible();
   }
   assert.deepEqual(errors, []);
   console.log(

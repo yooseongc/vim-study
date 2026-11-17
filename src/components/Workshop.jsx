@@ -1,3 +1,4 @@
+import { nextLesson } from '../lessons/curriculum.js';
 import { useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { workshop, practice, concepts, dotWorkshop } from '../lessons/workshop.js';
 import { PracticeRun } from './PracticeRun.jsx';
@@ -119,6 +120,7 @@ export function Workshop({ ref, onSelect }) {
         />
       )}
       <CourseMenu
+        currentId={workshop.id}
         title={workshop.title}
         open={menuOpen}
         close={() => setMenuOpen(false)}
@@ -173,7 +175,7 @@ function Finish({ kind, next, reset, select }) {
         </div>
       ) : (
         <div className={s.endLinks}>
-          <button className={s.primary} onClick={() => select('range-workshop')}>
+          <button className={s.primary} onClick={() => select(nextLesson('workshop').id)}>
             다음에는 범위를 정해 치환하기 →
           </button>
           <button onClick={reset}>이 문제 다시 풀기</button>

@@ -1,203 +1,54 @@
 import { missions } from '../missions.js';
+import { guidedCourses } from '../lessons/catalog.js';
 import s from '../styles/MissionList.module.css';
-import { advancedCourses } from '../lessons/catalog.js';
 
 export function MissionList({ current, completed, onSelect, basicsCompleted, grammarCompleted }) {
+  function entry(course, badge) {
+    return (
+      <button
+        key={course.id}
+        className={`${s.mission} ${current.id === course.id ? s.active : ''}`}
+        aria-current={current.id === course.id ? 'step' : undefined}
+        onClick={() => onSelect(course.id)}
+      >
+        <span className={s.number}>{badge}</span>
+        <span>
+          <strong>{course.title}</strong>
+          {course.skill && <small>{course.skill}</small>}
+        </span>
+      </button>
+    );
+  }
   return (
     <aside className={s.missions}>
       <div className={s.label}>학습과 자유 연습</div>
       <nav id="mission-list" className={s.list} aria-label="학습 단원과 자유 연습">
-        <button className={s.mission} onClick={() => onSelect('buffer-workshop')}>
-          <span className={s.number}>파일</span>
-          <span>
-            <strong>버퍼와 창을 구분하며 파일 다루기</strong>
-            <small>분할 · 숨은 변경 · 모두 저장</small>
-          </span>
-        </button>
-        <button className={s.mission} onClick={() => onSelect('grammar-workshop')}>
-          <span className={s.number}>조합</span>
-          <span>
-            <strong>찾고, 이동하고, 범위를 편집하기</strong>
-            <small>검색 · 이동 · 동작과 범위</small>
-          </span>
-        </button>
-        <button className={s.mission} onClick={() => onSelect('basics-workshop')}>
-          <span className={s.number}>입문</span>
-          <span>
-            <strong>모드를 알고, 편집하고 저장하기</strong>
-            <small>입력 · 저장 · undo와 redo</small>
-          </span>
-        </button>
-        <button className={s.mission} onClick={() => onSelect('workshop')}>
-          <span className={s.number}>새로</span>
-          <span>
-            <strong>한 번 바꾸고, 다시 쓰기</strong>
-            <small>이어 입력하는 새 연습</small>
-          </span>
-        </button>
-        <button className={s.mission} onClick={() => onSelect('range-workshop')}>
-          <span className={s.number}>새로</span>
-          <span>
-            <strong>범위를 고르고, 확인하며 바꾸기</strong>
-            <small>줄 범위와 치환을 이어 연습</small>
-          </span>
-        </button>
-        <button className={s.mission} onClick={() => onSelect('register-workshop')}>
-          <span className={s.number}>새로</span>
-          <span>
-            <strong>복사한 내용을 지키며 편집하기</strong>
-            <small>복사 · 삭제 · 보관함 선택</small>
-          </span>
-        </button>
-        <button className={s.mission} onClick={() => onSelect('macro-workshop')}>
-          <span className={s.number}>새로</span>
-          <span>
-            <strong>여러 동작을 묶고, 확인하며 반복하기</strong>
-            <small>녹화 · 한 번 확인 · 예외 건너뛰기</small>
-          </span>
-        </button>
-        <button className={s.mission} onClick={() => onSelect('navigation-workshop')}>
-          <span className={s.number}>새로</span>
-          <span>
-            <strong>멀리 이동하고, 다시 돌아오기</strong>
-            <small>mark · 줄과 칸 · 점프 기록</small>
-          </span>
-        </button>
-        <button className={s.mission} onClick={() => onSelect('block-workshop')}>
-          <span className={s.number}>새로</span>
-          <span>
-            <strong>같은 열을 골라 함께 편집하기</strong>
-            <small>블록 선택 · 함께 입력 · 열 삭제</small>
-          </span>
-        </button>
-        <button className={s.mission} onClick={() => onSelect('quickfix-workshop')}>
-          <span className={s.number}>새로</span>
-          <span>
-            <strong>검색 목록을 따라 편집하기</strong>
-            <small>검색 위치 · 파일 이동 · 모두 저장</small>
-          </span>
-        </button>
-        <button className={s.mission} onClick={() => onSelect('batch-workshop')}>
-          <span className={s.number}>새로</span>
-          <span>
-            <strong>목록을 정하고 함께 바꾸기</strong>
-            <small>파일 범위 · 반복 치환 · 목록 저장</small>
-          </span>
-        </button>
-        <button className={s.mission} onClick={() => onSelect('global-workshop')}>
-          <span className={s.number}>새로</span>
-          <span>
-            <strong>조건으로 줄을 골라 처리하기</strong>
-            <small>출력 확인 · 줄 삭제 · 반대 조건</small>
-          </span>
-        </button>
-        <button
-          className={`${s.mission} ${current.id === 'basics' ? s.active : ''}`}
-          aria-current={current.id === 'basics' ? 'step' : 'false'}
-          onClick={() => onSelect('basics')}
+        {entry(
+          { id: 'home', title: '전체 학습 목차', skill: '입문부터 내 터미널까지 · 13개 과정' },
+          '↗',
+        )}
+        {entry(
+          { id: 'workspace', title: '나의 Vim 작업 공간', skill: '파일 저장 · 버퍼와 창' },
+          '파일',
+        )}
+        <details
+          open={guidedCourses.some((course) => course.id === current.id) || current.id === 'review'}
         >
-          <span className={s.number}>{basicsCompleted ? '✓' : '입문'}</span>
-          <span>
-            <strong>기억을 정리하는 첫 편집</strong>
-            <small>한 단계씩 · 모드와 저장</small>
-          </span>
-        </button>
-        <button
-          className={s.mission + (current.id === 'grammar' ? ' ' + s.active : '')}
-          aria-current={current.id === 'grammar' ? 'step' : 'false'}
-          onClick={() => onSelect('grammar')}
-        >
-          <span className={s.number}>{grammarCompleted ? '✓' : '조합'}</span>
-          <span>
-            <strong>편집 명령을 문장처럼 조합하기</strong>
-            <small>한 단계씩 · 동작과 범위</small>
-          </span>
-        </button>
-        <button
-          className={`${s.mission} ${current.id === 'dot' ? s.active : ''}`}
-          aria-current={current.id === 'dot' ? 'step' : 'false'}
-          onClick={() => onSelect('dot')}
-        >
-          <span className={s.number}>반복</span>
-          <span>
-            <strong>한 번 바꾸고, 점으로 반복하기</strong>
-            <small>한 단계씩 · n과 점 명령</small>
-          </span>
-        </button>
-        <button
-          className={`${s.mission} ${current.id === 'substitution' ? s.active : ''}`}
-          aria-current={current.id === 'substitution' ? 'step' : 'false'}
-          onClick={() => onSelect('substitution')}
-        >
-          <span className={s.number}>치환</span>
-          <span>
-            <strong>범위를 정하고 확인하며 치환하기</strong>
-            <small>현재 줄 · 범위 · 확인</small>
-          </span>
-        </button>
-        {advancedCourses.map((course) => (
-          <button
-            key={course.id}
-            className={`${s.mission} ${current.id === course.id ? s.active : ''}`}
-            aria-current={current.id === course.id ? 'step' : 'false'}
-            onClick={() => onSelect(course.id)}
-          >
-            <span className={s.number}>{course.badge}</span>
-            <span>
-              <strong>{course.title}</strong>
-              <small>{course.skill}</small>
-            </span>
-          </button>
-        ))}
-        <button
-          className={`${s.mission} ${current.id === 'local' ? s.active : ''}`}
-          aria-current={current.id === 'local' ? 'step' : 'false'}
-          onClick={() => onSelect('local')}
-        >
-          <span className={s.number}>로컬</span>
-          <span>
-            <strong>내 터미널에서 마무리하기</strong>
-            <small>실습 파일 · 셸 · SSH</small>
-          </span>
-        </button>
-        <button
-          className={`${s.mission} ${current.id === 'workspace' ? s.active : ''}`}
-          aria-current={current.id === 'workspace' ? 'step' : 'false'}
-          onClick={() => onSelect('workspace')}
-        >
-          <span className={s.number}>파일</span>
-          <span>
-            <strong>나의 Vim 작업 공간</strong>
-            <small>파일 저장 · 버퍼와 창</small>
-          </span>
-        </button>
-        <button
-          className={`${s.mission} ${current.id === 'review' ? s.active : ''}`}
-          aria-current={current.id === 'review' ? 'step' : 'false'}
-          onClick={() => onSelect('review')}
-        >
-          <span className={s.number}>복습</span>
-          <span>
-            <strong>다시 꺼내 쓰는 연습</strong>
-            <small>상태 점검 · 변형 문제</small>
-          </span>
-        </button>
-        {missions.map((mission, index) => (
-          <button
-            key={mission.id}
-            className={`${s.mission} ${mission.id === current.id ? s.active : ''}`}
-            aria-current={mission.id === current.id ? 'step' : 'false'}
-            onClick={() => onSelect(mission.id)}
-          >
-            <span className={s.number}>
-              {completed.includes(mission.id) ? '✓' : String(index + 1).padStart(2, '0')}
-            </span>
-            <span>
-              <strong>{mission.title}</strong>
-              <small>{mission.skill}</small>
-            </span>
-          </button>
-        ))}
+          <summary>이전 과정과 복습 열기</summary>
+          {guidedCourses.map((course) =>
+            entry(
+              course,
+              (course.id === 'basics' && basicsCompleted) ||
+                (course.id === 'grammar' && grammarCompleted)
+                ? '✓'
+                : course.badge,
+            ),
+          )}
+          {entry({ id: 'review', title: '다시 꺼내 쓰는 연습', skill: '기존 복습 화면' }, '복습')}
+        </details>
+        {missions.map((course, index) =>
+          entry(course, completed.includes(course.id) ? '✓' : String(index + 1).padStart(2, '0')),
+        )}
       </nav>
       <div className={s.note}>
         <span>↳</span>

@@ -1,3 +1,4 @@
+import { LearningHome, home } from './components/LearningHome.jsx';
 import { useEffect, useRef, useState } from 'react';
 import { missions } from './missions.js';
 import { useStudyStore } from './hooks/useStudyStore.js';
@@ -33,7 +34,8 @@ import { BatchWorkshop } from './components/BatchWorkshop.jsx';
 import { batchWorkshop } from './lessons/batch-workshop.js';
 
 import { GlobalWorkshop } from './components/GlobalWorkshop.jsx';
-import { VimLogo } from './components/VimLogo.jsx';
+import { CourseMenu, WorkshopHeader } from './components/WorkshopNavigation.jsx';
+import workshopStyles from './styles/Workshop.module.css';
 import { BasicsWorkshop } from './components/BasicsWorkshop.jsx';
 import { GrammarWorkshop } from './components/GrammarWorkshop.jsx';
 import { BufferWorkshop } from './components/BufferWorkshop.jsx';
@@ -43,6 +45,7 @@ import { basicsWorkshop } from './lessons/basics-workshop.js';
 import { globalWorkshop } from './lessons/global-workshop.js';
 
 const activities = [
+  home,
   bufferWorkshop,
   grammarWorkshop,
   basicsWorkshop,
@@ -63,28 +66,7 @@ const activities = [
 ];
 
 const missionFromHash = () =>
-  activities.find((mission) => mission.id === location.hash.slice(1)) || workshop;
-function Guide() {
-  return (
-    <section id="guide" className={s.guide}>
-      <h2>콘솔에서 자유로워지는 학습 경로</h2>
-      <p>
-        ① 생존: 모드·저장·되돌리기 → ② 의도 단위 편집: 검색·motion·text object → ③ 반복 제거:
-        점·치환·매크로 → ④ 작업 공간: 버퍼·분할·레지스터 → ⑤ 현장 전이: quickfix·argdo·필터·셸 왕복
-      </p>
-      <p>
-        안내 단원은 입문부터 레지스터·매크로·블록 편집·여러 파일 작업까지 이어집니다. 마지막 ‘내
-        터미널에서 마무리하기’에서 실습 파일을 내려받아 셸·필터·권한·SSH를 연습하세요. 자유 작업
-        공간에서는 파일과 창을 직접 다루고, 여섯 자유 미션에서는 배운 방법을 조합할 수 있습니다.
-      </p>
-      <p>
-        실제 Vim 8.2 / 플러그인 없음 / 브라우저 가상 파일. <code>:!grep</code> 같은 외부 프로세스와
-        실제 서버 접속은 지원하지 않습니다. 키보드가 있는 데스크톱 사용을 권장합니다.
-      </p>
-    </section>
-  );
-}
-
+  activities.find((mission) => mission.id === location.hash.slice(1)) || home;
 export default function App() {
   const store = useStudyStore();
   const [basicsCompleted, setBasicsCompleted] = useState(() => readBasics().completed);
@@ -99,20 +81,23 @@ export default function App() {
   const index = missions.indexOf(mission);
   const count = store.state.completed.length;
   function select(id) {
-    if (id === mission.id || !session.current?.canLeave()) return;
+    const next = activities.find((item) => item.id === id);
+    if (!next || id === mission.id || !(session.current?.canLeave() ?? true)) return;
     history.pushState(null, '', `#${id}`);
-    setMission(activities.find((item) => item.id === id));
+    setMission(next);
+    setGuide(false);
     setExpanded(false);
   }
   useEffect(() => {
     const onHashChange = () => {
       const next = missionFromHash();
       if (next.id === selected.current.id) return;
-      if (!session.current?.canLeave()) {
+      if (!(session.current?.canLeave() ?? true)) {
         history.replaceState(null, '', `#${selected.current.id}`);
         return;
       }
       setMission(next);
+      setGuide(false);
       setExpanded(false);
     };
     window.addEventListener('hashchange', onHashChange);
@@ -122,6 +107,7 @@ export default function App() {
     store.reset(mission.id);
     setAttempt((value) => value + 1);
   }
+  if (mission.id === 'home') return <LearningHome ref={session} onSelect={select} />;
   if (mission.id === 'local') return <LocalPractice ref={session} onSelect={select} />;
   if (mission.id === 'buffer-workshop') return <BufferWorkshop ref={session} onSelect={select} />;
   if (mission.id === 'grammar-workshop') return <GrammarWorkshop ref={session} onSelect={select} />;
@@ -139,51 +125,56 @@ export default function App() {
   if (mission.id === 'register-workshop')
     return <RegisterWorkshop ref={session} onSelect={select} />;
   return (
-    <>
-      <header className={s.header}>
-        <a className={s.brand} href="./">
-          <VimLogo className={s.logo} /> VIM <b>FIELD GUIDE</b>
-        </a>
-        <span className={s.edition}>
-          실전에서 손에 익히는 Vim <span> / VOL. 01</span>
-        </span>
-        <button
-          id="guide-toggle"
-          onClick={() => {
-            setExpanded(false);
-            setGuide((value) => !value);
-          }}
-        >
-          학습 지도 ↗
-        </button>
-      </header>
+    <div className={workshopStyles.page}>
+      <WorkshopHeader openMenu={() => setGuide(true)} />
+      <CourseMenu
+        open={guide}
+        close={() => setGuide(false)}
+        select={select}
+        title={mission.title}
+        currentId={mission.id}
+      />
       <main className={s.main}>
         {!expanded && (
           <section className={s.intro}>
             <div>
-              <p className={s.eyebrow}>LESS TYPING. MORE THINKING.</p>
+              <p className={s.eyebrow}>
+                {index >= 0
+                  ? '배운 방법을 직접 골라 써보기'
+                  : mission.id === 'workspace'
+                    ? '내 파일로 연습하기'
+                    : '이전 버전의 학습 과정'}
+              </p>
               <h1>
-                키를 외우지 말고, <em>문제를 해결하세요.</em>
+                {index >= 0
+                  ? '작은 문제에, 나의 방법으로.'
+                  : mission.id === 'workspace'
+                    ? '편집할 파일을 직접 골라보세요.'
+                    : '한 단계씩 확인하며 연습하기.'}
               </h1>
               <p className={s.lede}>
-                모드와 저장부터 한 단계씩 이해하고 연습하세요. 익숙해지면 자유 연습에서 직접 조합해
-                보세요.
+                {index >= 0
+                  ? '정답은 하나가 아닙니다. 보존할 내용을 지키면서 원하는 결과를 만들어보세요.'
+                  : mission.id === 'workspace'
+                    ? '파일은 이 브라우저에 저장됩니다. 필요한 설명은 학습 목차에서 다시 열 수 있습니다.'
+                    : '기존 기록을 이어서 볼 수 있습니다. 개편한 과정은 상단 학습 목차에서 시작하세요.'}
               </p>
             </div>
-            <div className={s.journey}>
-              <span className={s.tiny}>YOUR FIELD NOTES</span>
-              <strong>
-                <span id="completed">{String(count).padStart(2, '0')}</span>
-                <small> / 06</small>
-              </strong>
-              <span>완료한 실전 미션</span>
-              <div className={s.progress}>
-                <i id="progress" style={{ width: `${(count / missions.length) * 100}%` }} />
+            {index >= 0 && (
+              <div className={s.journey}>
+                <span className={s.tiny}>자유 미션</span>
+                <strong>
+                  <span id="completed">{String(count).padStart(2, '0')}</span>
+                  <small> / 06</small>
+                </strong>
+                <span>완료한 자유 미션</span>
+                <div className={s.progress}>
+                  <i id="progress" style={{ width: `${(count / missions.length) * 100}%` }} />
+                </div>
               </div>
-            </div>
+            )}
           </section>
         )}
-        {guide && !expanded && <Guide />}
         <div className={`${s.workspace} ${expanded ? s.expanded : ''}`}>
           {!expanded && (
             <MissionList
@@ -242,6 +233,6 @@ export default function App() {
           </footer>
         )}
       </main>
-    </>
+    </div>
   );
 }

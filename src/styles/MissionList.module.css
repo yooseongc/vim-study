@@ -83,6 +83,7 @@
   }
   .list {
     display: flex;
+    align-items: flex-start;
     overflow-x: auto;
     gap: 6px;
     padding-bottom: 6px;
@@ -94,5 +95,23 @@
   }
   .note {
     display: none;
+  }
+}
+
+.list details {
+  margin: 12px 0;
+}
+.list summary {
+  cursor: pointer;
+  padding: 12px 8px;
+  font-size: 14px;
+  color: #52624c;
+}
+@media (max-width: 760px) {
+  .list details {
+    flex: 0 0 250px;
+    margin: 0;
+    max-height: 140px;
+    overflow-y: auto;
   }
 }

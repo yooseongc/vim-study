@@ -1,3 +1,4 @@
+import { nextLesson } from '../lessons/curriculum.js';
 import { useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { PracticeRun } from './PracticeRun.jsx';
 import { CourseMenu, WorkshopHeader } from './WorkshopNavigation.jsx';
@@ -69,15 +70,8 @@ function SegmentFinish({ segment, next, retry, select, nextCourse, continueId })
   );
 }
 
-export function SegmentWorkshop({
-  ref,
-  onSelect,
-  workshop,
-  segments,
-  Intro,
-  nextCourse,
-  continueId,
-}) {
+export function SegmentWorkshop({ ref, onSelect, workshop, segments, Intro, continueId }) {
+  const nextCourse = nextLesson(workshop.id);
   const [index, setIndex] = useState(-1);
   const [attempt, setAttempt] = useState(0);
   const [complete, setComplete] = useState(false);
@@ -118,6 +112,7 @@ export function SegmentWorkshop({
         />
       )}
       <CourseMenu
+        currentId={workshop.id}
         title={workshop.title}
         open={menuOpen}
         close={() => setMenuOpen(false)}

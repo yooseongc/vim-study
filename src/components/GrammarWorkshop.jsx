@@ -96,7 +96,6 @@ export function GrammarWorkshop({ ref, onSelect }) {
       segments={grammarLessons}
       Intro={GrammarIntro}
       continueId="grammar-workshop-continue"
-      nextCourse={{ id: 'workshop', label: '이어서 한 번 바꾸고 다시 쓰기' }}
     />
   );
 }

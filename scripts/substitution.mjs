@@ -133,6 +133,7 @@ try {
   await page.getByRole('button', { name: /나의 Vim 작업 공간/ }).click();
   await expect(page.locator('#title')).toHaveText('나의 Vim 작업 공간');
   await expect.poll(() => page.workers().length).toBe(1);
+  await page.locator('#mission-list summary').click();
   await page.getByRole('button', { name: /범위를 정하고 확인하며 치환하기/ }).click();
   await ready();
   await expect(page.locator('#lesson-step')).toHaveText('1 / 31');

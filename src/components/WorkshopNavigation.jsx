@@ -1,53 +1,20 @@
 import { useEffect, useRef } from 'react';
+import { curriculum, curriculumGroups } from '../lessons/curriculum.js';
 import { guidedCourses } from '../lessons/catalog.js';
 import s from '../styles/Workshop.module.css';
 import { VimLogo } from './VimLogo.jsx';
 
-const groups = [
-  [
-    '이어 입력하는 새 과정',
-    [
-      'basics-workshop',
-      'grammar-workshop',
-      'workshop',
-      'range-workshop',
-      'register-workshop',
-      'macro-workshop',
-      'navigation-workshop',
-      'block-workshop',
-      'buffer-workshop',
-      'quickfix-workshop',
-      'batch-workshop',
-      'global-workshop',
-    ],
-  ],
-  ['기본부터 정리하기', ['basics', 'grammar', 'registers', 'block']],
-  ['이동과 반복 익히기', ['navigation', 'dot', 'substitution', 'macros']],
-  ['파일과 작업 범위 넓히기', ['workspace', 'quickfix', 'batch', 'global', 'local']],
-];
-const extraTitles = {
-  'buffer-workshop': '버퍼와 창을 구분하며 파일 다루기',
-  'grammar-workshop': '찾고, 이동하고, 범위를 편집하기',
-  'basics-workshop': '모드를 알고, 편집하고 저장하기',
-  'global-workshop': '조건으로 줄을 골라 처리하기',
-  'batch-workshop': '목록을 정하고 함께 바꾸기',
-  'quickfix-workshop': '검색 목록을 따라 편집하기',
-  'block-workshop': '같은 열을 골라 함께 편집하기',
-  workshop: '한 번 바꾸고, 다시 쓰기',
-  'range-workshop': '범위를 고르고, 확인하며 바꾸기',
-  'register-workshop': '복사한 내용을 지키며 편집하기',
-  'macro-workshop': '여러 동작을 묶고, 확인하며 반복하기',
-  'navigation-workshop': '멀리 이동하고, 다시 돌아오기',
-  workspace: '나의 Vim 작업 공간',
-  local: '내 터미널에서 마무리하기',
-};
-
-export function CourseMenu({ open, close, select, title }) {
+export function CourseMenu({ open, close, select, title, currentId }) {
   const dialog = useRef(null);
   useEffect(() => {
     if (open && !dialog.current.open) dialog.current.showModal();
     if (!open && dialog.current.open) dialog.current.close();
   }, [open]);
+  const current = currentId;
+  const go = (id) => {
+    if (id === current) close();
+    else select(id);
+  };
   return (
     <dialog
       ref={dialog}
@@ -62,25 +29,48 @@ export function CourseMenu({ open, close, select, title }) {
           닫기
         </button>
       </div>
-      <p>지금은 ‘{title}’를 연습하고 있습니다. 기존 과정도 필요한 부분부터 열 수 있습니다.</p>
-      {groups.map(([name, ids]) => (
-        <section key={name}>
-          <h3>{name}</h3>
+      <p>{title} · 순서대로 배우거나 필요한 과정부터 시작하세요.</p>
+      <div className={s.menuLinks}>
+        <button onClick={() => go('home')}>학습 시작 안내</button>
+        <button onClick={() => go('workspace')}>나의 Vim 작업 공간</button>
+      </div>
+      {curriculumGroups.map((group) => (
+        <section key={group}>
+          <h3>{group}</h3>
           <div className={s.menuLinks}>
-            {ids.map((id) => (
-              <button key={id} onClick={() => select(id)}>
-                {guidedCourses.find((c) => c.id === id)?.title || extraTitles[id]}
-                <span aria-hidden="true">↗</span>
-              </button>
-            ))}
+            {curriculum
+              .filter((course) => course.group === group)
+              .map((course) => (
+                <button
+                  key={course.id}
+                  className={s.courseLink}
+                  onClick={() => go(course.id)}
+                  aria-current={current === course.id ? 'step' : undefined}
+                >
+                  <span>{String(curriculum.indexOf(course) + 1).padStart(2, '0')}</span>
+                  <span className={s.courseTitle}>{course.title}</span>
+                  {current === course.id && <span>현재</span>}
+                </button>
+              ))}
           </div>
         </section>
       ))}
-      <details>
-        <summary>자유 미션과 기존 복습</summary>
+      <section>
+        <h3>자유롭게 적용하기</h3>
         <div className={s.menuLinks}>
-          <button onClick={() => select('port')}>여섯 자유 미션</button>
-          <button onClick={() => select('review')}>기존 복습 화면</button>
+          <button onClick={() => go('port')}>여섯 자유 미션</button>
+        </div>
+      </section>
+      <details>
+        <summary>이전 과정과 복습 열기</summary>
+        <p>단계마다 확인하던 이전 버전입니다. 기존 기록과 주소를 유지합니다.</p>
+        <div className={s.menuLinks}>
+          {guidedCourses.map((course) => (
+            <button key={course.id} onClick={() => go(course.id)}>
+              {course.title}
+            </button>
+          ))}
+          <button onClick={() => go('review')}>기존 복습 화면</button>
         </div>
       </details>
     </dialog>

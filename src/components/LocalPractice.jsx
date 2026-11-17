@@ -339,6 +339,7 @@ export function LocalPractice({ ref, onSelect }) {
         </p>
       </main>
       <CourseMenu
+        currentId={localCourse.id}
         title={localCourse.title}
         open={menuOpen}
         close={() => setMenuOpen(false)}

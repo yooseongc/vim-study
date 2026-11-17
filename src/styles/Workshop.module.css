@@ -822,3 +822,44 @@
     transition: background 160ms ease;
   }
 }
+
+.menuLinks button[aria-current='step'] {
+  background: #eaf0e0;
+  border-color: #5f7c55;
+  font-weight: 600;
+}
+.menu summary {
+  cursor: pointer;
+  padding: 12px 0;
+}
+.menuLinks button span {
+  color: #52675f;
+  flex-shrink: 0;
+}
+
+.menuHeading {
+  position: sticky;
+  top: -24px;
+  background: #fcfcf7;
+  padding: 12px 0;
+  z-index: 1;
+}
+.menuHeading button {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.menuLinks .courseLink {
+  display: grid;
+  grid-template-columns: 2ch minmax(0, 1fr) auto;
+  gap: 10px;
+}
+.menuLinks .courseTitle {
+  color: #203b35;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 400px) {
+  .menuHeading h2 {
+    font-size: 20px;
+  }
+}

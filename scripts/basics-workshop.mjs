@@ -148,6 +148,7 @@ try {
   await page.getByRole('button', { name: /이어서 검색과 편집 문법 배우기/ }).click();
   await expect(page.locator('#grammar-workshop-start')).toBeVisible();
   await page.getByRole('button', { name: /학습 목차/ }).click();
+  await page.locator('dialog summary').click();
   await page.getByRole('button', { name: '편집 명령을 문장처럼 조합하기', exact: false }).click();
   await expect(page).toHaveURL(/#grammar$/);
   await expect

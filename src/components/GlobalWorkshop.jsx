@@ -84,7 +84,6 @@ export function GlobalWorkshop({ ref, onSelect }) {
       segments={globalLessons}
       Intro={GlobalIntro}
       continueId="global-continue"
-      nextCourse={{ id: 'local', label: '이어서 내 터미널에서 마무리하기' }}
     />
   );
 }

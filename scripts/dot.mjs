@@ -117,6 +117,7 @@ try {
   await page.getByRole('button', { name: /나의 Vim 작업 공간/ }).click();
   await expect(page.locator('#title')).toHaveText('나의 Vim 작업 공간');
   await expect.poll(() => page.workers().length).toBe(1);
+  await page.locator('#mission-list summary').click();
   await page.getByRole('button', { name: /한 번 바꾸고, 점으로 반복하기/ }).click();
   await ready();
   await expect(page.locator('#lesson-step')).toHaveText('1 / 18');

@@ -85,6 +85,8 @@ try {
   await expect(page.locator('#workspace-state')).toContainText('tasks.txt');
   await expect(page.locator('#workspace-state')).toContainText('1개 버퍼 미저장');
   page.once('dialog', (dialog) => dialog.dismiss());
+  if (!(await page.locator('#mission-list details').evaluate((el) => el.open)))
+    await page.locator('#mission-list summary').click();
   await page.getByRole('button', { name: /기억을 정리하는 첫 편집/ }).click();
   await expect(page.locator('#title')).toHaveText('나의 Vim 작업 공간');
   await cmd('wa');
@@ -126,6 +128,8 @@ try {
   await cmd('w');
   await expect(page.locator('#workspace-message')).toContainText('브라우저 저장에 실패');
   page.once('dialog', (dialog) => dialog.dismiss());
+  if (!(await page.locator('#mission-list details').evaluate((el) => el.open)))
+    await page.locator('#mission-list summary').click();
   await page.getByRole('button', { name: /기억을 정리하는 첫 편집/ }).click();
   await expect(page.locator('#title')).toHaveText('나의 Vim 작업 공간');
   await page.evaluate(() => {
@@ -136,6 +140,8 @@ try {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.screenshot({ path: 'test-results/workspace-mobile.png', fullPage: true });
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+  if (!(await page.locator('#mission-list details').evaluate((el) => el.open)))
+    await page.locator('#mission-list summary').click();
   await page.getByRole('button', { name: /기억을 정리하는 첫 편집/ }).click();
   await expect(page.locator('#title')).toHaveText('기억을 정리하는 첫 편집');
   await expect.poll(() => page.workers().length).toBe(1);

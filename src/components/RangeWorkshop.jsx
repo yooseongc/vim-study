@@ -109,7 +109,6 @@ export function RangeWorkshop({ ref, onSelect }) {
       segments={rangeLessons}
       Intro={RangeIntro}
       continueId="range-continue"
-      nextCourse={{ id: 'register-workshop', label: '이어서 복사한 내용 보관하기' }}
     />
   );
 }

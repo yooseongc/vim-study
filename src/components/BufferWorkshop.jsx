@@ -83,7 +83,6 @@ export function BufferWorkshop({ ref, onSelect }) {
       segments={bufferLessons}
       Intro={BufferIntro}
       continueId="buffer-continue"
-      nextCourse={{ id: 'quickfix-workshop', label: '이어서 검색 목록으로 파일 이동하기' }}
     />
   );
 }

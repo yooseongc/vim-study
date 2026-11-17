@@ -74,7 +74,6 @@ export function BasicsWorkshop({ ref, onSelect }) {
       segments={basicsLessons}
       Intro={BasicsIntro}
       continueId="basics-workshop-continue"
-      nextCourse={{ id: 'grammar-workshop', label: '이어서 검색과 편집 문법 배우기' }}
     />
   );
 }

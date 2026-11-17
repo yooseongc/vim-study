@@ -28,7 +28,7 @@ async function textIs(text) {
     .toBe(text);
 }
 try {
-  await page.goto(base);
+  await page.goto(base + '#workshop');
   await expect(page.locator('#workshop-start')).toBeVisible();
   await page.screenshot({ path: 'test-results/workshop-intro.png', fullPage: true });
   assert.equal(page.workers().length, 0);
@@ -167,6 +167,7 @@ try {
   await page.keyboard.press('Escape');
   await page.getByRole('button', { name: /학습 목차/ }).click();
   page.once('dialog', (dialog) => dialog.dismiss());
+  await page.locator('dialog summary').click();
   await page.getByRole('button', { name: /기억을 정리하는 첫 편집/ }).click();
   await expect(page.getByRole('dialog', { name: '어디부터 연습할까요?' })).toBeVisible();
   await page.getByRole('button', { name: '학습 목차 닫기' }).click();
