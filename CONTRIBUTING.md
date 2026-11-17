@@ -49,6 +49,7 @@
    `node scripts/global-workshop.mjs`: 출력과 삭제, 줄 시작 패턴, 반대 조건, 잘못 삭제한 줄 복구, TEMP/TEMPORARY 구분과 다섯 화면 크기.
    `node scripts/basics-workshop.mjs`: 공식 로고, 모드별 w, 연속 입력, Esc와 저장 구분, 명령 취소, 저장 전후 undo/redo, 보존할 줄, 세 문제와 다섯 화면 크기.
    `node scripts/grammar-workshop.mjs`: 검색 미리보기·취소·확정, n/N, 동작 대기·취소, ciw 연속 입력, w/b/0/$, dw 복구, ci"와 di"의 모드 차이, 보존할 줄, 네 문제와 다섯 화면 크기.
+   `node scripts/buffer-workshop.mjs`: 같은 버퍼의 두 창, 창 이동·닫기, 숨은 미저장 버퍼, w와 wa, 버퍼 전환, 보존 파일, 마지막 창 수, 다섯 화면 크기와 개인 작업 공간의 파일 보존·저장·복원·단원 복귀.
    `node scripts/transport-repro.mjs`: 공유 메모리의 payload 완성 전 상태 공개 방지. 원본 비교는 `UNPATCHED_TRANSPORT=1`로 실행하며 실패가 예상됩니다.
    `node scripts/input-stress.mjs`: 지연 없는 입력·명령·resize 반복. 실패를 감추기 위해 입력 지연이나 자동 재시도를 추가하지 않습니다.
    `node scripts/isolation-startup.mjs`: 서비스 워커 제어가 등록 응답보다 먼저 시작하는 첫 접속, 일반 첫 접속, 새로고침 횟수와 등록 거부 안내.

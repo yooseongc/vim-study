@@ -1,0 +1,46 @@
+.status {
+  padding: 4px 8px;
+  margin: 6px 0;
+  border: 1px solid #d6ded5;
+  border-radius: 5px;
+  background: #e9eee0;
+  min-width: 0;
+}
+.status strong,
+.status span {
+  display: block;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow-x: auto;
+}
+.status strong {
+  font-size: 14px;
+}
+.status span {
+  font-size: 13px;
+  color: #52675f;
+}
+.choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0;
+}
+.choices button[aria-pressed='true'] {
+  background: #e9eee0;
+  border-color: #728765;
+}
+.windows {
+  display: grid;
+  gap: 10px;
+  margin-top: 20px;
+}
+.windows div {
+  border: 1px solid #d6ded5;
+  padding: 12px;
+  background: #f4f5ef;
+}
+.windows code {
+  display: block;
+  margin-top: 8px;
+}

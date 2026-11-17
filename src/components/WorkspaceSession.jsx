@@ -13,14 +13,19 @@ import { VimTerminal } from './VimTerminal.jsx';
 import { SettingsDialog } from './SettingsDialog.jsx';
 import s from '../styles/WorkspaceSession.module.css';
 
-export function WorkspaceSession({ ref }) {
+export function WorkspaceSession({ ref, onSelect }) {
   const [attempt, setAttempt] = useState(0);
   return (
-    <WorkspaceRun key={attempt} ref={ref} onRestart={() => setAttempt((value) => value + 1)} />
+    <WorkspaceRun
+      key={attempt}
+      ref={ref}
+      onSelect={onSelect}
+      onRestart={() => setAttempt((value) => value + 1)}
+    />
   );
 }
 
-function WorkspaceRun({ ref, onRestart }) {
+function WorkspaceRun({ ref, onRestart, onSelect }) {
   const [initial] = useState(readWorkspace);
   const [settings] = useState(readSettings);
   const [files, setFiles] = useState(initial.files);
@@ -160,6 +165,7 @@ function WorkspaceRun({ ref, onRestart }) {
           파일은 저장된 내용, 버퍼는 편집 중인 내용, 창은 버퍼를 보여 주는 자리입니다. 파일을 바꿔
           열어도 저장하지 않은 버퍼는 이 세션에 남습니다.
         </p>
+        <button onClick={() => onSelect('buffer-workshop')}>버퍼와 창을 설명부터 연습하기 →</button>
       </header>
       <div className={s.files} ref={panel} tabIndex={-1} aria-label="작업 공간 도구와 안내">
         <div className={s.tools}>

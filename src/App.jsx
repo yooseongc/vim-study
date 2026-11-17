@@ -36,11 +36,14 @@ import { GlobalWorkshop } from './components/GlobalWorkshop.jsx';
 import { VimLogo } from './components/VimLogo.jsx';
 import { BasicsWorkshop } from './components/BasicsWorkshop.jsx';
 import { GrammarWorkshop } from './components/GrammarWorkshop.jsx';
+import { BufferWorkshop } from './components/BufferWorkshop.jsx';
+import { bufferWorkshop } from './lessons/buffer-workshop.js';
 import { grammarWorkshop } from './lessons/grammar-workshop.js';
 import { basicsWorkshop } from './lessons/basics-workshop.js';
 import { globalWorkshop } from './lessons/global-workshop.js';
 
 const activities = [
+  bufferWorkshop,
   grammarWorkshop,
   basicsWorkshop,
   globalWorkshop,
@@ -119,6 +122,7 @@ export default function App() {
     store.reset(mission.id);
     setAttempt((value) => value + 1);
   }
+  if (mission.id === 'buffer-workshop') return <BufferWorkshop ref={session} onSelect={select} />;
   if (mission.id === 'grammar-workshop') return <GrammarWorkshop ref={session} onSelect={select} />;
   if (mission.id === 'basics-workshop') return <BasicsWorkshop ref={session} onSelect={select} />;
   if (mission.id === 'global-workshop') return <GlobalWorkshop ref={session} onSelect={select} />;
@@ -206,7 +210,7 @@ export default function App() {
           ) : mission.id === 'local' ? (
             <LocalPractice ref={session} onPractice={() => select('workspace')} />
           ) : mission.id === 'workspace' ? (
-            <WorkspaceSession ref={session} />
+            <WorkspaceSession ref={session} onSelect={select} />
           ) : mission.id === 'review' ? (
             <ReviewSession ref={session} />
           ) : (

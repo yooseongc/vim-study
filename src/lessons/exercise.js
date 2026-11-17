@@ -34,7 +34,12 @@ export function checkExercise(course, snapshot, saved) {
       kind: 'save',
       message: '내용은 맞습니다. 콜론 → w → Enter로 저장하면 이 문제가 끝납니다.',
     };
-  return { kind: 'success', message: '바꿀 내용과 남길 내용, 저장까지 확인했습니다.' };
+  return (
+    checkWindows(course, snapshot) ?? {
+      kind: 'success',
+      message: '바꿀 내용과 남길 내용, 저장까지 확인했습니다.',
+    }
+  );
 }
 
 function checkFiles(course, snapshot) {
@@ -70,7 +75,22 @@ function checkFiles(course, snapshot) {
       message:
         '내용은 맞습니다. :wa와 Enter로 모든 수정 버퍼를 저장하세요. :w는 현재 파일만 저장합니다.',
     };
-  return { kind: 'success', message: '모든 대상 파일의 저장과 보존할 파일을 확인했습니다.' };
+  return (
+    checkWindows(course, snapshot) ?? {
+      kind: 'success',
+      message: '모든 대상 파일의 저장과 보존할 파일을 확인했습니다.',
+    }
+  );
+}
+
+function checkWindows(course, snapshot) {
+  if (course.finalWindowCount && snapshot.windowCount !== course.finalWindowCount)
+    return {
+      kind: 'windows',
+      message:
+        '저장됐습니다. :close와 Enter로 분할 창을 닫아 창 하나로 마무리하세요. 마지막 창에서는 실행하지 않습니다.',
+    };
+  return null;
 }
 
 export function modeText(mode = '') {

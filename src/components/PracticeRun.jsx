@@ -10,6 +10,7 @@ import { BlockStatus } from './BlockStatus.jsx';
 import { NavigationStatus } from './NavigationStatus.jsx';
 import { QuickfixStatus } from './QuickfixStatus.jsx';
 import { BatchStatus } from './BatchStatus.jsx';
+import { BufferStatus } from './BufferStatus.jsx';
 import s from '../styles/Workshop.module.css';
 
 export function PracticeRun({ ref, lesson, kind, reset, finish, sectionLabel }) {
@@ -123,7 +124,7 @@ export function PracticeRun({ ref, lesson, kind, reset, finish, sectionLabel }) 
   }
   return (
     <main
-      className={`${s.practice} ${extendedCoach ? s.extendedCoach : ''} ${lesson.showRegisters || lesson.showMacro || lesson.showNavigation || lesson.showBlock || lesson.showQuickfix || lesson.showBatch ? s.withMonitor : ''}`}
+      className={`${s.practice} ${extendedCoach ? s.extendedCoach : ''} ${lesson.showRegisters || lesson.showMacro || lesson.showNavigation || lesson.showBlock || lesson.showQuickfix || lesson.showBatch || lesson.showBuffers ? s.withMonitor : ''}`}
       onKeyDownCapture={shortcut}
     >
       <div className={s.lessonHeading}>
@@ -248,6 +249,7 @@ export function PracticeRun({ ref, lesson, kind, reset, finish, sectionLabel }) 
           {lesson.showBlock && <BlockStatus snapshot={snapshot} />}
           {lesson.showQuickfix && <QuickfixStatus snapshot={snapshot} />}
           {lesson.showBatch && <BatchStatus snapshot={snapshot} />}
+          {lesson.showBuffers && <BufferStatus snapshot={snapshot} />}
           <VimTerminal
             {...editor}
             path={snapshot?.path || `/work/${course.file}`}

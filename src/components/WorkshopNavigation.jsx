@@ -15,6 +15,7 @@ const groups = [
       'macro-workshop',
       'navigation-workshop',
       'block-workshop',
+      'buffer-workshop',
       'quickfix-workshop',
       'batch-workshop',
       'global-workshop',
@@ -25,6 +26,7 @@ const groups = [
   ['파일과 작업 범위 넓히기', ['workspace', 'quickfix', 'batch', 'global', 'local']],
 ];
 const extraTitles = {
+  'buffer-workshop': '버퍼와 창을 구분하며 파일 다루기',
   'grammar-workshop': '찾고, 이동하고, 범위를 편집하기',
   'basics-workshop': '모드를 알고, 편집하고 저장하기',
   'global-workshop': '조건으로 줄을 골라 처리하기',

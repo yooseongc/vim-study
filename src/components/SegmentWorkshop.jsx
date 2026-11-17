@@ -53,6 +53,7 @@ function SegmentFinish({ segment, next, retry, select, nextCourse, continueId })
         </div>
       ) : (
         <div className={s.endLinks}>
+          {segment.workspaceNote && <p>{segment.workspaceNote}</p>}
           <button className={s.primary} onClick={() => select('workspace')}>
             내 파일로 자유롭게 연습하기 →
           </button>
