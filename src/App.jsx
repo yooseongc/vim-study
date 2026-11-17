@@ -35,10 +35,13 @@ import { batchWorkshop } from './lessons/batch-workshop.js';
 import { GlobalWorkshop } from './components/GlobalWorkshop.jsx';
 import { VimLogo } from './components/VimLogo.jsx';
 import { BasicsWorkshop } from './components/BasicsWorkshop.jsx';
+import { GrammarWorkshop } from './components/GrammarWorkshop.jsx';
+import { grammarWorkshop } from './lessons/grammar-workshop.js';
 import { basicsWorkshop } from './lessons/basics-workshop.js';
 import { globalWorkshop } from './lessons/global-workshop.js';
 
 const activities = [
+  grammarWorkshop,
   basicsWorkshop,
   globalWorkshop,
   batchWorkshop,
@@ -116,6 +119,7 @@ export default function App() {
     store.reset(mission.id);
     setAttempt((value) => value + 1);
   }
+  if (mission.id === 'grammar-workshop') return <GrammarWorkshop ref={session} onSelect={select} />;
   if (mission.id === 'basics-workshop') return <BasicsWorkshop ref={session} onSelect={select} />;
   if (mission.id === 'global-workshop') return <GlobalWorkshop ref={session} onSelect={select} />;
   if (mission.id === 'batch-workshop') return <BatchWorkshop ref={session} onSelect={select} />;

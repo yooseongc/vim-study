@@ -8,6 +8,7 @@ const groups = [
     '이어 입력하는 새 과정',
     [
       'basics-workshop',
+      'grammar-workshop',
       'workshop',
       'range-workshop',
       'register-workshop',
@@ -24,6 +25,7 @@ const groups = [
   ['파일과 작업 범위 넓히기', ['workspace', 'quickfix', 'batch', 'global', 'local']],
 ];
 const extraTitles = {
+  'grammar-workshop': '찾고, 이동하고, 범위를 편집하기',
   'basics-workshop': '모드를 알고, 편집하고 저장하기',
   'global-workshop': '조건으로 줄을 골라 처리하기',
   'batch-workshop': '목록을 정하고 함께 바꾸기',

@@ -141,6 +141,12 @@ try {
   await page.getByRole('button', { name: '이 문제 다시 풀기', exact: true }).click();
   await ready();
   await textIs('start\nnote: keep this line');
+  await type('iVim ');
+  await page.keyboard.press('Escape');
+  await command(':w');
+  await finish(2);
+  await page.getByRole('button', { name: /이어서 검색과 편집 문법 배우기/ }).click();
+  await expect(page.locator('#grammar-workshop-start')).toBeVisible();
   await page.getByRole('button', { name: /학습 목차/ }).click();
   await page.getByRole('button', { name: '편집 명령을 문장처럼 조합하기', exact: false }).click();
   await expect(page).toHaveURL(/#grammar$/);
