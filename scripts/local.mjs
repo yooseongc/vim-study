@@ -79,6 +79,25 @@ try {
   console.log(
     'PASS: local curriculum, ZIP download, file comparison, protected file failure, missing/oversize handling, no records, four widths and workspace navigation.',
   );
+} catch (error) {
+  console.error(
+    await page.evaluate(async () => ({
+      isolated: crossOriginIsolated,
+      secure: isSecureContext,
+      sharedArrayBuffer: typeof SharedArrayBuffer,
+      controller: navigator.serviceWorker.controller?.scriptURL,
+      registrations: (await navigator.serviceWorker.getRegistrations()).map((r) => ({
+        scope: r.scope,
+        active: r.active?.state,
+        waiting: r.waiting?.state,
+        installing: r.installing?.state,
+      })),
+      status: document.querySelector('#engine-status')?.textContent,
+      message: document.body.innerText.slice(-1200),
+    })),
+  );
+  await page.screenshot({ path: 'test-results/local-failure.png', fullPage: true });
+  throw error;
 } finally {
   await browser.close();
 }
