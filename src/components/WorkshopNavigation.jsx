@@ -1,11 +1,13 @@
 import { useEffect, useRef } from 'react';
 import { guidedCourses } from '../lessons/catalog.js';
 import s from '../styles/Workshop.module.css';
+import { VimLogo } from './VimLogo.jsx';
 
 const groups = [
   [
     '이어 입력하는 새 과정',
     [
+      'basics-workshop',
       'workshop',
       'range-workshop',
       'register-workshop',
@@ -22,6 +24,7 @@ const groups = [
   ['파일과 작업 범위 넓히기', ['workspace', 'quickfix', 'batch', 'global', 'local']],
 ];
 const extraTitles = {
+  'basics-workshop': '모드를 알고, 편집하고 저장하기',
   'global-workshop': '조건으로 줄을 골라 처리하기',
   'batch-workshop': '목록을 정하고 함께 바꾸기',
   'quickfix-workshop': '검색 목록을 따라 편집하기',
@@ -84,7 +87,7 @@ export function WorkshopHeader({ openMenu }) {
   return (
     <header className={s.header}>
       <span className={s.brand}>
-        <b>v_</b> Vim <span>작은 편집, 큰 차이</span>
+        <VimLogo className={s.logo} /> Vim <span>작은 편집, 큰 차이</span>
       </span>
       <button onClick={() => openMenu()} aria-haspopup="dialog">
         학습 목차 <span aria-hidden="true">☰</span>

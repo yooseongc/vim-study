@@ -7,6 +7,13 @@ export function MissionList({ current, completed, onSelect, basicsCompleted, gra
     <aside className={s.missions}>
       <div className={s.label}>학습과 자유 연습</div>
       <nav id="mission-list" className={s.list} aria-label="학습 단원과 자유 연습">
+        <button className={s.mission} onClick={() => onSelect('basics-workshop')}>
+          <span className={s.number}>입문</span>
+          <span>
+            <strong>모드를 알고, 편집하고 저장하기</strong>
+            <small>입력 · 저장 · undo와 redo</small>
+          </span>
+        </button>
         <button className={s.mission} onClick={() => onSelect('workshop')}>
           <span className={s.number}>새로</span>
           <span>

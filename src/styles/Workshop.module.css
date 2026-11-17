@@ -25,9 +25,11 @@
   font-size: 18px;
   font-weight: 600;
 }
-.brand b {
-  font: 700 26px monospace;
-  letter-spacing: -2px;
+.logo {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  flex-shrink: 0;
 }
 .brand > span {
   font-size: 13px;

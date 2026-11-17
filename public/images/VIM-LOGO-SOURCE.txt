@@ -1,0 +1,8 @@
+Official Vim logo, unmodified SVG downloaded from:
+https://www.vim.org/images/vimlogo.svg
+Linked as "Vim SVG" at https://www.vim.org/logos.php
+Retrieved 2026-11-17.
+The SVG embeds the upstream Vim license URL:
+https://raw.githubusercontent.com/vim/vim/master/LICENSE
+Vim license text is included in this distribution at vendor/VIM-LICENSE.txt.
+Vim is the upstream editor project; this independent learning site is not its official website.

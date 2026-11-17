@@ -33,9 +33,13 @@ import { BatchWorkshop } from './components/BatchWorkshop.jsx';
 import { batchWorkshop } from './lessons/batch-workshop.js';
 
 import { GlobalWorkshop } from './components/GlobalWorkshop.jsx';
+import { VimLogo } from './components/VimLogo.jsx';
+import { BasicsWorkshop } from './components/BasicsWorkshop.jsx';
+import { basicsWorkshop } from './lessons/basics-workshop.js';
 import { globalWorkshop } from './lessons/global-workshop.js';
 
 const activities = [
+  basicsWorkshop,
   globalWorkshop,
   batchWorkshop,
   quickfixWorkshop,
@@ -112,6 +116,7 @@ export default function App() {
     store.reset(mission.id);
     setAttempt((value) => value + 1);
   }
+  if (mission.id === 'basics-workshop') return <BasicsWorkshop ref={session} onSelect={select} />;
   if (mission.id === 'global-workshop') return <GlobalWorkshop ref={session} onSelect={select} />;
   if (mission.id === 'batch-workshop') return <BatchWorkshop ref={session} onSelect={select} />;
   if (mission.id === 'quickfix-workshop')
@@ -128,7 +133,7 @@ export default function App() {
     <>
       <header className={s.header}>
         <a className={s.brand} href="./">
-          <span className={s.logo}>v_</span> VIM <b>FIELD GUIDE</b>
+          <VimLogo className={s.logo} /> VIM <b>FIELD GUIDE</b>
         </a>
         <span className={s.edition}>
           실전에서 손에 익히는 Vim <span> / VOL. 01</span>

@@ -4,7 +4,7 @@ import { PracticeRun } from './PracticeRun.jsx';
 import { CourseMenu, WorkshopHeader } from './WorkshopNavigation.jsx';
 import s from '../styles/Workshop.module.css';
 
-function Intro({ start }) {
+function Intro({ start, basics }) {
   const [concept, setConcept] = useState(0);
   const [after, setAfter] = useState(false);
   return (
@@ -35,6 +35,9 @@ function Intro({ start }) {
           직접 연습하기 <span aria-hidden="true">→</span>
         </button>
         <p className={s.small}>검색과 입력을 해본 분에게 · 실제 Vim · 학습 기록 없이</p>
+        <button className={s.textButton} onClick={basics}>
+          모드와 저장이 헷갈리면 입문부터 →
+        </button>
       </div>
       <div className={s.introLesson}>
         <div className={s.previewHeading}>
@@ -91,7 +94,7 @@ export function Workshop({ ref, onSelect }) {
     <div className={s.page}>
       <WorkshopHeader openMenu={() => setMenuOpen(true)} />
       {phase === 'intro' ? (
-        <Intro start={() => setPhase('guided')} />
+        <Intro start={() => setPhase('guided')} basics={() => onSelect('basics-workshop')} />
       ) : complete ? (
         <Finish
           kind={phase}
