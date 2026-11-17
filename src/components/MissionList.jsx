@@ -11,8 +11,10 @@ export function MissionList({ current, completed, onSelect, basicsCompleted, gra
         aria-current={current.id === course.id ? 'step' : undefined}
         onClick={() => onSelect(course.id)}
       >
-        <span className={s.number}>{badge}</span>
-        <span>
+        <span className={s.number} aria-hidden="true">
+          {badge}
+        </span>
+        <span className={s.entryText}>
           <strong>{course.title}</strong>
           {course.skill && <small>{course.skill}</small>}
         </span>
@@ -29,7 +31,16 @@ export function MissionList({ current, completed, onSelect, basicsCompleted, gra
         )}
         {entry(
           { id: 'workspace', title: '나의 Vim 작업 공간', skill: '파일 저장 · 버퍼와 창' },
-          '파일',
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.6"
+            aria-hidden="true"
+          >
+            <path d="M3 7V5a1 1 0 0 1 1-1h5l2 3h9a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7Z" />
+            <path d="M3 9h18" />
+          </svg>,
         )}
         <details
           open={guidedCourses.some((course) => course.id === current.id) || current.id === 'review'}

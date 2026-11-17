@@ -94,7 +94,8 @@
   margin-left: auto;
 }
 .number {
-  font-family: monospace;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
   color: #52675f;
 }
 .free {

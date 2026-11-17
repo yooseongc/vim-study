@@ -112,14 +112,14 @@
   display: grid;
   gap: 10px;
   margin: 28px 0;
-  font: 14px monospace;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
   color: #957656;
 }
 .promise b {
   color: var(--ink);
-  font:
-    500 16px 'Noto Sans KR',
-    sans-serif;
+  font-size: 16px;
+  font-weight: 600;
   margin-left: 12px;
 }
 .introCopy > .primary {

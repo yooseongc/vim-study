@@ -1,6 +1,5 @@
 .label {
-  font-size: 12px;
-  letter-spacing: 0.6px;
+  font-size: 13px;
   font-weight: 600;
 }
 .missions {
@@ -19,12 +18,12 @@
 }
 .mission {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   text-align: left;
   width: 100%;
   border: 1px solid transparent;
   padding: 13px 8px;
-  gap: 10px;
+  gap: 12px;
   margin: 4px 0;
 }
 .mission.active {
@@ -34,22 +33,37 @@
 .number {
   flex-shrink: 0;
   white-space: nowrap;
-  font: 16px monospace;
+  font-size: 14px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  line-height: 24px;
   color: #546c40;
   min-width: 24px;
 }
+.number svg {
+  display: block;
+  width: 20px;
+  height: 24px;
+}
+.entryText {
+  min-width: 0;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
 .mission strong {
   font-weight: 600;
-  font-size: 14px;
+  font-size: 15px;
   line-height: 1.6;
   display: block;
   word-break: keep-all;
+  text-wrap: balance;
 }
 .mission small {
   display: block;
   color: #52624c;
   margin-top: 5px;
   font-size: 13px;
+  line-height: 1.75;
 }
 .note {
   border-top: 1px solid #cbd5c3;
@@ -69,6 +83,8 @@
   .missions {
     max-height: max(420px, calc(100dvh - 250px));
     overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #a6b29e transparent;
   }
 }
 @media (max-width: 760px) {
