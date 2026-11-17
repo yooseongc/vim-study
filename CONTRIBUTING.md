@@ -36,7 +36,7 @@
    `node scripts/dot.mjs`: M6 점 명령의 18단계, 검색 위치, undo/redo, 보호할 검색 결과 건너뛰기, 저장 검증과 기록 미생성.
    `node scripts/substitution.mjs`: M6 치환의 31단계, 현재 줄·줄 범위·전체 파일, g/c 옵션, y/n/q 응답, 저장과 기록 미생성.
    `node scripts/advanced.mjs`: M6 후반 일곱 단원, 레지스터·녹화·mark·블록·quickfix·arglist·global의 실제 상태, 독립 과제와 보호 파일, 기록 미생성, 화면과 다음 단원 연결.
-   `node scripts/local.mjs`: 로컬 과정, ZIP 다운로드, 파일 비교·오답·크기 제한, 반응형과 작업 공간 연결.
+   `node scripts/local.mjs`: 로컬 과정 전체 설명·환경별 안내, ZIP 다운로드, 명령 복사·거부, 줄 비교·누락·오답·크기 제한, 읽기 중 선택 취소, 반응형과 작업 공간 연결.
    `node scripts/local-native.mjs`: 실제 로컬 Vim/Bash로 여러 파일 편집, 매크로, 외부 필터, 검사기와 읽기 전용 복구. 설치된 Vim/Bash가 필요하며 SSH 접속·대화형 job control은 자동 검증 범위 밖입니다.
    `node scripts/workshop.mjs`: 새 대표 단원의 연속 입력, 키보드 진행·힌트, 현재 문제 초기화, 실수 복구, 저장 판정, 여러 화면에서의 조작 가능성과 Worker 정리.
    `node scripts/range-workshop.mjs`: 치환 미리보기와 실제 Vim의 여섯 조합 비교, 네 문제, 확인 중 y/n/q·undo 복구, 범위 밖 변경 차단, 긴 명령 노출, resize 뒤 픽셀과 확인 모드 유지.

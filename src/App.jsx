@@ -122,6 +122,7 @@ export default function App() {
     store.reset(mission.id);
     setAttempt((value) => value + 1);
   }
+  if (mission.id === 'local') return <LocalPractice ref={session} onSelect={select} />;
   if (mission.id === 'buffer-workshop') return <BufferWorkshop ref={session} onSelect={select} />;
   if (mission.id === 'grammar-workshop') return <GrammarWorkshop ref={session} onSelect={select} />;
   if (mission.id === 'basics-workshop') return <BasicsWorkshop ref={session} onSelect={select} />;
@@ -207,8 +208,6 @@ export default function App() {
                     : undefined
               }
             />
-          ) : mission.id === 'local' ? (
-            <LocalPractice ref={session} onPractice={() => select('workspace')} />
           ) : mission.id === 'workspace' ? (
             <WorkspaceSession ref={session} onSelect={select} />
           ) : mission.id === 'review' ? (

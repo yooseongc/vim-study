@@ -1,3 +1,5 @@
+import { commandParts } from './local-guide.js';
+
 export const labInitial = {
   'api.conf': 'mode=draft\nport=3000\n',
   'web.conf': 'mode=draft\nport=3000\n',
@@ -27,6 +29,23 @@ export function validateLab(files) {
     return {
       name,
       passed: text === expected,
+      row: row === undefined ? null : row + 1,
+      actual:
+        row === undefined
+          ? null
+          : lines[row] === undefined
+            ? '(줄 없음)'
+            : lines[row] === ''
+              ? '(빈 줄 또는 마지막 줄바꿈)'
+              : lines[row],
+      expected:
+        row === undefined
+          ? null
+          : target[row] === undefined
+            ? '(이 줄은 없어야 합니다)'
+            : target[row] === ''
+              ? '(마지막 줄바꿈)'
+              : target[row],
       message:
         text === undefined
           ? '파일을 선택하지 않았습니다.'
@@ -46,7 +65,7 @@ export const localSections = [
     steps: [
       {
         title: '실습 묶음을 내려받고 압축을 풉니다',
-        text: '아래 ZIP에는 여섯 연습 파일, 결과 비교용 expected 폴더, verify.sh가 들어 있습니다. 새 폴더에 풀어 원본 프로젝트와 구분하세요. 초기화하려면 ZIP을 다른 새 폴더에 다시 풉니다.',
+        text: '실습 ZIP에는 여섯 연습 파일, 결과 비교용 expected 폴더, verify.sh가 들어 있습니다. 새 폴더에 풀어 원본 프로젝트와 구분하세요. 초기화하려면 ZIP을 다른 새 폴더에 다시 풉니다.',
       },
       {
         title: '터미널에서 그 폴더로 이동합니다',
@@ -120,7 +139,13 @@ export const localSections = [
         title: 'tasks 파일을 엽니다',
         where: 'Vim 명령줄',
         command: ':edit tasks.txt',
-        text: 'api와 web 앞에 ready: 와 공백을 붙입니다. note: keep은 남깁니다. q → a로 녹화를 시작하고 I로 줄 앞에 입력한 다음 Esc, j, q로 마치세요. 다음 줄에서 @ 다음 a로 한 번 실행합니다. :w로 저장합니다.',
+        text: 'api와 web 앞에 ready: 와 공백을 붙입니다. note: keep은 남깁니다. 매크로·블록 입력·범위 치환 중 익숙한 방법을 선택해도 됩니다. 다음 설명은 범위 치환 예시입니다.',
+      },
+      {
+        title: '첫 두 줄에만 접두어를 붙입니다',
+        where: 'Vim 명령줄',
+        command: ':1,2s/^/ready: /',
+        text: '1,2는 첫 두 줄, s는 치환, ^는 줄 시작입니다. ready: 뒤 공백도 입력합니다. note 줄은 범위 밖이라 남습니다. 결과를 보고 :w와 Enter로 저장하세요.',
       },
       {
         title: '로그를 엽니다',
@@ -300,11 +325,12 @@ export function labArchiveFiles() {
       'Passing verifies file contents only, not SSH, permissions, or keystrokes.',
       '',
       ...localSections.flatMap((section) => [
-        section.title,
+        section.title + (['permissions', 'ssh'].includes(section.id) ? ' (선택 확장)' : ''),
         section.intro,
         ...section.steps.flatMap((step) => [
           step.title,
           step.command ? `[${step.where}] ${step.command}` : '',
+          ...(commandParts[step.command] ?? []).map(([part, meaning]) => `  ${part}: ${meaning}`),
           step.text,
         ]),
         '',

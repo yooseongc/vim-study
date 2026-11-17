@@ -2,7 +2,12 @@ import { mkdir, mkdtemp, writeFile, readFile } from 'node:fs/promises';
 import { resolve, dirname } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import assert from 'node:assert/strict';
-import { labArchiveFiles, labExpected } from '../src/lessons/local-lab.js';
+import {
+  labArchiveFiles,
+  labExpected,
+  labInitial,
+  localSections,
+} from '../src/lessons/local-lab.js';
 
 await mkdir('test-results', { recursive: true });
 const cwd = await mkdtemp(resolve('test-results/native-lab-'));
@@ -59,6 +64,35 @@ for (const [name, expected] of Object.entries(labExpected))
     name,
   );
 assert.equal(run(bash, ['verify.sh']).status, 0, 'native edits must pass');
+// Run the new displayed range recipe and the native-Vim file-only alternative.
+for (const name of ['tasks.txt', 'names.txt'])
+  await writeFile(resolve(cwd, name), labInitial[name]);
+const prefixCommand = localSections
+  .find((s) => s.id === 'project')
+  .steps.find((s) => s.command?.startsWith(':1,2s/'))
+  .command.slice(1);
+await writeFile(
+  resolve(cwd, 'alternatives.vim'),
+  `edit tasks.txt\n${prefixCommand}\nwrite\nedit names.txt\nsort u\nwrite\nquitall\n`,
+);
+const alternative = run(vim, [
+  '-Nu',
+  'NONE',
+  '-i',
+  'NONE',
+  '-N',
+  '-n',
+  '-es',
+  '-S',
+  'alternatives.vim',
+]);
+assert.equal(alternative.status, 0, alternative.stderr);
+for (const name of ['tasks.txt', 'names.txt'])
+  assert.equal(
+    (await readFile(resolve(cwd, name), 'utf8')).replaceAll('\r\n', '\n'),
+    labExpected[name],
+  );
+assert.equal(run(bash, ['verify.sh']).status, 0, 'alternative edits preserve all expected files');
 await writeFile(
   resolve(cwd, 'readonly.vim'),
   `edit api.conf
@@ -87,5 +121,5 @@ assert.equal(
 await writeFile(resolve(cwd, 'notes.txt'), 'changed\n');
 assert.equal(run(bash, ['verify.sh']).status, 1, 'collateral edit must fail');
 console.log(
-  'PASS: native Vim multi-file edits, recorded macro, global, external sort, Bash checker failure/success, readonly E45 and saveas recovery. SSH/job-control require an interactive user environment.',
+  'PASS: native Vim multi-file edits, macro, displayed range recipe, built-in sort alternative, global, external sort, Bash checker failure/success, readonly E45 and saveas recovery. SSH/job-control require an interactive user environment.',
 );
