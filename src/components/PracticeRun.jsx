@@ -5,6 +5,7 @@ import { readSettings } from '../lib/storage.js';
 import { SettingsDialog } from './SettingsDialog.jsx';
 import { VimTerminal } from './VimTerminal.jsx';
 import { RegisterShelf } from './RegisterShelf.jsx';
+import { MacroStatus } from './MacroStatus.jsx';
 import s from '../styles/Workshop.module.css';
 
 export function PracticeRun({ ref, lesson, kind, reset, finish, sectionLabel }) {
@@ -111,7 +112,7 @@ export function PracticeRun({ ref, lesson, kind, reset, finish, sectionLabel }) 
   }
   return (
     <main
-      className={`${s.practice} ${extendedCoach ? s.extendedCoach : ''} ${lesson.showRegisters ? s.withRegisters : ''}`}
+      className={`${s.practice} ${extendedCoach ? s.extendedCoach : ''} ${lesson.showRegisters || lesson.showMacro ? s.withMonitor : ''}`}
       onKeyDownCapture={shortcut}
     >
       <div className={s.lessonHeading}>
@@ -132,7 +133,11 @@ export function PracticeRun({ ref, lesson, kind, reset, finish, sectionLabel }) 
           <div className={s.coachScroll} ref={coachScroll}>
             <div className={s.coachLabel}>
               <span>
-                {kind === 'guided' ? `${stage + 1} / ${guidedGoals.length}` : '직접 선택하는 문제'}
+                {kind === 'guided'
+                  ? goal.recovery
+                    ? '복구 안내'
+                    : `${stage + 1} / ${guidedGoals.filter((item) => !item.recovery).length}`
+                  : '직접 선택하는 문제'}
               </span>
               <span>{kind === 'guided' ? goal.label : '적용과 건너뛰기'}</span>
             </div>
@@ -227,6 +232,7 @@ export function PracticeRun({ ref, lesson, kind, reset, finish, sectionLabel }) 
             </button>
           </div>
           {lesson.showRegisters && <RegisterShelf snapshot={snapshot} />}
+          {lesson.showMacro && <MacroStatus snapshot={snapshot} />}
           <VimTerminal
             {...editor}
             path={snapshot?.path || `/work/${course.file}`}
@@ -261,11 +267,13 @@ export function PracticeRun({ ref, lesson, kind, reset, finish, sectionLabel }) 
           <span>
             {passed
               ? '바꿀 부분과 남길 부분, 저장까지 확인했어요.'
-              : result.kind === 'save'
-                ? '내용이 맞습니다. 이제 저장해보세요.'
-                : kind === 'guided'
-                  ? '입력을 이어가세요. 맞는 결과에서 안내가 이어집니다.'
-                  : '원하는 방법으로 해결하세요. 위치를 고르는 건 내 몫입니다.'}
+              : result.kind === 'recording'
+                ? result.message
+                : result.kind === 'save'
+                  ? '내용이 맞습니다. 이제 저장해보세요.'
+                  : kind === 'guided'
+                    ? '입력을 이어가세요. 맞는 결과에서 안내가 이어집니다.'
+                    : '원하는 방법으로 해결하세요. 위치를 고르는 건 내 몫입니다.'}
           </span>
         </div>
         <button

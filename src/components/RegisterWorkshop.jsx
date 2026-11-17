@@ -89,7 +89,7 @@ export function RegisterWorkshop({ ref, onSelect }) {
       segments={registerLessons}
       Intro={RegisterIntro}
       continueId="register-continue"
-      nextCourse={{ id: 'macros', label: '이어서 여러 동작을 매크로로 묶기' }}
+      nextCourse={{ id: 'macro-workshop', label: '이어서 여러 동작을 매크로로 묶기' }}
     />
   );
 }

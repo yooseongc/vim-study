@@ -25,6 +25,7 @@ test('success requires exact preserved content, the practice file, normal mode a
     assert.equal(checkPractice(kind, good, '').kind, 'save');
     assert.equal(checkPractice(kind, { ...good, dirtyCount: 1 }, text).kind, 'save');
     assert.equal(checkPractice(kind, { ...good, mode: 'i' }, text).kind, 'mode');
+    assert.equal(checkPractice(kind, { ...good, recording: 'a' }, text).kind, 'recording');
     assert.equal(checkPractice(kind, { ...good, path: '/work/other.txt' }, text).kind, 'path');
   }
 });

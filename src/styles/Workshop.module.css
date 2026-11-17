@@ -709,10 +709,10 @@
   .extendedCoach .coach p {
     line-height: 1.65;
   }
-  .withRegisters .lessonHeading {
+  .withMonitor .lessonHeading {
     padding-block: 6px;
   }
-  .withRegisters .coach p {
+  .withMonitor .coach p {
     line-height: 1.65;
   }
   .coach {

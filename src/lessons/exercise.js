@@ -20,6 +20,8 @@ export function checkExercise(course, snapshot, saved) {
         ? `${row + 1}번째 설명 줄은 바꾸지 않는 부분입니다. Esc로 나온 뒤 u로 마지막 변경을 되돌려보세요.`
         : `${row + 1}번째 줄을 목표와 비교해보세요. 지금까지 맞게 바꾼 줄은 그대로 두면 됩니다.`,
     };
+  if (snapshot.recording)
+    return { kind: 'recording', message: '내용은 맞습니다. Esc로 나온 뒤 q로 녹화를 끝내세요.' };
   if (snapshot.mode !== 'n')
     return {
       kind: 'mode',

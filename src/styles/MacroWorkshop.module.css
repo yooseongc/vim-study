@@ -1,0 +1,42 @@
+.status {
+  padding: 5px 8px;
+  margin: 4px 0 6px;
+  border: 1px solid #d6ded5;
+  border-radius: 5px;
+  background: #e9eee0;
+  min-width: 0;
+}
+.status span {
+  display: block;
+  font-size: 11px;
+  color: #52675f;
+}
+.status .recording {
+  color: #8c3b20;
+  font-weight: 600;
+}
+.status code {
+  display: block;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.choices {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 16px 0;
+}
+.choices button[aria-pressed='true'] {
+  background: #e9eee0;
+  border-color: #728765;
+}
+.cursor {
+  border-left: 3px solid #9b4b2e;
+  background: #e9eee0;
+}
+.explanation {
+  min-height: 70px;
+  word-break: keep-all;
+}
