@@ -466,7 +466,8 @@
   font-size: 12px;
   margin-top: 4px;
 }
-.textView pre {
+.textView > pre,
+.textViewPanel {
   position: absolute;
   bottom: 20px;
   left: 0;
@@ -483,6 +484,11 @@
     15px/1.8 Consolas,
     monospace;
   z-index: 1;
+}
+.textViewPanel pre {
+  white-space: pre-wrap;
+  margin: 10px 0;
+  font: inherit;
 }
 .actionBar {
   min-height: 78px;

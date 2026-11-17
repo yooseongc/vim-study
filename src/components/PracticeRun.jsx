@@ -8,12 +8,20 @@ import { RegisterShelf } from './RegisterShelf.jsx';
 import { MacroStatus } from './MacroStatus.jsx';
 import { BlockStatus } from './BlockStatus.jsx';
 import { NavigationStatus } from './NavigationStatus.jsx';
+import { QuickfixStatus } from './QuickfixStatus.jsx';
 import s from '../styles/Workshop.module.css';
 
 export function PracticeRun({ ref, lesson, kind, reset, finish, sectionLabel }) {
   const { practice, guidedGoals, guidedStage, challengeHints, reference } = lesson;
   const course = practice[kind];
-  const [files] = useState(() => ({ [course.file]: course.initial + '\n' }));
+  const [files] = useState(() =>
+    Object.fromEntries(
+      Object.entries({ [course.file]: course.initial, ...course.files }).map(([name, text]) => [
+        name,
+        text + '\n',
+      ]),
+    ),
+  );
   const [settings] = useState(readSettings);
   const [snapshot, setSnapshot] = useState(null);
   const [stage, setStage] = useState(0);
@@ -114,7 +122,7 @@ export function PracticeRun({ ref, lesson, kind, reset, finish, sectionLabel }) 
   }
   return (
     <main
-      className={`${s.practice} ${extendedCoach ? s.extendedCoach : ''} ${lesson.showRegisters || lesson.showMacro || lesson.showNavigation || lesson.showBlock ? s.withMonitor : ''}`}
+      className={`${s.practice} ${extendedCoach ? s.extendedCoach : ''} ${lesson.showRegisters || lesson.showMacro || lesson.showNavigation || lesson.showBlock || lesson.showQuickfix ? s.withMonitor : ''}`}
       onKeyDownCapture={shortcut}
     >
       <div className={s.lessonHeading}>
@@ -237,6 +245,7 @@ export function PracticeRun({ ref, lesson, kind, reset, finish, sectionLabel }) 
           {lesson.showMacro && <MacroStatus snapshot={snapshot} />}
           {lesson.showNavigation && <NavigationStatus snapshot={snapshot} />}
           {lesson.showBlock && <BlockStatus snapshot={snapshot} />}
+          {lesson.showQuickfix && <QuickfixStatus snapshot={snapshot} />}
           <VimTerminal
             {...editor}
             path={snapshot?.path || `/work/${course.file}`}
@@ -246,7 +255,7 @@ export function PracticeRun({ ref, lesson, kind, reset, finish, sectionLabel }) 
           />
           <div className={s.editorBottom}>
             <span>
-              {snapshot?.modified
+              {snapshot?.dirtyCount || snapshot?.modified
                 ? '아직 저장하지 않은 변경'
                 : saved
                   ? '연습 파일에 저장됨'
@@ -261,7 +270,20 @@ export function PracticeRun({ ref, lesson, kind, reset, finish, sectionLabel }) 
           </div>
           <details className={s.textView}>
             <summary>편집 내용을 텍스트로 보기</summary>
-            <pre>{snapshot?.lines.join('\n') || course.initial}</pre>
+            <div className={s.textViewPanel}>
+              <pre>{snapshot?.lines.join('\n') || course.initial}</pre>
+              {course.targets &&
+                Object.entries(course.targets).map(([name, text]) => (
+                  <div key={name}>
+                    <b>{name} · 목표</b>
+                    <pre>{text}</pre>
+                    <b>편집 중인 내용</b>
+                    <pre>{snapshot?.buffers?.[name] ?? '준비 중'}</pre>
+                    <b>저장된 내용</b>
+                    <pre>{snapshot?.files?.[name] ?? '준비 중'}</pre>
+                  </div>
+                ))}
+            </div>
           </details>
         </section>
       </div>

@@ -34,6 +34,12 @@ let snapshot.jumpCount = len(getjumplist()[0])
 let snapshot.visualStart = [line('v'), col('v')]
 let snapshot.quickfixCount = len(getqflist())
 let snapshot.quickfixIndex = get(getqflist({'idx': 0}), 'idx', 0)
+let snapshot.quickfixWindow = &buftype ==# 'quickfix'
+let snapshot.buffers = {}
+for name in ${JSON.stringify(names)}
+let path = '/work/' . name
+let snapshot.buffers[name] = bufloaded(path) ? join(getbufline(path, 1, '$'), "\\n") : join(readfile(path), "\\n")
+endfor
 let snapshot.argumentCount = argc()
 let snapshot.argumentIndex = argidx()
 let snapshot.dirtyCount = len(filter(getbufinfo(), 'v:val.changed'))

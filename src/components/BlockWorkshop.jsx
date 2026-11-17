@@ -101,7 +101,7 @@ export function BlockWorkshop({ ref, onSelect }) {
       segments={blockLessons}
       Intro={BlockIntro}
       continueId="block-continue"
-      nextCourse={{ id: 'quickfix', label: '이어서 검색 결과를 작업 목록으로 쓰기' }}
+      nextCourse={{ id: 'quickfix-workshop', label: '이어서 검색 결과를 작업 목록으로 쓰기' }}
     />
   );
 }

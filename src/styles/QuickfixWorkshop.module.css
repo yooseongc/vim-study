@@ -1,0 +1,38 @@
+.status {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 6px 0;
+}
+.status > div {
+  padding: 4px 8px;
+  border: 1px solid #d6ded5;
+  background: #e9eee0;
+  border-radius: 5px;
+}
+.status span {
+  display: block;
+  font-size: 11px;
+  color: #52675f;
+}
+.status strong {
+  display: block;
+  font-size: 14px;
+}
+.choices {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 16px 0;
+}
+.item {
+  padding: 12px;
+  border-bottom: 1px solid #d6ded5;
+}
+.active {
+  background: #e9eee0;
+  font-weight: 600;
+}
+.explanation {
+  min-height: 80px;
+}

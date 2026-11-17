@@ -44,6 +44,7 @@
    `node scripts/macro-workshop.mjs`: 녹화와 a 덮어쓰기, 점과 매크로의 커서 차이, @a·@@, 예외 줄 복구, 녹화 종료와 저장 판정, 세 문제와 다섯 화면 크기.
    `node scripts/navigation-workshop.mjs`: mark와 register의 분리, 줄·칸 복귀, 점프 기록 왕복, 편집 보존, 입력 모드 안내, 독립 과제의 보호할 줄과 다섯 화면 크기.
    `node scripts/block-workshop.mjs`: 선택 방식 비교, 실제 블록 범위, 취소와 undo/redo, Esc 이후 입력 적용, 열 삭제, 보호할 줄과 저장, 다섯 화면 크기.
+   `node scripts/quickfix-workshop.mjs`: 검색 명령 구성, 목록 창과 다음·이전 결과, 파일별 편집·저장, 숨은 미저장 버퍼, 설명 파일 복구, 세 문제와 다섯 화면 크기.
 6. 공개 전에 변경 내용을 검토하고, 배포 성공 뒤 운영 주소에서도 동작을 확인합니다.
 
 브라우저 검증은 별도의 숨겨진 임시 프로필에서 수행합니다. 사용자가 보고 있는 창의 크기를 테스트 목적으로 바꾸지 않습니다.

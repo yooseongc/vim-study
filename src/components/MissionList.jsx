@@ -49,6 +49,13 @@ export function MissionList({ current, completed, onSelect, basicsCompleted, gra
             <small>블록 선택 · 함께 입력 · 열 삭제</small>
           </span>
         </button>
+        <button className={s.mission} onClick={() => onSelect('quickfix-workshop')}>
+          <span className={s.number}>새로</span>
+          <span>
+            <strong>검색 목록을 따라 편집하기</strong>
+            <small>검색 위치 · 파일 이동 · 모두 저장</small>
+          </span>
+        </button>
         <button
           className={`${s.mission} ${current.id === 'basics' ? s.active : ''}`}
           aria-current={current.id === 'basics' ? 'step' : 'false'}

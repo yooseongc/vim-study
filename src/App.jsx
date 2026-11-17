@@ -26,7 +26,11 @@ import { navigationWorkshop } from './lessons/navigation-workshop.js';
 import { BlockWorkshop } from './components/BlockWorkshop.jsx';
 import { blockWorkshop } from './lessons/block-workshop.js';
 
+import { QuickfixWorkshop } from './components/QuickfixWorkshop.jsx';
+import { quickfixWorkshop } from './lessons/quickfix-workshop.js';
+
 const activities = [
+  quickfixWorkshop,
   blockWorkshop,
   workshop,
   rangeWorkshop,
@@ -100,6 +104,8 @@ export default function App() {
     store.reset(mission.id);
     setAttempt((value) => value + 1);
   }
+  if (mission.id === 'quickfix-workshop')
+    return <QuickfixWorkshop ref={session} onSelect={select} />;
   if (mission.id === 'block-workshop') return <BlockWorkshop ref={session} onSelect={select} />;
   if (mission.id === 'macro-workshop') return <MacroWorkshop ref={session} onSelect={select} />;
   if (mission.id === 'navigation-workshop')

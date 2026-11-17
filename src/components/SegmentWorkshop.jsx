@@ -17,7 +17,16 @@ function SegmentFinish({ segment, next, retry, select, nextCourse, continueId })
       <h1>{segment.recap}</h1>
       <p>{segment.detail}</p>
       <div className={s.finishPreview}>
-        <pre>{course.target}</pre>
+        {course.targets ? (
+          Object.entries(course.targets).map(([name, text]) => (
+            <div key={name}>
+              <b>{name}</b>
+              <pre>{text}</pre>
+            </div>
+          ))
+        ) : (
+          <pre>{course.target}</pre>
+        )}
       </div>
       {segment.question ? (
         <div className={s.decision}>
