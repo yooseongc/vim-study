@@ -74,6 +74,7 @@ function checkFiles(course, snapshot) {
 }
 
 export function modeText(mode = '') {
+  if (mode === 'r') return '메시지 확인 · Enter로 계속';
   if (mode === 'v') return '문자 선택 모드';
   if (mode === 'V') return '줄 선택 모드';
   if (mode === '\u0016') return '블록 선택 모드';

@@ -41,6 +41,7 @@ let path = '/work/' . name
 let snapshot.buffers[name] = bufloaded(path) ? join(getbufline(path, 1, '$'), "\\n") : join(readfile(path), "\\n")
 endfor
 let snapshot.argumentCount = argc()
+let snapshot.argumentFiles = map(argv(), 'fnamemodify(v:val, ":p")')
 let snapshot.argumentIndex = argidx()
 let snapshot.dirtyCount = len(filter(getbufinfo(), 'v:val.changed'))
 let snapshot.files = ${dict}

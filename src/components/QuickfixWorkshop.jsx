@@ -83,7 +83,7 @@ export function QuickfixWorkshop({ ref, onSelect }) {
       segments={quickfixLessons}
       Intro={QuickfixIntro}
       continueId="quickfix-continue"
-      nextCourse={{ id: 'batch', label: '이어서 파일 목록에 같은 변경 적용하기' }}
+      nextCourse={{ id: 'batch-workshop', label: '이어서 파일 목록에 같은 변경 적용하기' }}
     />
   );
 }

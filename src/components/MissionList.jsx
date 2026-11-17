@@ -56,6 +56,13 @@ export function MissionList({ current, completed, onSelect, basicsCompleted, gra
             <small>검색 위치 · 파일 이동 · 모두 저장</small>
           </span>
         </button>
+        <button className={s.mission} onClick={() => onSelect('batch-workshop')}>
+          <span className={s.number}>새로</span>
+          <span>
+            <strong>목록을 정하고 함께 바꾸기</strong>
+            <small>파일 범위 · 반복 치환 · 목록 저장</small>
+          </span>
+        </button>
         <button
           className={`${s.mission} ${current.id === 'basics' ? s.active : ''}`}
           aria-current={current.id === 'basics' ? 'step' : 'false'}
