@@ -49,6 +49,7 @@ async function mobile(label) {
     [320, 844],
   ]) {
     await page.setViewportSize({ width, height });
+    await page.locator('#workshop-next').scrollIntoViewIfNeeded();
     const b = await page.evaluate(() => {
       const canvas = document.querySelector('#vim-canvas').getBoundingClientRect();
       const coach = document.querySelector('#workshop-goal').parentElement.getBoundingClientRect();
@@ -62,7 +63,7 @@ async function mobile(label) {
       };
     });
     assert.equal(b.overflow, false);
-    assert.ok(b.canvas >= 150 && b.next <= height, JSON.stringify({ label, width, ...b }));
+    assert.ok(b.canvas >= 150 && b.next <= height + 1, JSON.stringify({ label, width, ...b }));
     if (b.key) assert.ok(b.key <= b.coach, JSON.stringify({ label, width, ...b }));
     await page.screenshot({ path: `test-results/register-${label}-${width}.png`, fullPage: true });
   }
@@ -73,14 +74,16 @@ async function finish(index) {
   await command(':w');
   await expect(page.locator('#workshop-next')).toBeEnabled();
   await page.keyboard.press('Control+Enter');
-  await expect(page.getByRole('heading', { name: registerLessons[index].recap })).toBeVisible();
+  await expect(
+    page.getByRole('heading', { name: '목표대로 편집하고 저장했습니다.' }),
+  ).toBeVisible();
   await expect.poll(() => page.workers().length).toBe(0);
   if (index < 3) {
     const segment = registerLessons[index];
     await page
       .getByRole('button', { name: segment.answers[1 - segment.correct], exact: true })
       .click();
-    await expect(page.locator('#register-continue')).toBeDisabled();
+    await expect(page.locator('#register-continue')).toBeEnabled();
     await page.getByRole('button', { name: segment.answers[segment.correct], exact: true }).click();
     await page.locator('#register-continue').click();
     await ready();

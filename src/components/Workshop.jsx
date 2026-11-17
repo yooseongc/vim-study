@@ -147,7 +147,7 @@ function Finish({ kind, next, reset, select }) {
       </h1>
       <p>
         {kind === 'guided'
-          ? '검색으로 위치를 고르고, 단어를 바꾼 뒤, 점으로 다시 적용했습니다. 마지막 설명 줄도 지켰습니다.'
+          ? 'tea와 coffee의 크기를 large로 바꾸고, 마지막 설명 줄은 그대로 남겼습니다. 저장된 결과까지 확인했습니다.'
           : '세 milk 항목을 oat로 바꾸고 설명 줄은 보존했습니다. 저장된 파일까지 확인했습니다.'}
       </p>
       <div className={s.finishPreview}>

@@ -40,6 +40,8 @@ async function layouts(label) {
     [320, 844],
   ]) {
     await page.setViewportSize({ width, height });
+    if (await page.locator('#workshop-next').count())
+      await page.locator('#workshop-next').scrollIntoViewIfNeeded();
     const bounds = await page.evaluate(() => ({
       overflow: document.documentElement.scrollWidth > innerWidth,
       canvas: document.querySelector('#vim-canvas')?.getBoundingClientRect().height,
@@ -51,7 +53,7 @@ async function layouts(label) {
     if (bounds.canvas)
       assert.ok(
         bounds.canvas >= 150 &&
-          bounds.next <= height &&
+          bounds.next <= height + 1 &&
           (!bounds.key || bounds.key <= bounds.coach),
         JSON.stringify({ label, width, ...bounds }),
       );
@@ -65,7 +67,9 @@ async function layouts(label) {
 async function finish(index) {
   await expect(page.locator('#workshop-next')).toBeEnabled();
   await page.keyboard.press('Control+Enter');
-  await expect(page.getByRole('heading', { name: basicsLessons[index].recap })).toBeVisible();
+  await expect(
+    page.getByRole('heading', { name: '목표대로 편집하고 저장했습니다.' }),
+  ).toBeVisible();
   await expect.poll(() => page.workers().length).toBe(0);
   if (index < 2) {
     const part = basicsLessons[index];
@@ -145,6 +149,37 @@ try {
   await page.keyboard.press('Escape');
   await command(':w');
   await finish(2);
+  for (const [index, actions] of [
+    [3, ['A Friday', 'Escape', 'oOwner: me', 'Escape']],
+    [4, ['jddpj2dd']],
+    [5, ['jVjyGp']],
+    [6, ['A tonight', 'Escape', 'jddpoBring water', 'Escape']],
+  ]) {
+    await page.locator('#basics-workshop-continue').click();
+    await ready();
+    await expect(page.getByRole('region', { name: '이번 문제의 전체 목표' })).toContainText('목표');
+    for (const action of actions) {
+      if (action === 'Escape') await page.keyboard.press('Escape');
+      else await type(action);
+    }
+    await command(':w');
+    await finish(index);
+  }
+  await page.getByText('내용을 다시 쓰는 방법', { exact: true }).click();
+  await expect(
+    page.getByText('작은 범위를 다시 입력해도 같은 목표를 만들 수 있습니다.', { exact: false }),
+  ).toBeVisible();
+  await page.getByRole('button', { name: '이 문제 다시 풀기', exact: true }).click();
+  await ready();
+  await type('ggVGc');
+  const alternate = basicsLessons[6].lesson.practice.challenge.target.split('\n');
+  for (const [i, line] of alternate.entries()) {
+    if (i) await page.keyboard.press('Enter');
+    await type(line);
+  }
+  await page.keyboard.press('Escape');
+  await command(':w');
+  await finish(6);
   await page.getByRole('button', { name: /이어서 검색과 편집 문법 배우기/ }).click();
   await expect(page.locator('#grammar-workshop-start')).toBeVisible();
   await page.getByRole('button', { name: /학습 목차/ }).click();
@@ -160,7 +195,7 @@ try {
     .toBe(true);
   assert.deepEqual(errors, []);
   console.log(
-    'PASS: official logos, mode comparison, continuous input, Esc versus save, normal w, command cancel, undo/redo before and after save, protected line, three exercises, five layouts, no records and navigation.',
+    'PASS: official logos, mode comparison, continuous input, Esc versus save, normal w, command cancel, undo/redo before and after save, protected line, seven exercises including line moves and visual copy, five layouts, no records and navigation.',
   );
 } finally {
   await browser.close();

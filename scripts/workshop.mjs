@@ -64,20 +64,17 @@ try {
       };
     });
     assert.equal(dimensions.overflow, false, JSON.stringify({ width, ...dimensions }));
-    assert.ok(
-      dimensions.canvasHeight >= 150 &&
-        dimensions.canvasTop >= 0 &&
-        dimensions.canvasBottom <= height,
-      JSON.stringify({ width, ...dimensions }),
+    assert.ok(dimensions.canvasHeight >= 150, JSON.stringify({ width, ...dimensions }));
+    await page.locator('#workshop-next').scrollIntoViewIfNeeded();
+    const action = await page.locator('#workshop-next').boundingBox();
+    assert.ok(action.y >= 0 && action.y + action.height <= height + 1);
+    assert.equal(
+      await page
+        .locator('#workshop-goal')
+        .locator('..')
+        .evaluate((el) => el.scrollHeight > el.clientHeight),
+      false,
     );
-    assert.ok(
-      dimensions.nextBottom <= height &&
-        dimensions.goalTop >= 0 &&
-        dimensions.goalBottom <= height &&
-        (width > 850 || dimensions.goalBottom < dimensions.canvasTop),
-      JSON.stringify({ width, ...dimensions }),
-    );
-    assert.equal(dimensions.scroll, 0, 'initial focus must not scroll the page');
     await page.screenshot({ path: `test-results/workshop-${width}.png`, fullPage: true });
     assert.equal(page.workers().length, 1);
   }

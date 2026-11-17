@@ -239,12 +239,11 @@
 }
 .practice {
   max-width: 1440px;
-  height: calc(100dvh - 64px);
-  min-height: 570px;
+  min-height: calc(100dvh - 64px);
   margin: auto;
   padding: 0 28px;
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-rows: auto auto auto auto;
 }
 .lessonHeading {
   padding: 18px 0;
@@ -276,7 +275,8 @@
 .workbench {
   min-height: 0;
   display: grid;
-  grid-template-columns: 330px minmax(0, 1fr);
+  grid-template-columns: minmax(340px, 0.85fr) minmax(0, 1.4fr);
+  min-height: 460px;
   gap: 24px;
 }
 .coach {
@@ -289,7 +289,6 @@
   border-radius: 12px;
 }
 .coachScroll {
-  overflow-y: auto;
   min-height: 0;
   padding: 22px;
   flex: 1;
@@ -407,6 +406,8 @@
   overflow-wrap: anywhere;
 }
 .editor {
+  height: clamp(380px, calc(100dvh - 220px), 560px);
+  align-self: start;
   min-width: 0;
   min-height: 0;
   display: flex;
@@ -680,13 +681,13 @@
   .promise b {
     display: block;
     margin: 4px 0 0;
-    font-size: 12px;
+    font-size: 14px;
   }
   .introLesson {
     padding: 20px;
   }
   .practice {
-    height: calc(100dvh - 56px);
+    height: auto;
     min-height: 690px;
     padding: 0 14px;
   }
@@ -697,7 +698,7 @@
     font-size: 20px;
   }
   .lessonHeading .eyebrow {
-    font-size: 12px;
+    font-size: 14px;
   }
   .phases {
     display: none;
@@ -705,11 +706,11 @@
   .workbench {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: 240px minmax(0, 1fr);
+    grid-template-rows: auto auto;
     gap: 10px;
   }
   .extendedCoach .workbench {
-    grid-template-rows: 300px minmax(0, 1fr);
+    grid-template-rows: auto auto;
   }
   .extendedCoach .lessonHeading {
     padding-block: 7px;
@@ -731,7 +732,7 @@
     scrollbar-gutter: auto;
   }
   .coachLabel {
-    font-size: 11px;
+    font-size: 13px;
   }
   .coach h2 {
     font-size: 18px;
@@ -761,19 +762,19 @@
   .coachTools button {
     padding: 4px 10px;
     min-height: 34px;
-    font-size: 12px;
+    font-size: 14px;
     word-break: keep-all;
   }
   .coachTools kbd {
     margin-left: 6px;
   }
   .expected {
-    display: none;
+    display: block;
   }
   .reference {
     margin-top: 10px;
     padding-top: 10px;
-    font-size: 12px;
+    font-size: 14px;
   }
   .editorHeading {
     padding-bottom: 6px;
@@ -784,10 +785,10 @@
     gap: 0 6px;
   }
   .editorBottom > span {
-    font-size: 11px;
+    font-size: 13px;
   }
   .editorBottom button {
-    font-size: 11px;
+    font-size: 13px;
     padding: 4px;
   }
   .actionBar {
@@ -796,7 +797,7 @@
     gap: 12px;
   }
   .actionBar > div {
-    font-size: 11px;
+    font-size: 13px;
     line-height: 1.6;
   }
   .actionBar .primary {
@@ -861,5 +862,20 @@
 @media (max-width: 400px) {
   .menuHeading h2 {
     font-size: 20px;
+  }
+}
+
+@media (max-width: 850px) {
+  .practice .workbench {
+    grid-template-rows: auto auto;
+  }
+  .practice .editor {
+    min-height: 420px;
+  }
+  .coachScroll {
+    overflow: visible;
+  }
+  .coachTools button {
+    min-height: 44px;
   }
 }

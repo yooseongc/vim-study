@@ -1,3 +1,4 @@
+import { everydayLessons } from './everyday-editing.js';
 export const basicsWorkshop = { id: 'basics-workshop', title: '모드를 알고, 편집하고 저장하기' };
 const reference = [
   '일반 모드는 키로 동작을 지시하는 상태입니다. i는 insert, 즉 입력 모드로 들어가는 명령입니다. 인터랙티브 모드라는 이름은 쓰지 않습니다.',
@@ -111,7 +112,7 @@ function lesson(initial, undo = false) {
     },
   };
 }
-export const basicsLessons = [
+const firstLessons = [
   {
     label: '1 / 3 · 입력과 저장',
     recap: '모드 전환과 저장을 구분했습니다.',
@@ -160,3 +161,8 @@ export const basicsLessons = [
     },
   },
 ];
+
+export const basicsLessons = [...firstLessons, ...everydayLessons].map((segment, index, all) => ({
+  ...segment,
+  label: `${index + 1} / ${all.length} · ${segment.label.replace(/^\d+ \/ \d+ · /, '')}`,
+}));

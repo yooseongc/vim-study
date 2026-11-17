@@ -1,3 +1,4 @@
+import { ExerciseBrief } from './ExerciseBrief.jsx';
 import { useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { checkExercise, modeText } from '../lessons/exercise.js';
 import { useVimEngine } from '../hooks/useVimEngine.js';
@@ -107,7 +108,10 @@ export function PracticeRun({ ref, lesson, kind, reset, finish, sectionLabel }) 
   }
   function continueLesson() {
     if (passed) finish();
-    else focusEditor();
+    else {
+      pendingCheck.current = true;
+      setFeedback(checkExercise(course, snapshot, saved));
+    }
   }
   function shortcut(event) {
     if (settingsOpen) return;
@@ -130,7 +134,11 @@ export function PracticeRun({ ref, lesson, kind, reset, finish, sectionLabel }) 
       <div className={s.lessonHeading}>
         <div>
           <p className={s.eyebrow}>
-            {sectionLabel || (kind === 'guided' ? '함께 해보기' : '혼자 해결하기')}
+            {sectionLabel
+              ? `문제 ${sectionLabel}`
+              : kind === 'guided'
+                ? '함께 해보기'
+                : '혼자 해결하기'}
           </p>
           <h1 id="title">{lesson.title}</h1>
         </div>
@@ -140,6 +148,7 @@ export function PracticeRun({ ref, lesson, kind, reset, finish, sectionLabel }) 
           <span aria-current={kind === 'challenge' ? 'step' : undefined}>혼자 해결하기</span>
         </div>
       </div>
+      <ExerciseBrief course={course} />
       <div className={s.workbench}>
         <aside className={s.coach} ref={guideRef} tabIndex={-1} aria-label="현재 연습 안내">
           <div className={s.coachScroll} ref={coachScroll}>
@@ -148,10 +157,10 @@ export function PracticeRun({ ref, lesson, kind, reset, finish, sectionLabel }) 
                 {kind === 'guided'
                   ? goal.recovery
                     ? '복구 안내'
-                    : `${stage + 1} / ${guidedGoals.filter((item) => !item.recovery).length}`
+                    : `동작 ${stage + 1} / ${guidedGoals.filter((item) => !item.recovery).length}`
                   : '직접 선택하는 문제'}
               </span>
-              <span>{kind === 'guided' ? goal.label : '적용과 건너뛰기'}</span>
+              <span>{kind === 'guided' ? goal.label : '방법을 직접 고르기'}</span>
             </div>
             <h2 id="workshop-goal">
               {passed ? '저장까지 확인했습니다.' : kind === 'guided' ? goal.title : course.title}
@@ -199,9 +208,12 @@ export function PracticeRun({ ref, lesson, kind, reset, finish, sectionLabel }) 
               <div className={s.diagnosis} role="status">
                 <b>현재 내용 점검</b>
                 <p>{feedback.message}</p>
-                {feedback.kind === 'text' && (
+                {feedback.row != null && (
                   <dl>
-                    <dt>{feedback.row}번째 줄 · 현재</dt>
+                    <dt>
+                      {feedback.file && `${feedback.file} · `}
+                      {feedback.row}번째 줄 · 현재
+                    </dt>
                     <dd>{feedback.actual}</dd>
                     <dt>목표</dt>
                     <dd>{feedback.expected}</dd>
@@ -218,6 +230,7 @@ export function PracticeRun({ ref, lesson, kind, reset, finish, sectionLabel }) 
             <button
               onClick={() => {
                 pendingCheck.current = true;
+                setFeedback(checkExercise(course, snapshot, saved));
               }}
               disabled={editor.status !== 'ready'}
             >
@@ -312,7 +325,7 @@ export function PracticeRun({ ref, lesson, kind, reset, finish, sectionLabel }) 
           disabled={!passed}
           onClick={continueLesson}
         >
-          {kind === 'guided' ? '편집 마무리' : '결과 확인'} <kbd>Ctrl ↵</kbd>
+          풀이 마치기 <kbd>Ctrl ↵</kbd>
         </button>
       </footer>
       <SettingsDialog

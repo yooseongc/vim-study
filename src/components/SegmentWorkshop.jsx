@@ -4,7 +4,16 @@ import { PracticeRun } from './PracticeRun.jsx';
 import { CourseMenu, WorkshopHeader } from './WorkshopNavigation.jsx';
 import s from '../styles/Workshop.module.css';
 
-function SegmentFinish({ segment, next, retry, select, nextCourse, continueId }) {
+function SegmentFinish({
+  segment,
+  next,
+  retry,
+  select,
+  nextCourse,
+  continueId,
+  hasNext,
+  requireAnswer,
+}) {
   const [choice, setChoice] = useState(null);
   const heading = useRef(null);
   const course = segment.lesson.practice.guided || segment.lesson.practice.challenge;
@@ -15,8 +24,23 @@ function SegmentFinish({ segment, next, retry, select, nextCourse, continueId })
         ✓
       </div>
       <p className={s.eyebrow}>{segment.label}</p>
-      <h1>{segment.recap}</h1>
-      <p>{segment.detail}</p>
+      <h1>목표대로 편집하고 저장했습니다.</h1>
+      <p>{course.description || '아래 저장된 결과와 문제의 목표가 일치합니다.'}</p>
+      <details>
+        <summary>안내에서 다룬 방법 돌아보기</summary>
+        <p>{segment.detail}</p>
+      </details>
+      {segment.lesson.solutions && (
+        <section className={s.decision}>
+          <h2>어떤 방법으로 풀었나요?</h2>
+          {segment.lesson.solutions.map(([name, text]) => (
+            <details key={name}>
+              <summary>{name}</summary>
+              <p>{text}</p>
+            </details>
+          ))}
+        </section>
+      )}
       <div className={s.finishPreview}>
         {course.targets ? (
           Object.entries(course.targets).map(([name, text]) => (
@@ -32,6 +56,11 @@ function SegmentFinish({ segment, next, retry, select, nextCourse, continueId })
       {segment.question ? (
         <div className={s.decision}>
           <h2>{segment.question}</h2>
+          {!requireAnswer && (
+            <p className={s.small}>
+              선택 확인입니다. 답을 생각해보거나 다음 문제에서 이어 연습하세요.
+            </p>
+          )}
           {segment.answers.map((answer, index) => (
             <button key={answer} aria-pressed={choice === index} onClick={() => setChoice(index)}>
               {answer}
@@ -47,7 +76,7 @@ function SegmentFinish({ segment, next, retry, select, nextCourse, continueId })
             id={continueId}
             className={s.primary}
             onClick={next}
-            disabled={choice !== segment.correct}
+            disabled={requireAnswer && choice !== segment.correct}
           >
             다음 문제로 →
           </button>
@@ -55,17 +84,25 @@ function SegmentFinish({ segment, next, retry, select, nextCourse, continueId })
       ) : (
         <div className={s.endLinks}>
           {segment.workspaceNote && <p>{segment.workspaceNote}</p>}
-          <button className={s.primary} onClick={() => select('workspace')}>
-            내 파일로 자유롭게 연습하기 →
-          </button>
-          <button onClick={() => select(nextCourse.id)}>{nextCourse.label} →</button>
+          {hasNext ? (
+            <button id={continueId} className={s.primary} onClick={next}>
+              다음 문제로 →
+            </button>
+          ) : (
+            <button className={s.primary} onClick={() => select(nextCourse.id)}>
+              {nextCourse.label} →
+            </button>
+          )}
+          {!hasNext && (
+            <p>방금 만든 편집을 바탕으로, 다음에는 ‘{nextCourse.title}’를 연습합니다.</p>
+          )}
+          <button onClick={() => select('workspace')}>내 파일로 자유롭게 연습하기 →</button>
           <button onClick={retry}>이 문제 다시 풀기</button>
           <p className={s.small}>
             판정은 결과와 저장을 확인합니다. 정해진 키 순서를 강제하지 않습니다.
           </p>
         </div>
       )}
-      <p className={s.small}>이 문제의 내용과 완료 기록은 브라우저에 남기지 않습니다.</p>
     </main>
   );
 }
@@ -88,6 +125,8 @@ export function SegmentWorkshop({ ref, onSelect, workshop, segments, Intro, cont
         <SegmentFinish
           key={index}
           segment={segment}
+          hasNext={index < segments.length - 1}
+          requireAnswer={workshop.id === 'basics-workshop' && index < 2}
           nextCourse={nextCourse}
           continueId={continueId}
           next={() => {

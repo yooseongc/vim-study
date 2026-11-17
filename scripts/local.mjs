@@ -26,6 +26,14 @@ try {
       window.copiedCommand = text;
     };
   });
+  await expect(page.locator('#lab-goals').locator('..')).not.toHaveAttribute('open');
+  await page.locator('#lab-goals').click();
+  await expect(page.getByText('mode=prod, port=8080으로 변경', { exact: true })).toBeVisible();
+  await page.locator('#lab-goals').click();
+  await page
+    .getByRole('button', { name: 'Vim 실행을 확인했어요 · 첫 파일 열기 →', exact: true })
+    .click();
+  await expect(page.getByText('환경 준비를 확인했습니다.', { exact: false })).toBeVisible();
   const downloadPromise = page.waitForEvent('download');
   await page.getByRole('link', { name: '실습 묶음 받기 (.zip)' }).click();
   const download = await downloadPromise;

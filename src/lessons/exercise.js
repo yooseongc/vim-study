@@ -53,13 +53,24 @@ function checkFiles(course, snapshot) {
   for (const [name, target] of Object.entries(course.targets)) {
     const actual =
       snapshot.path === `/work/${name}` ? snapshot.lines.join('\n') : snapshot.buffers?.[name];
-    if (actual !== target)
+    if (actual !== target) {
+      const currentLines = actual?.split('\n') || [];
+      const targetLines = target.split('\n');
+      const row = Array.from(
+        { length: Math.max(currentLines.length, targetLines.length) },
+        (_, i) => i,
+      ).find((i) => currentLines[i] !== targetLines[i]);
       return {
         kind: 'files',
+        file: name,
+        row: row + 1,
+        actual: currentLines[row] ?? '(줄 없음)',
+        expected: targetLines[row] ?? '(이 줄은 없어야 합니다)',
         message: course.protectedFiles?.includes(name)
           ? `${name} 파일은 그대로 보존해야 합니다. 이 파일로 돌아가 변경을 되돌려주세요.`
           : `${name}의 편집 내용을 확인하세요. 목표와 다른 내용이 남아 있습니다.`,
       };
+    }
   }
   if (snapshot.recording)
     return { kind: 'recording', message: '내용은 맞습니다. Esc로 나온 뒤 q로 녹화를 끝내세요.' };

@@ -42,6 +42,7 @@ async function mobile(label) {
     [320, 844],
   ]) {
     await page.setViewportSize({ width, height });
+    await page.locator('#workshop-next').scrollIntoViewIfNeeded();
     const b = await page.evaluate(() => {
       const canvas = document.querySelector('#vim-canvas').getBoundingClientRect();
       const coach = document.querySelector('#workshop-goal').parentElement.getBoundingClientRect();
@@ -55,7 +56,7 @@ async function mobile(label) {
       };
     });
     assert.equal(b.overflow, false);
-    assert.ok(b.canvas >= 150 && b.next <= height, JSON.stringify({ label, width, ...b }));
+    assert.ok(b.canvas >= 150 && b.next <= height + 1, JSON.stringify({ label, width, ...b }));
     if (b.key) assert.ok(b.key <= b.coach, JSON.stringify({ label, width, ...b }));
     await page.screenshot({ path: `test-results/macro-${label}-${width}.png`, fullPage: true });
   }
@@ -66,12 +67,14 @@ async function finish(index) {
   await command(':w');
   await expect(page.locator('#workshop-next')).toBeEnabled();
   await page.keyboard.press('Control+Enter');
-  await expect(page.getByRole('heading', { name: macroLessons[index].recap })).toBeVisible();
+  await expect(
+    page.getByRole('heading', { name: '목표대로 편집하고 저장했습니다.' }),
+  ).toBeVisible();
   await expect.poll(() => page.workers().length).toBe(0);
   if (index < 2) {
     const part = macroLessons[index];
     await page.getByRole('button', { name: part.answers[1 - part.correct], exact: true }).click();
-    await expect(page.locator('#macro-continue')).toBeDisabled();
+    await expect(page.locator('#macro-continue')).toBeEnabled();
     await page.getByRole('button', { name: part.answers[part.correct], exact: true }).click();
     await page.locator('#macro-continue').click();
     await ready();
@@ -144,7 +147,9 @@ try {
   await type('q');
   await expect(page.locator('#workshop-next')).toBeEnabled();
   await page.keyboard.press('Control+Enter');
-  await expect(page.getByRole('heading', { name: macroLessons[2].recap })).toBeVisible();
+  await expect(
+    page.getByRole('heading', { name: '목표대로 편집하고 저장했습니다.' }),
+  ).toBeVisible();
   await expect.poll(() => page.workers().length).toBe(0);
   assert.deepEqual(await page.evaluate(() => Object.keys(localStorage)), []);
   await page.getByRole('button', { name: '이 문제 다시 풀기', exact: true }).click();

@@ -29,13 +29,13 @@ function BasicsIntro({ start }) {
             02 <b>되돌렸다 다시 적용하고</b>
           </span>
           <span>
-            03 <b>혼자 첫 편집을 마칩니다</b>
+            03 <b>줄을 정리하고 안내문을 완성합니다</b>
           </span>
         </div>
         <button id="basics-workshop-start" className={s.primary} onClick={start}>
           모드부터 연습하기 →
         </button>
-        <p className={s.small}>세 개의 짧은 문제 · 실제 Vim · 학습 기록 없이</p>
+        <p className={s.small}>모드와 저장 3문제 · 줄 편집과 적용 4문제</p>
       </div>
       <section className={s.introLesson} aria-label="모드별 키의 뜻">
         <div className={s.previewHeading}>

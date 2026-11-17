@@ -50,6 +50,8 @@ export function LocalPractice({ ref, onSelect }) {
   const [results, setResults] = useState(null);
   const [message, setMessage] = useState('');
   const [environment, setEnvironment] = useState('wsl');
+  const [setupReady, setSetupReady] = useState(false);
+  const lessonStart = useRef(null);
   const selection = useRef(0),
     fileInput = useRef(null),
     verifyHeading = useRef(null),
@@ -146,7 +148,14 @@ export function LocalPractice({ ref, onSelect }) {
               ['unix', 'Linux · macOS'],
               ['native', 'Windows 네이티브 Vim'],
             ].map(([id, label]) => (
-              <button key={id} aria-pressed={environment === id} onClick={() => setEnvironment(id)}>
+              <button
+                key={id}
+                aria-pressed={environment === id}
+                onClick={() => {
+                  setEnvironment(id);
+                  setSetupReady(false);
+                }}
+              >
                 {label}
               </button>
             ))}
@@ -158,23 +167,74 @@ export function LocalPractice({ ref, onSelect }) {
                 ? 'Vim과 Bash, sort, diff가 있는 로컬 터미널에서 진행합니다. 실습 ZIP을 새 폴더에 풀고 시작하세요.'
                 : '편집 과제와 아래 파일 비교는 할 수 있습니다. 외부 sort·Bash 검사·Ctrl+z/fg 실습은 WSL에서 진행하세요. names.txt의 파일 목표만 맞추려면 Vim의 :sort u를 사용할 수 있지만, 외부 필터 실습을 대신한 것은 아닙니다.'}
           </p>
+          <details>
+            <summary>터미널이나 Vim이 아직 준비되지 않았다면</summary>
+            <p>
+              {environment === 'wsl'
+                ? 'Windows에서는 먼저 WSL 환경을 준비하고, 설치된 Linux 터미널을 여세요.'
+                : environment === 'native'
+                  ? 'Windows용 Vim을 설치하고 터미널에서 실행할 수 있는지 확인하세요. 아래에서는 파일 편집과 결과 비교부터 할 수 있습니다.'
+                  : '터미널에서 Vim을 실행할 수 있는지 먼저 확인하세요. 설치 방법은 운영체제마다 다릅니다.'}
+            </p>
+            {environment === 'wsl' && (
+              <p>
+                <a
+                  href="https://learn.microsoft.com/windows/wsl/install"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Microsoft WSL 설치 안내 ↗
+                </a>
+              </p>
+            )}
+            <p>
+              <a href="https://www.vim.org/download.php" target="_blank" rel="noreferrer">
+                Vim 공식 설치 안내 ↗
+              </a>
+            </p>
+          </details>
+          <p>
+            터미널에서 <code>vim --version</code>을 실행해 버전이 나오는지 확인하세요. 이 확인은
+            파일을 수정하지 않습니다.
+          </p>
+          <button
+            onClick={() => {
+              setSetupReady(true);
+              choose(0);
+              lessonStart.current?.scrollIntoView({ block: 'start' });
+              lessonStart.current?.focus();
+            }}
+          >
+            Vim 실행을 확인했어요 · 첫 파일 열기 →
+          </button>
+          {setupReady && (
+            <p>환경 준비를 확인했습니다. ZIP을 내려받아 새 폴더에 풀고 아래 안내를 진행하세요.</p>
+          )}
         </section>
         <section className={s.goals} aria-labelledby="lab-goals">
-          <h2 id="lab-goals">이번에 만들 결과</h2>
-          <p>ZIP의 최상위 파일을 편집합니다. expected 폴더는 비교용 정답이므로 수정하지 마세요.</p>
-          <div className={s.goalGrid}>
-            {labGoals.map(([name, target, note]) => (
-              <article key={name}>
-                <h3>{name}</h3>
-                <p>{target}</p>
-                <small>{note}</small>
-              </article>
-            ))}
-          </div>
+          <details>
+            <summary id="lab-goals">이번에 만들 결과 · 여섯 파일의 목표 펼치기</summary>
+            <p>
+              ZIP의 최상위 파일을 편집합니다. expected 폴더는 비교용 정답이므로 수정하지 마세요.
+            </p>
+            <div className={s.goalGrid}>
+              {labGoals.map(([name, target, note]) => (
+                <article key={name}>
+                  <h3>{name}</h3>
+                  <p>{target}</p>
+                  <small>{note}</small>
+                </article>
+              ))}
+            </div>
+          </details>
         </section>
-        <div className={s.lessonLayout}>
+        <div className={s.lessonLayout} ref={lessonStart} tabIndex={-1}>
           <nav className={s.tabs} aria-label="로컬 실습 과정">
-            <p>필요한 과정부터 열기</p>
+            <p>
+              {environment === 'native'
+                ? '파일 편집부터 시작 · 외부 도구와 셸은 WSL 필요'
+                : '첫 파일 열기 → 편집 → 셸에서 확인'}
+            </p>
             {localSections.map((item, index) => (
               <button
                 key={item.id}
