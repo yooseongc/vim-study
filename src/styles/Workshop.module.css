@@ -879,3 +879,62 @@
     min-height: 44px;
   }
 }
+
+.problemIndex {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 28px 48px;
+}
+.problemIndex h2 {
+  font-size: 22px;
+}
+.problemIndex p {
+  color: #52675f;
+  line-height: 1.8;
+}
+.problemIndex ol {
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.problemIndex button {
+  width: 100%;
+  text-align: left;
+  line-height: 1.7;
+}
+.problemIndex span {
+  color: #805638;
+  font-size: 14px;
+}
+.prediction {
+  margin: 16px 0;
+  padding: 12px;
+  background: #edf1e5;
+  border-radius: 8px;
+}
+.prediction button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  margin: 8px 0;
+}
+.prediction button[aria-pressed='true'] {
+  border-color: #53754d;
+  background: #e0ead8;
+}
+@media (max-width: 760px) {
+  .problemIndex ol {
+    grid-template-columns: 1fr;
+  }
+}
+
+.courseTrail {
+  max-width: 1440px;
+  padding: 10px 28px 0;
+  margin: auto;
+}
+.courseTrail button {
+  font-size: 14px;
+}

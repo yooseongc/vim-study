@@ -33,7 +33,7 @@ function MacroIntro({ start }) {
         <button id="macro-start" className={s.primary} onClick={start}>
           매크로 연습 시작하기 →
         </button>
-        <p className={s.small}>세 개의 짧은 문제 · 실제 Vim · 학습 기록 없이</p>
+        <p className={s.small}>매크로 3문제 · 방법을 고르는 배포표 1문제</p>
       </div>
       <section className={s.introLesson} aria-label="점과 매크로 비교 예시">
         <div className={s.previewHeading}>

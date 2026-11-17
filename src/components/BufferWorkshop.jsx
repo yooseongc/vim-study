@@ -33,7 +33,7 @@ function BufferIntro({ start }) {
         <button id="buffer-start" className={s.primary} onClick={start}>
           버퍼와 창 연습하기 →
         </button>
-        <p className={s.small}>세 개의 짧은 문제 · 실제 Vim · 학습 기록 없이</p>
+        <p className={s.small}>버퍼와 창 3문제 · 설정과 사용 안내 종합 1문제</p>
       </div>
       <section className={s.introLesson} aria-label="버퍼와 창 개념 비교">
         <div className={s.previewHeading}>

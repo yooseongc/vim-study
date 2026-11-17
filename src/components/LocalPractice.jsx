@@ -1,5 +1,6 @@
+import { localSectionsFor, nativeOutcomes } from '../lessons/local-environments.js';
 import { useImperativeHandle, useRef, useState } from 'react';
-import { localSections, labExpected, validateLab } from '../lessons/local-lab.js';
+import { labExpected, validateLab } from '../lessons/local-lab.js';
 import { labGoals, localOutcomes, commandParts } from '../lessons/local-guide.js';
 import { CourseMenu, WorkshopHeader } from './WorkshopNavigation.jsx';
 import w from '../styles/Workshop.module.css';
@@ -9,7 +10,8 @@ function Command({ step }) {
   const [copied, setCopied] = useState('');
   if (!step.command) return null;
   const parts = commandParts[step.command];
-  const canCopy = step.where?.includes('셸') || step.where === 'Vim 명령줄';
+  const canCopy =
+    step.where?.includes('셸') || step.where === 'Vim 명령줄' || step.where === 'PowerShell';
   async function copy() {
     try {
       await navigator.clipboard.writeText(step.command);
@@ -50,13 +52,14 @@ export function LocalPractice({ ref, onSelect }) {
   const [results, setResults] = useState(null);
   const [message, setMessage] = useState('');
   const [environment, setEnvironment] = useState('wsl');
+  const sections = localSectionsFor(environment);
   const [setupReady, setSetupReady] = useState(false);
   const lessonStart = useRef(null);
   const selection = useRef(0),
     fileInput = useRef(null),
     verifyHeading = useRef(null),
     stepHeading = useRef(null);
-  const section = localSections[sectionIndex],
+  const section = sections[sectionIndex],
     step = section.steps[stepIndex];
   const optional = ['permissions', 'ssh'].includes(section.id);
   function choose(index) {
@@ -154,6 +157,7 @@ export function LocalPractice({ ref, onSelect }) {
                 onClick={() => {
                   setEnvironment(id);
                   setSetupReady(false);
+                  choose(0);
                 }}
               >
                 {label}
@@ -235,28 +239,31 @@ export function LocalPractice({ ref, onSelect }) {
                 ? '파일 편집부터 시작 · 외부 도구와 셸은 WSL 필요'
                 : '첫 파일 열기 → 편집 → 셸에서 확인'}
             </p>
-            {localSections.map((item, index) => (
+            {sections.map((item, index) => (
               <button
                 key={item.id}
                 aria-current={index === sectionIndex ? 'step' : undefined}
                 onClick={() => choose(index)}
               >
                 {item.title}
-                {index >= 4 && <small>선택 확장</small>}
+                {['permissions', 'ssh'].includes(item.id) && <small>선택 확장</small>}
               </button>
             ))}
           </nav>
           <article className={s.section}>
             <p className={s.eyebrow}>
               {optional ? '선택 확장 · 파일 검사와 별개' : '기본 실습'} · {sectionIndex + 1} /{' '}
-              {localSections.length}
+              {sections.length}
             </p>
             <h2>{section.title}</h2>
             <p>{section.intro}</p>
             <div className={s.outcome}>
               <h3>직접 확인할 결과</h3>
               <ul>
-                {localOutcomes[section.id].map((text) => (
+                {(
+                  (environment === 'native' && nativeOutcomes[section.id]) ||
+                  localOutcomes[section.id]
+                ).map((text) => (
                   <li key={text}>{text}</li>
                 ))}
               </ul>
@@ -277,7 +284,7 @@ export function LocalPractice({ ref, onSelect }) {
                 <h3 ref={stepHeading} tabIndex={-1}>
                   {step.title}
                 </h3>
-                <Command key={`${section.id}:${stepIndex}`} step={step} />
+                <Command key={`${environment}:${section.id}:${stepIndex}`} step={step} />
                 <p>{step.text}</p>
                 <div className={s.controls}>
                   <button disabled={stepIndex === 0} onClick={() => move(stepIndex - 1)}>
@@ -297,7 +304,7 @@ export function LocalPractice({ ref, onSelect }) {
                 이전 과정
               </button>
               <button
-                disabled={sectionIndex === localSections.length - 1}
+                disabled={sectionIndex === sections.length - 1}
                 onClick={() => choose(sectionIndex + 1)}
               >
                 다음 과정

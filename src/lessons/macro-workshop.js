@@ -1,3 +1,4 @@
+import { repetitionTransfer } from './transfer-practice.js';
 export const macroWorkshop = { id: 'macro-workshop', title: '여러 동작을 묶고, 확인하며 반복하기' };
 export function readableMacro(value = '') {
   return value
@@ -141,7 +142,7 @@ const recovery = {
   ),
   recovery: true,
 };
-export const macroLessons = [
+const coreLessons = [
   {
     label: '1 / 3 · 녹화하고 한 번 확인하기',
     recap: '편집 뒤의 이동도 함께 반복했습니다.',
@@ -259,3 +260,8 @@ export const macroLessons = [
     },
   },
 ];
+
+export const macroLessons = [...coreLessons, repetitionTransfer].map((part, index, all) => ({
+  ...part,
+  label: `${index + 1} / ${all.length} · ${part.label.replace(/^\d+ \/ \d+ · /, '')}`,
+}));

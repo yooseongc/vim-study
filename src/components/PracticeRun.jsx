@@ -14,6 +14,30 @@ import { BatchStatus } from './BatchStatus.jsx';
 import { BufferStatus } from './BufferStatus.jsx';
 import s from '../styles/Workshop.module.css';
 
+function Prediction({ item }) {
+  const [choice, setChoice] = useState(null);
+  return (
+    <div className={s.prediction}>
+      <p>
+        <b>누르기 전에 예상해보기</b>
+      </p>
+      <p>{item.question}</p>
+      {item.answers.map((answer, index) => (
+        <button key={answer} aria-pressed={choice === index} onClick={() => setChoice(index)}>
+          {answer}
+        </button>
+      ))}
+      {choice !== null && (
+        <p role="status">
+          {choice === item.correct ? '맞습니다. ' : '선택 범위를 다시 보세요. '}
+          {item.why}
+        </p>
+      )}
+      <p className={s.small}>답을 선택하지 않고 Vim에서 바로 확인해도 됩니다.</p>
+    </div>
+  );
+}
+
 export function PracticeRun({ ref, lesson, kind, reset, finish, sectionLabel }) {
   const { practice, guidedGoals, guidedStage, challengeHints, reference } = lesson;
   const course = practice[kind];
@@ -172,6 +196,7 @@ export function PracticeRun({ ref, lesson, kind, reset, finish, sectionLabel }) 
                   ? goal.explanation
                   : course.description}
             </p>
+            {!passed && goal?.prediction && <Prediction key={stage} item={goal.prediction} />}
             {!passed && kind === 'guided' && (
               <ol className={s.keySequence} aria-label="순서대로 누를 키">
                 {goal.keys.map(([key, meaning], i) => (

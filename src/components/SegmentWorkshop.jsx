@@ -119,8 +119,40 @@ export function SegmentWorkshop({ ref, onSelect, workshop, segments, Intro, cont
   return (
     <div className={s.page}>
       <WorkshopHeader openMenu={() => setMenuOpen(true)} />
+      {index >= 0 && (
+        <div className={s.courseTrail}>
+          <button
+            onClick={() => {
+              if (!(run.current?.canLeave() ?? true)) return;
+              setComplete(false);
+              setIndex(-1);
+            }}
+          >
+            ← 이 과정의 문제 목록
+          </button>
+        </div>
+      )}
       {index < 0 ? (
-        <Intro start={() => setIndex(0)} />
+        <>
+          <Intro start={() => setIndex(0)} />
+          <section className={s.problemIndex} aria-label="이 과정의 문제">
+            <h2>필요한 문제부터 시작해도 됩니다</h2>
+            <p>
+              처음이라면 위의 시작 버튼으로 순서대로 연습하세요. 이미 아는 내용은 건너뛸 수
+              있습니다.
+            </p>
+            <ol>
+              {segments.map((item, position) => (
+                <li key={item.label}>
+                  <button onClick={() => setIndex(position)}>
+                    {item.label}
+                    {item.lesson.practice.challenge && <span> · 직접 풀기</span>}
+                  </button>
+                </li>
+              ))}
+            </ol>
+          </section>
+        </>
       ) : complete ? (
         <SegmentFinish
           key={index}

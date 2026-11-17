@@ -1,3 +1,4 @@
+import { codeEditingLessons } from './code-editing.js';
 export const grammarWorkshop = { id: 'grammar-workshop', title: '찾고, 이동하고, 범위를 편집하기' };
 const reference = [
   '/는 앞으로 검색하는 입력줄을 엽니다. 검색어를 쓰는 동안 위치가 미리 보이지만 Enter로 확정해야 편집을 시작합니다. Esc는 검색을 취소합니다.',
@@ -236,7 +237,7 @@ const quoteLesson = {
     return at(s, 1, 8, 17) ? 1 : 0;
   },
 };
-export const grammarLessons = [
+const coreLessons = [
   {
     label: '1 / 4 · 검색과 단어 바꾸기',
     recap: '검색과 편집을 구분했습니다.',
@@ -298,3 +299,8 @@ export const grammarLessons = [
     },
   },
 ];
+
+export const grammarLessons = [...coreLessons, ...codeEditingLessons].map((part, index, all) => ({
+  ...part,
+  label: `${index + 1} / ${all.length} · ${part.label.replace(/^\d+ \/ \d+ · /, '')}`,
+}));

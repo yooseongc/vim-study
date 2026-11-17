@@ -58,7 +58,7 @@ function GrammarIntro({ start }) {
         <button id="grammar-workshop-start" className={s.primary} onClick={start}>
           검색과 편집 연습하기 →
         </button>
-        <p className={s.small}>네 개의 짧은 문제 · 실제 Vim · 학습 기록 없이</p>
+        <p className={s.small}>검색과 범위 4문제 · 문자 선택과 코드 편집 4문제</p>
       </div>
       <section className={s.introLesson} aria-label="동작과 범위 비교">
         <div className={s.previewHeading}>

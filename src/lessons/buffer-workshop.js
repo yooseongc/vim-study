@@ -1,3 +1,4 @@
+import { filesTransfer } from './transfer-practice.js';
 export const bufferWorkshop = { id: 'buffer-workshop', title: '버퍼와 창을 구분하며 파일 다루기' };
 const reference = [
   '파일은 저장된 내용, 버퍼는 Vim이 편집 중인 내용, 창은 버퍼를 보여주는 자리입니다. 같은 버퍼를 두 창에서 보면 어느 창에서 편집해도 같은 내용이 보입니다.',
@@ -223,7 +224,7 @@ const multiLesson = {
     return s.mode === 'c' && s.command.startsWith('split') ? 1 : 0;
   },
 };
-export const bufferLessons = [
+const coreLessons = [
   {
     label: '1 / 3 · 같은 버퍼, 두 창',
     recap: '창과 편집 내용을 구분했습니다.',
@@ -279,7 +280,7 @@ export const bufferLessons = [
   },
 ];
 
-bufferLessons.at(-1).lesson.solutions = [
+coreLessons.at(-1).lesson.solutions = [
   [
     '파일을 하나씩 열었다면',
     '버퍼를 바꿔가며 편집해도 됩니다. w는 현재 파일만 저장하므로 숨은 변경까지 저장했는지 확인합니다.',
@@ -289,3 +290,8 @@ bufferLessons.at(-1).lesson.solutions = [
     '분할 창을 사용하면 두 내용을 함께 볼 수 있습니다. 창을 닫는 것과 버퍼를 저장하는 것은 별개입니다. 이 문제는 마지막 창 하나와 모든 파일의 저장을 확인합니다.',
   ],
 ];
+
+export const bufferLessons = [...coreLessons, filesTransfer].map((part, index, all) => ({
+  ...part,
+  label: `${index + 1} / ${all.length} · ${part.label.replace(/^\d+ \/ \d+ · /, '')}`,
+}));
