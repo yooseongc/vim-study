@@ -37,6 +37,9 @@ export function checkExercise(course, snapshot, saved) {
 }
 
 export function modeText(mode = '') {
+  if (mode === 'v') return '문자 선택 모드';
+  if (mode === 'V') return '줄 선택 모드';
+  if (mode === '\u0016') return '블록 선택 모드';
   if (mode === 'n') return '일반 모드';
   if (mode.startsWith('no')) return '범위를 기다리는 중';
   if (mode.startsWith('i')) return '입력 모드';

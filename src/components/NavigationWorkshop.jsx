@@ -96,7 +96,7 @@ export function NavigationWorkshop({ ref, onSelect }) {
       segments={navigationLessons}
       Intro={NavigationIntro}
       continueId="navigation-continue"
-      nextCourse={{ id: 'block', label: '이어서 여러 줄을 블록으로 편집하기' }}
+      nextCourse={{ id: 'block-workshop', label: '이어서 여러 줄을 블록으로 편집하기' }}
     />
   );
 }

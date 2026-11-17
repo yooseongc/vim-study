@@ -42,6 +42,13 @@ export function MissionList({ current, completed, onSelect, basicsCompleted, gra
             <small>mark · 줄과 칸 · 점프 기록</small>
           </span>
         </button>
+        <button className={s.mission} onClick={() => onSelect('block-workshop')}>
+          <span className={s.number}>새로</span>
+          <span>
+            <strong>같은 열을 골라 함께 편집하기</strong>
+            <small>블록 선택 · 함께 입력 · 열 삭제</small>
+          </span>
+        </button>
         <button
           className={`${s.mission} ${current.id === 'basics' ? s.active : ''}`}
           aria-current={current.id === 'basics' ? 'step' : 'false'}

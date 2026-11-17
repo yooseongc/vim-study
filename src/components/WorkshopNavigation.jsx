@@ -5,13 +5,21 @@ import s from '../styles/Workshop.module.css';
 const groups = [
   [
     '이어 입력하는 새 과정',
-    ['workshop', 'range-workshop', 'register-workshop', 'macro-workshop', 'navigation-workshop'],
+    [
+      'workshop',
+      'range-workshop',
+      'register-workshop',
+      'macro-workshop',
+      'navigation-workshop',
+      'block-workshop',
+    ],
   ],
   ['기본부터 정리하기', ['basics', 'grammar', 'registers', 'block']],
   ['이동과 반복 익히기', ['navigation', 'dot', 'substitution', 'macros']],
   ['파일과 작업 범위 넓히기', ['workspace', 'quickfix', 'batch', 'global', 'local']],
 ];
 const extraTitles = {
+  'block-workshop': '같은 열을 골라 함께 편집하기',
   workshop: '한 번 바꾸고, 다시 쓰기',
   'range-workshop': '범위를 고르고, 확인하며 바꾸기',
   'register-workshop': '복사한 내용을 지키며 편집하기',

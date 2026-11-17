@@ -23,7 +23,11 @@ import { macroWorkshop } from './lessons/macro-workshop.js';
 import { NavigationWorkshop } from './components/NavigationWorkshop.jsx';
 import { navigationWorkshop } from './lessons/navigation-workshop.js';
 
+import { BlockWorkshop } from './components/BlockWorkshop.jsx';
+import { blockWorkshop } from './lessons/block-workshop.js';
+
 const activities = [
+  blockWorkshop,
   workshop,
   rangeWorkshop,
   registerWorkshop,
@@ -96,6 +100,7 @@ export default function App() {
     store.reset(mission.id);
     setAttempt((value) => value + 1);
   }
+  if (mission.id === 'block-workshop') return <BlockWorkshop ref={session} onSelect={select} />;
   if (mission.id === 'macro-workshop') return <MacroWorkshop ref={session} onSelect={select} />;
   if (mission.id === 'navigation-workshop')
     return <NavigationWorkshop ref={session} onSelect={select} />;
