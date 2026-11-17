@@ -35,6 +35,13 @@ export function MissionList({ current, completed, onSelect, basicsCompleted, gra
             <small>녹화 · 한 번 확인 · 예외 건너뛰기</small>
           </span>
         </button>
+        <button className={s.mission} onClick={() => onSelect('navigation-workshop')}>
+          <span className={s.number}>새로</span>
+          <span>
+            <strong>멀리 이동하고, 다시 돌아오기</strong>
+            <small>mark · 줄과 칸 · 점프 기록</small>
+          </span>
+        </button>
         <button
           className={`${s.mission} ${current.id === 'basics' ? s.active : ''}`}
           aria-current={current.id === 'basics' ? 'step' : 'false'}

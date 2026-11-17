@@ -20,12 +20,15 @@ import { RegisterWorkshop } from './components/RegisterWorkshop.jsx';
 import { registerWorkshop } from './lessons/register-workshop.js';
 import { MacroWorkshop } from './components/MacroWorkshop.jsx';
 import { macroWorkshop } from './lessons/macro-workshop.js';
+import { NavigationWorkshop } from './components/NavigationWorkshop.jsx';
+import { navigationWorkshop } from './lessons/navigation-workshop.js';
 
 const activities = [
   workshop,
   rangeWorkshop,
   registerWorkshop,
   macroWorkshop,
+  navigationWorkshop,
   ...guidedCourses,
   localCourse,
   workspace,
@@ -94,6 +97,8 @@ export default function App() {
     setAttempt((value) => value + 1);
   }
   if (mission.id === 'macro-workshop') return <MacroWorkshop ref={session} onSelect={select} />;
+  if (mission.id === 'navigation-workshop')
+    return <NavigationWorkshop ref={session} onSelect={select} />;
   if (mission.id === 'workshop') return <Workshop ref={session} onSelect={select} />;
   if (mission.id === 'range-workshop') return <RangeWorkshop ref={session} onSelect={select} />;
   if (mission.id === 'register-workshop')

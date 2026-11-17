@@ -6,6 +6,7 @@ import { SettingsDialog } from './SettingsDialog.jsx';
 import { VimTerminal } from './VimTerminal.jsx';
 import { RegisterShelf } from './RegisterShelf.jsx';
 import { MacroStatus } from './MacroStatus.jsx';
+import { NavigationStatus } from './NavigationStatus.jsx';
 import s from '../styles/Workshop.module.css';
 
 export function PracticeRun({ ref, lesson, kind, reset, finish, sectionLabel }) {
@@ -112,7 +113,7 @@ export function PracticeRun({ ref, lesson, kind, reset, finish, sectionLabel }) 
   }
   return (
     <main
-      className={`${s.practice} ${extendedCoach ? s.extendedCoach : ''} ${lesson.showRegisters || lesson.showMacro ? s.withMonitor : ''}`}
+      className={`${s.practice} ${extendedCoach ? s.extendedCoach : ''} ${lesson.showRegisters || lesson.showMacro || lesson.showNavigation ? s.withMonitor : ''}`}
       onKeyDownCapture={shortcut}
     >
       <div className={s.lessonHeading}>
@@ -233,6 +234,7 @@ export function PracticeRun({ ref, lesson, kind, reset, finish, sectionLabel }) 
           </div>
           {lesson.showRegisters && <RegisterShelf snapshot={snapshot} />}
           {lesson.showMacro && <MacroStatus snapshot={snapshot} />}
+          {lesson.showNavigation && <NavigationStatus snapshot={snapshot} />}
           <VimTerminal
             {...editor}
             path={snapshot?.path || `/work/${course.file}`}

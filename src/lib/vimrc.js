@@ -30,6 +30,7 @@ let snapshot.registerA = getreg('a')
 let snapshot.registerZero = getreg('0')
 let snapshot.recording = reg_recording()
 let snapshot.markA = getpos("'a")[1:2]
+let snapshot.jumpCount = len(getjumplist()[0])
 let snapshot.visualStart = [line('v'), col('v')]
 let snapshot.quickfixCount = len(getqflist())
 let snapshot.quickfixIndex = get(getqflist({'idx': 0}), 'idx', 0)

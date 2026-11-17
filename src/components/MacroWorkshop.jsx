@@ -87,7 +87,7 @@ export function MacroWorkshop({ ref, onSelect }) {
       segments={macroLessons}
       Intro={MacroIntro}
       continueId="macro-continue"
-      nextCourse={{ id: 'navigation', label: '이어서 멀리 이동하고 제자리로 돌아오기' }}
+      nextCourse={{ id: 'navigation-workshop', label: '이어서 멀리 이동하고 제자리로 돌아오기' }}
     />
   );
 }

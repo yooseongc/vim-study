@@ -1,0 +1,41 @@
+.status {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  padding: 6px 0;
+}
+.status > div {
+  min-width: 0;
+  padding: 4px 8px;
+  border: 1px solid #d6ded5;
+  background: #e9eee0;
+  border-radius: 5px;
+}
+.status span {
+  display: block;
+  color: #52675f;
+  font-size: 11px;
+}
+.status code {
+  display: block;
+  white-space: nowrap;
+  font-size: 14px;
+}
+.choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0;
+}
+.choices button[aria-pressed='true'] {
+  border-color: #728765;
+  background: #e9eee0;
+}
+.caret {
+  background: #e6c27a;
+  color: #203b35;
+}
+.explanation {
+  min-height: 70px;
+  word-break: keep-all;
+}
