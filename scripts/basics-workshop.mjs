@@ -83,7 +83,7 @@ try {
     .click();
   await expect(page).toHaveURL(/#basics-workshop$/);
   const logo = page.getByRole('img', { name: 'Vim 로고' });
-  assert.ok(await logo.evaluate((img) => img.complete && img.naturalWidth > 0));
+  await expect.poll(() => logo.evaluate((img) => img.complete && img.naturalWidth > 0)).toBe(true);
   await page.getByRole('button', { name: '입력 모드', exact: true }).click();
   await expect(page.getByRole('status')).toContainText('글자 w가 들어갑니다');
   await page.getByRole('button', { name: '명령줄', exact: true }).click();
@@ -144,11 +144,13 @@ try {
   await page.getByRole('button', { name: /학습 목차/ }).click();
   await page.getByRole('button', { name: '편집 명령을 문장처럼 조합하기', exact: false }).click();
   await expect(page).toHaveURL(/#grammar$/);
-  assert.ok(
-    await page
-      .getByRole('img', { name: 'Vim 로고' })
-      .evaluate((img) => img.complete && img.naturalWidth > 0),
-  );
+  await expect
+    .poll(() =>
+      page
+        .getByRole('img', { name: 'Vim 로고' })
+        .evaluate((img) => img.complete && img.naturalWidth > 0),
+    )
+    .toBe(true);
   assert.deepEqual(errors, []);
   console.log(
     'PASS: official logos, mode comparison, continuous input, Esc versus save, normal w, command cancel, undo/redo before and after save, protected line, three exercises, five layouts, no records and navigation.',
