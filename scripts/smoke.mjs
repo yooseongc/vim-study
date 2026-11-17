@@ -14,7 +14,7 @@ try {
     (process.env.TEST_URL || 'http://127.0.0.1:5174/vim-study/').split('#')[0] + '#port',
   );
   await page.waitForFunction(
-    () => document.querySelector('#engine-status').textContent.includes('WASM'),
+    () => document.querySelector('#engine-status')?.textContent.includes('WASM'),
     { timeout: 30000 },
   );
   assert.equal(await page.evaluate(() => crossOriginIsolated), true);
@@ -33,7 +33,7 @@ try {
   await page.waitForFunction(() => document.body.dataset.font === 'JetBrains Mono:h22');
   await page.reload();
   await page.waitForFunction(() =>
-    document.querySelector('#engine-status').textContent.includes('WASM'),
+    document.querySelector('#engine-status')?.textContent.includes('WASM'),
   );
   await page.locator('#settings-open').click();
   assert.equal(await page.locator('#font-size').inputValue(), '22');
@@ -79,7 +79,7 @@ try {
   assert.match(await page.locator('#completed').textContent(), /01/);
   await page.reload();
   await page.waitForFunction(() =>
-    document.querySelector('#engine-status').textContent.includes('WASM'),
+    document.querySelector('#engine-status')?.textContent.includes('WASM'),
   );
   await page.locator('#check').click();
   await page.locator('#feedback[data-result=success]').waitFor();
@@ -93,7 +93,7 @@ try {
     await page.goto((process.env.TEST_URL || 'http://127.0.0.1:5174/vim-study/') + '#' + id);
     await page.reload();
     await page.waitForFunction(() =>
-      document.querySelector('#engine-status').textContent.includes('WASM'),
+      document.querySelector('#engine-status')?.textContent.includes('WASM'),
     );
     await page.locator('#vim-input').focus();
     for (const key of sequence) {
@@ -111,7 +111,7 @@ try {
   await page.screenshot({ path: 'test-results/desktop.png', fullPage: true });
   await page.getByRole('button', { name: /설정 두 개/ }).click();
   await page.waitForFunction(() =>
-    document.querySelector('#engine-status').textContent.includes('WASM'),
+    document.querySelector('#engine-status')?.textContent.includes('WASM'),
   );
   await page.locator('#vim-input').focus();
   await page.keyboard.type('/3000');

@@ -8,7 +8,7 @@ try {
     (process.env.TEST_URL || 'http://127.0.0.1:5184/vim-study/').split('#')[0] + '#port',
   );
   await page.waitForFunction(() =>
-    document.querySelector('#engine-status').textContent.includes('WASM'),
+    document.querySelector('#engine-status')?.textContent.includes('WASM'),
   );
   await page.evaluate(() => document.fonts.ready);
   await mkdir('test-results', { recursive: true });
