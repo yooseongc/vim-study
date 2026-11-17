@@ -2,6 +2,7 @@ import { VimWasm, checkBrowserCompatibility } from 'vim-wasm';
 import { loadEditorFont, vimFont } from './fonts.js';
 import { createVimrc } from './vimrc.js';
 import { validFileName } from './workspace-files.js';
+import { installAtomicTransport } from './vim-transport.js';
 
 // vim-wasm 0.0.13 has no public dispose API. Keep its pinned-version
 // internals here only; UI components never access workers or screen handlers.
@@ -52,6 +53,7 @@ export function createVimEngine({ canvas, input, files, settings, callbacks }) {
       input,
       workerScriptPath: `${import.meta.env.BASE_URL}vendor/vim.js`,
     });
+    installAtomicTransport(vim.worker);
     let lastSize = '';
     const resize = () => {
       const { width, height } = canvas.getBoundingClientRect();
